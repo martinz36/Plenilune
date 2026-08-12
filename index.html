@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plenilune Pastelería | Tortas de Autor y Pastelería 100% Artesanal</title>
+    <meta name="description" content="Pastelería hecha a mano y desde cero en su estado más puro. Descubre el sabor real de ingredientes nobles, procesos sin prisas y diseños de autor diseñados para tus momentos especiales.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header / Navigation -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <img src="assets/logo.png" alt="Logo Plenilune Pastelería" class="logo-img">
+                <span class="logo-text">Plenilune</span>
+            </a>
+            <nav class="nav">
+                <a href="#comparison" class="nav-link">¿Por qué artesanal?</a>
+                <a href="#process" class="nav-link">El Proceso</a>
+                <a href="#gallery" class="nav-link">Galería</a>
+                <a href="#faq" class="nav-link">Preguntas</a>
+            </nav>
+            <a href="#calculator" class="btn btn-nav">Cotizar Torta</a>
+            <button class="mobile-nav-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Nav Overlay -->
+    <div class="mobile-menu">
+        <nav class="mobile-nav">
+            <a href="#comparison" class="mobile-nav-link">¿Por qué artesanal?</a>
+            <a href="#process" class="mobile-nav-link">El Proceso</a>
+            <a href="#gallery" class="mobile-nav-link">Galería</a>
+            <a href="#faq" class="mobile-nav-link">Preguntas</a>
+            <a href="#calculator" class="btn mobile-btn-nav">Cotizar Torta</a>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <span class="hero-tag">Pastelería 100% Honesta y de Autor</span>
+                <h1 class="hero-title">El tiempo, el detalle y el sabor real que merecen tus momentos especiales</h1>
+                <p class="hero-subtitle">Pastelería hecha a mano y desde cero. Sin premezclas ultraprocesadas, sin conservantes químicos ni procesos automatizados. Solo ingredientes nobles en su estado más puro y el tiempo que requiere la excelencia.</p>
+                <div class="hero-actions">
+                    <a href="#calculator" class="btn btn-primary">Cotizar mi torta personalizada</a>
+                    <a href="#comparison" class="btn btn-secondary">Descubre la diferencia</a>
+                </div>
+            </div>
+            <div class="hero-image-container">
+                <div class="glass-badge hero-badge">
+                    <span class="badge-number">100%</span>
+                    <span class="badge-text">Artesanal de Origen</span>
+                </div>
+                <img src="assets/cake_elegant.jpg" alt="Torta de autor Plenilune decorada con flores y detalles dorados" class="hero-image" fetchpriority="high">
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Comparison / Diagnostic Section -->
+    <section class="comparison" id="comparison">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tag">Contraste Honesto</span>
+                <h2 class="section-title">¿Por qué vale lo que vale?</h2>
+                <p class="section-desc">Entendemos la diferencia entre alimentar y crear una experiencia memorable. Así se compara la pastelería industrial y masiva frente a nuestro taller artesanal.</p>
+            </div>
+
+            <div class="comparison-grid">
+                <!-- Mass Produced Card -->
+                <div class="comparison-card mass-produced">
+                    <div class="card-header">
+                        <h3>Pastelería Industrial</h3>
+                        <p class="card-meta">Enfocada en el volumen y la reducción de costos</p>
+                    </div>
+                    <ul class="comparison-list">
+                        <li>
+                            <svg class="icon icon-cross" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                            <div>
+                                <strong>Ingredientes ultra-estabilizados:</strong> Premezclas en polvo, grasas hidrogenadas (margarinas), conservantes artificiales para larga duración y colorantes sintéticos.
+                            </div>
+                        </li>
+                        <li>
+                            <svg class="icon icon-cross" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                            <div>
+                                <strong>Procesos automatizados y congelados:</strong> Bizcochuelos horneados hace semanas, congelados y apilados en cámaras de frío. Cremas vegetales montadas a escala industrial.
+                            </div>
+                        </li>
+                        <li>
+                            <svg class="icon icon-cross" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                            <div>
+                                <strong>Diseños estandarizados y moldes rápidos:</strong> Decoraciones plásticas, láminas de azúcar impresas y terminaciones rápidas que toman minutos de empaque en serie.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Plenilune Card -->
+                <div class="comparison-card plenilune-difference">
+                    <div class="card-badge">Valor Real</div>
+                    <div class="card-header">
+                        <h3>Plenilune Pastelería</h3>
+                        <p class="card-meta">Enfocada en la excelencia y la personalización de autor</p>
+                    </div>
+                    <ul class="comparison-list">
+                        <li>
+                            <svg class="icon icon-check" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            <div>
+                                <strong>Ingredientes 100% nobles y reales:</strong> Mantequilla de verdad (82% materia grasa), chocolates de alta pureza con cacao certificado, frutas naturales y vainilla en vaina. Cero aditivos.
+                            </div>
+                        </li>
+                        <li>
+                            <svg class="icon icon-check" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            <div>
+                                <strong>Elaboración fresca bajo pedido:</strong> Batido artesanal, horneado del mismo día y almíbares caseros. Cada torta se produce de forma individual e inmediata para asegurar frescura máxima.
+                            </div>
+                        </li>
+                        <li>
+                            <svg class="icon icon-check" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            <div>
+                                <strong>Dedicatoria artística a medida:</strong> Diseños de autor únicos y modelado a mano. Dedicamos entre 4 y 10 horas de diseño y montaje a cada creación para hacerla una obra de arte.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Artisan Process Section -->
+    <section class="process" id="process">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tag">Show, Don't Tell</span>
+                <h2 class="section-title">El viaje de tu torta: Del taller a tu mesa</h2>
+                <p class="section-desc">Detrás de la magia hay un método riguroso guiado por el respeto a los ingredientes y el amor por los detalles.</p>
+            </div>
+
+            <div class="process-timeline">
+                <!-- Step 1 -->
+                <div class="process-step">
+                    <div class="process-number">01</div>
+                    <div class="process-content">
+                        <h3>Selección de la Materia Prima</h3>
+                        <p>No transamos en calidad. Usamos mantequilla real, azúcar rubia o de caña, huevos frescos de gallinas libres, chocolates de origen y compotas caseras de fruta de temporada. La calidad comienza en el origen.</p>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="process-step">
+                    <div class="process-number">02</div>
+                    <div class="process-content">
+                        <h3>Batido y Horneado Lento</h3>
+                        <p>Cada bizcochuelo se bate pacientemente para atrapar aire de forma natural, sin impulsores químicos sintéticos. Se hornea lentamente a temperatura controlada, inundando el taller con el aroma de la repostería real.</p>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="process-step">
+                    <div class="process-number">03</div>
+                    <div class="process-content">
+                        <h3>Montaje y Nivelación de Capas</h3>
+                        <p>Armamos las tortas con precisión. Alternamos bizcochos húmedos impregnados de almíbares caseros con rellenos cremosos, ganaches estables y toques crujientes para crear un contraste de texturas insuperable en boca.</p>
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="process-step">
+                    <div class="process-number">04</div>
+                    <div class="process-content">
+                        <h3>Decoración Artística y de Autor</h3>
+                        <p>Aquí es donde las ideas toman forma. Flores orgánicas seleccionadas, texturas hechas con espátula, detalles en pan de oro de 24k y modelados en chocolate. Dedicamos horas de concentración absoluta a cada terminación.</p>
+                    </div>
+                </div>
+                <!-- Step 5 -->
+                <div class="process-step">
+                    <div class="process-number">05</div>
+                    <div class="process-content">
+                        <h3>Empaque y Entrega Segura</h3>
+                        <p>Una joya merece el mejor estuche. Diseñamos cajas de alta resistencia que protegen la torta del movimiento térmico y físico. Cada detalle está pensado para que la experiencia empiece desde el primer desempaque.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-highlight">
+                <div class="highlight-image-wrapper">
+                    <img src="assets/artisan_hands.jpg" alt="Manos de pastelera decorando una torta con precisión" class="highlight-image">
+                </div>
+                <div class="highlight-info">
+                    <blockquote>
+                        "No apuramos el frío, no acortamos los batidos y no usamos químicos para acelerar. El tiempo es nuestro ingrediente más valioso, y el sabor real es su recompensa."
+                    </blockquote>
+                    <cite>— Equipo Plenilune Pastelería</cite>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flagship Gallery & Testimonials -->
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tag">Colección de Autor</span>
+                <h2 class="section-title">Nuestras Creaciones Estrella</h2>
+                <p class="section-desc">Diseñadas para deleitar los sentidos tanto en lo visual como en lo gustativo. Tres perfiles pensados para paladares exigentes.</p>
+            </div>
+
+            <div class="gallery-grid">
+                <!-- Product 1: Red coquette cherry cake -->
+                <div class="product-card">
+                    <div class="product-img-wrapper">
+                        <img src="assets/ig_11.jpg" alt="Torta Vintage Coquette de Cerezas Plenilune" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-tag">Retro y Coquette</span>
+                        <h3>Torta Cereza Retro</h3>
+                        <p class="product-desc">Decoración vintage con bordes ultra-piped en tonos crema y rojo pasión. Bizcochuelo súper húmedo bañado en almíbar casero, relleno de crema diplomática y un corazón de cerezas al marrasquino.</p>
+                        <div class="product-meta">
+                            <span>Complejidad: Exclusiva</span>
+                            <span>La más solicitada</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 2: Vintage purple cake -->
+                <div class="product-card">
+                    <div class="product-img-wrapper">
+                        <img src="assets/ig_7.jpg" alt="Torta Vintage Lavanda Plenilune" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-tag">Vintage Chic</span>
+                        <h3>Torta Royal Lavanda</h3>
+                        <p class="product-desc">Un tributo a la repostería clásica europea. Detallada con volantes de crema en degradé lila, perlas comestibles y flores modeladas. Bizcocho aromático relleno de crema de arándanos silvestres.</p>
+                        <div class="product-meta">
+                            <span>Complejidad: Muy Alta</span>
+                            <span>Especial de Cumpleaños</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 3: Heart cake green/white -->
+                <div class="product-card">
+                    <div class="product-img-wrapper">
+                        <img src="assets/ig_17.jpg" alt="Torta Corazón Cancer Baby Plenilune" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-tag">Romántica y de Autor</span>
+                        <h3>Corazón de Crema y Cintas</h3>
+                        <p class="product-desc">Torta en forma de corazón con volantes rústicos, ribetes verdes bordados a mano y lazos de cinta satinada. Relleno de compota cítrica y mousse de chocolate blanco de alta pureza.</p>
+                        <div class="product-meta">
+                            <span>Complejidad: Alta</span>
+                            <span>Diseño personalizado</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 4: Golden croissants -->
+                <div class="product-card">
+                    <div class="product-img-wrapper">
+                        <img src="assets/ig_8.jpg" alt="Croissants Artesanales Plenilune" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-tag">Bollería de Autor</span>
+                        <h3>Croissant Crujiente de Mantequilla</h3>
+                        <p class="product-desc">Hojaldrado artesanal de 24 capas elaborado pacientemente a mano en nuestro taller durante 3 días. Corteza sumamente crujiente de color dorado brillante y una miga alveolada y aromática.</p>
+                        <div class="product-meta">
+                            <span>Laminado: 100% a mano</span>
+                            <span>Frescos del día</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonials Grid -->
+            <div class="testimonials-container">
+                <div class="text-center testimonial-header">
+                    <span class="section-tag">Prueba Social</span>
+                    <h3>Lo que dicen nuestros clientes</h3>
+                </div>
+                <div class="testimonials-grid">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"Cotizamos una torta de bodas y nos pareció más costosa que otras panaderías. Sin embargo, al probarla en la fiesta entendimos todo. No es empalagosa, el sabor a fruta fresca es real y el bizcocho estaba increíblemente húmedo. Mis invitados aún me preguntan quién la hizo."</p>
+                        <div class="testimonial-user">
+                            <strong>Mariana R.</strong>
+                            <span>Torta de Boda Personalizada</span>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"Espectacular la atención al detalle. Pedí una torta de autor para el cumpleaños de mi madre. Parecía una escultura de mármol con flores naturales y el relleno de pistacho era de otro planeta. Vale cada centavo por el arte y el sabor."</p>
+                        <div class="testimonial-user">
+                            <strong>Carlos D.</strong>
+                            <span>Torta de Cumpleaños Escultórica</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instagram Feed Grid Section -->
+    <section class="instagram-feed" id="instagram-feed">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tag">Galería de Diseños</span>
+                <h2 class="section-title">Nuestra Vitrina en Instagram</h2>
+                <p class="section-desc">Historias horneadas a pedido en nuestro taller. Cada torta representa una celebración y horas de dedicación única.</p>
+            </div>
+            
+            <div class="instagram-grid">
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_1.jpg" alt="Torta Minecraft Creeper" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_2.jpg" alt="Torta Calendario Personalizado" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_3.jpg" alt="Torta de Chocolate Antonio" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_4.jpg" alt="Torta Born to Die" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_5.jpg" alt="Torta de Patitos en el Lago" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_6.jpg" alt="Tarta de Frutillas de Autor" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_13.jpg" alt="Torta Corazón 1 Year" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_14.jpg" alt="Torta de Girasoles" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_15.jpg" alt="Galletas de Personajes" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_16.jpg" alt="Torta Corazón HB LU" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_10.jpg" alt="Galletas One Piece" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
+                    <img src="assets/ig_18.jpg" alt="Cheesecake con Frutas y Placa" class="instagram-img">
+                    <div class="instagram-overlay">
+                        <span class="instagram-icon">📸</span>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="text-center instagram-cta">
+                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                    Ver Galería Completa en Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Value & Quote Calculator -->
+    <section class="calculator-section" id="calculator">
+        <div class="container">
+            <div class="calculator-layout">
+                <!-- Information / Education Panel -->
+                <div class="calculator-info">
+                    <span class="section-tag">Transparencia y Valor</span>
+                    <h2 class="section-title">Calculadora de Dedicación y Valor</h2>
+                    <p class="calculator-intro">En la pastelería industrial, compras volumen y conservantes químicos. En Plenilune, compras <strong>tiempo de diseño, ingredientes nobles y arte comestible</strong>. Usa esta herramienta interactiva para estimar la dedicación y el valor de tu torta ideal.</p>
+                    
+                    <div class="value-indicators">
+                        <div class="indicator">
+                            <div class="indicator-icon">
+                                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm3.3 14.79L11 13V7h1.5v5.25l3.5 2.1-.71 1.44z" fill="currentColor"/></svg>
+                            </div>
+                            <div class="indicator-text">
+                                <h4>Dedicación Total</h4>
+                                <p id="calc-hours-display">4.5 Horas de batido, horneado y decoración detallada a mano.</p>
+                            </div>
+                        </div>
+                        <div class="indicator">
+                            <div class="indicator-icon">
+                                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z" fill="currentColor"/></svg>
+                            </div>
+                            <div class="indicator-text">
+                                <h4>Ingredientes Clave</h4>
+                                <p id="calc-ingredients-display">Mantequilla de verdad 82%, chocolate de origen al 70%, frutas frescas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculator Form -->
+                <div class="calculator-card glass-panel">
+                    <form id="quote-form">
+                        <!-- Step 1: Size -->
+                        <div class="form-group">
+                            <label class="form-label">1. ¿Para cuántas personas es el evento?</label>
+                            <div class="options-grid" id="size-options">
+                                <button type="button" class="option-btn active" data-value="10" data-hours="3" data-price="90">
+                                    <strong>10 personas</strong>
+                                    <span>Torta compacta (1 piso)</span>
+                                </button>
+                                <button type="button" class="option-btn" data-value="20" data-hours="4.5" data-price="170">
+                                    <strong>20 personas</strong>
+                                    <span>Torta mediana (1 o 2 pisos)</span>
+                                </button>
+                                <button type="button" class="option-btn" data-value="30" data-hours="6" data-price="250">
+                                    <strong>30 personas</strong>
+                                    <span>Torta celebración (2 pisos)</span>
+                                </button>
+                                <button type="button" class="option-btn" data-value="40" data-hours="8.5" data-price="340">
+                                    <strong>40+ personas</strong>
+                                    <span>Torta de gran evento (3 pisos)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Flavor -->
+                        <div class="form-group">
+                            <label class="form-label">2. Perfil de Sabor y Rellenos Nobles</label>
+                            <div class="options-grid" id="flavor-options">
+                                <button type="button" class="option-btn active" data-value="frutal" data-factor="1.0" data-desc="Mantequilla 82%, limón natural, coulis de frambuesa y mascarpone fresco.">
+                                    <strong>Cítrico y Frutal</strong>
+                                    <span>Frescura balanceada</span>
+                                </button>
+                                <button type="button" class="option-btn" data-value="chocolate" data-factor="1.1" data-desc="Chocolate belga 55%-70% de origen, praliné artesanal de avellanas tostadas.">
+                                    <strong>Chocolate Belga y Praliné</strong>
+                                    <span>Intensidad y texturas</span>
+                                </button>
+                                <button type="button" class="option-btn" data-value="pistacho" data-factor="1.2" data-desc="Pistachos seleccionados y tostados a mano en el taller, crema fresca de queso.">
+                                    <strong>Pistacho & Frutos Rojos</strong>
+                                    <span>Sabor Premium y sofisticado</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Design Complexity -->
+                        <div class="form-group">
+                            <label class="form-label">3. Nivel de Complejidad y Decoración</label>
+                            <div class="options-grid" id="design-options">
+                                <button type="button" class="option-btn active" data-value="minimal" data-hours-add="0" data-price-add="0" data-desc="Texturizado sutil con espátula, elegante y minimalista.">
+                                    <strong>Minimalista Texturada</strong>
+                                    <span>Elegancia simple (0h extra)</span>
+                                </button>
+                                <button type="button" class="option-btn" data-value="floral" data-hours-add="1.5" data-price-add="30" data-desc="Decorada con flores orgánicas frescas/secas y detalles de pan de oro 24k.">
+                                    <strong>Detalles & Flores Orgánicas</strong>
+                                    <span>Romántica y natural (+1.5h)</span>
+                                </button>
+                                <button type="button" class="option-btn" data-value="sculpture" data-hours-add="3" data-price-add="70" data-desc="Modelado escultórico a mano, detalles tridimensionales y altura de autor.">
+                                    <strong>Escultórica de Autor</strong>
+                                    <span>Diseño único de alta costura (+3h)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Output Summary -->
+                        <div class="calc-summary">
+                            <div class="summary-row">
+                                <span>Inversión estimada:</span>
+                                <strong class="summary-price" id="calc-price-display">S/ 90 - S/ 105</strong>
+                            </div>
+                            <p class="summary-note">El valor exacto se define tras afinar detalles específicos del diseño y alergias en nuestra conversación directa.</p>
+                            <button type="button" id="whatsapp-submit" class="btn btn-primary btn-block">
+                                <svg class="btn-icon" viewBox="0 0 24 24" width="20" height="20"><path d="M12.012 2c-5.506 0-9.988 4.47-9.988 9.957 0 1.764.465 3.488 1.347 5.016L2 22l5.19-1.353a9.96 9.96 0 0 0 4.822 1.233c5.506 0 9.988-4.47 9.988-9.957C22 6.47 17.518 2 12.012 2zm5.728 14.1c-.244.68-.96 1.258-1.597 1.393-.637.135-1.46.248-4.262-.907-3.58-1.478-5.894-5.11-6.073-5.347-.18-.238-1.455-1.921-1.455-3.663 0-1.742.915-2.6 1.236-2.936.32-.337.708-.423.94-.423.235 0 .47.004.673.013.212.01.498-.04.778.63.287.685.986 2.395 1.07 2.564.086.17.142.366.028.59-.113.227-.17.366-.34.56-.17.195-.357.437-.51.586-.17.165-.347.345-.15.68.197.337.876 1.436 1.877 2.325 1.293 1.147 2.383 1.503 2.723 1.673.34.17.537.14.738-.09.2-.23.864-1.002 1.096-1.344.23-.342.463-.284.778-.17.316.115 2.006.942 2.35.113.344-.17.574-.256.818-.596.244-.34.122-.652-.06-.992-.182-.34-.808-1.332-1.336-1.56-.528-.228-1.036-.34-1.502-.34h-.012c-.52 0-1.036.112-1.502.34z" fill="currentColor"/></svg>
+                                Cotizar detalles por WhatsApp
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tag">Transparencia Total</span>
+                <h2 class="section-title">Preguntas Frecuentes</h2>
+                <p class="section-desc">Resolvemos tus dudas sobre nuestros precios, reservas y método de trabajo.</p>
+            </div>
+
+            <div class="faq-accordion">
+                <!-- Item 1 -->
+                <div class="faq-item">
+                    <button class="faq-trigger">
+                        <span>¿Por qué los precios son distintos a los de una panadería convencional?</span>
+                        <svg class="icon icon-chevron" viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Una panadería convencional utiliza aditivos químicos para inflar las masas, margarinas hidrogenadas para abaratar costos y premezclas industriales congeladas de larga duración. Su producción es en serie.</p>
+                        <p>En <strong>Plenilune Pastelería</strong>, cada torta se hornea individualmente el mismo día. Usamos mantequilla real al 82% (no margarina), chocolate belga de alta pureza y frutas naturales seleccionadas. Además, dedicamos de 4 a 8 horas de trabajo artesanal minucioso al modelado y decoración de tu pieza. No pagas por volumen industrial, pagas por ingredientes honestos y arte personalizado.</p>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="faq-item">
+                    <button class="faq-trigger">
+                        <span>¿Con cuánto tiempo de anticipación debo hacer mi pedido?</span>
+                        <svg class="icon icon-chevron" viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Dado que no manejamos inventario congelado y procesamos pocos pedidos a la semana para garantizar un cuidado absoluto, recomendamos agendar con al menos <strong>5 a 7 días de anticipación</strong> para tortas clásicas, y <strong>15 días</strong> para tortas escultóricas o eventos grandes.</p>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="faq-item">
+                    <button class="faq-trigger">
+                        <span>¿Cómo garantizan que la torta llegue en perfectas condiciones?</span>
+                        <svg class="icon icon-chevron" viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Diseñamos empaques con bases rígidas reforzadas y cajas herméticas a la medida exacta de tu torta. Para el traslado, te brindamos instrucciones claras si decides retirarla tú mismo. También ofrecemos un servicio de despacho propio con chofer capacitado para transportar repostería delicada (con costo adicional según ubicación).</p>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="faq-item">
+                    <button class="faq-trigger">
+                        <span>¿Ofrecen opciones sin azúcar, sin gluten o veganas?</span>
+                        <svg class="icon icon-chevron" viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Elaboramos recetas adaptadas a requerimientos especiales bajo pedido. Sin embargo, dado que en nuestro taller manipulamos harina de trigo, lácteos y frutos secos, **no podemos garantizar la ausencia total de trazas** (no apto para celíacos severos o alergias alimentarias graves).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Final CTA -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <span class="logo-text">Plenilune</span>
+                    <span class="logo-symbol">🌙</span>
+                </a>
+                <p class="footer-tagline">El sabor real en su máxima expresión artesanal.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" fill="currentColor"/></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <a href="#hero">Inicio</a>
+                <a href="#comparison">Filosofía</a>
+                <a href="#process">El Taller</a>
+                <a href="#calculator">Cotizador</a>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contacto de Autor</h4>
+                <p>Pedidos personalizados y consultas especiales</p>
+                <p><strong>WhatsApp:</strong> +51 912 345 678 (Demo)</p>
+                <p><strong>Email:</strong> hola@plenilunepasteleria.com</p>
+                <p><em>Lima, Perú</em></p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom text-center">
+            <p>&copy; 2026 Plenilune Pastelería. Hecho con amor y tiempo real.</p>
+        </div>
+    </footer>
+
+    <!-- Main Logic Script -->
+    <script src="app.js"></script>
+</body>
+</html>
