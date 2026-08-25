@@ -52,8 +52,8 @@
         <div class="container hero-container">
             <div class="hero-content">
                 <span class="hero-tag">Pastelería 100% Honesta y de Autor</span>
-                <h1 class="hero-title">El tiempo, el detalle y el sabor real que merecen tus momentos especiales</h1>
-                <p class="hero-subtitle">Pastelería hecha a mano y desde cero. Sin premezclas ultraprocesadas, sin conservantes químicos ni procesos automatizados. Solo ingredientes nobles en su estado más puro y el tiempo que requiere la excelencia.</p>
+                <h1 class="hero-title" id="hero-title-display">El tiempo, el detalle y el sabor real que merecen tus momentos especiales</h1>
+                <p class="hero-subtitle" id="hero-subtitle-display">Pastelería hecha a mano y desde cero. Sin premezclas ultraprocesadas, sin conservantes químicos ni procesos automatizados. Solo ingredientes nobles en su estado más puro y el tiempo que requiere la excelencia.</p>
                 <div class="hero-actions">
                     <a href="#calculator" class="btn btn-primary">Cotizar mi torta personalizada</a>
                     <a href="#comparison" class="btn btn-secondary">Descubre la diferencia</a>
@@ -221,9 +221,9 @@
                         <img src="assets/ig_11.jpg" alt="Torta Vintage Coquette de Cerezas Plenilune" class="product-image">
                     </div>
                     <div class="product-info">
-                        <span class="product-tag">Retro y Coquette</span>
-                        <h3>Torta Cereza Retro</h3>
-                        <p class="product-desc">Decoración vintage con bordes ultra-piped en tonos crema y rojo pasión. Bizcochuelo súper húmedo bañado en almíbar casero, relleno de crema diplomática y un corazón de cerezas al marrasquino.</p>
+                        <span class="product-tag" data-catalog-tag="selene">Retro y Coquette</span>
+                        <h3 data-catalog-title="selene">Torta Cereza Retro</h3>
+                        <p class="product-desc" data-catalog-desc="selene">Decoración vintage con bordes ultra-piped en tonos crema y rojo pasión. Bizcochuelo súper húmedo bañado en almíbar casero, relleno de crema diplomática y un corazón de cerezas al marrasquino.</p>
                         <div class="product-meta">
                             <span>Complejidad: Exclusiva</span>
                             <span>La más solicitada</span>
@@ -236,9 +236,9 @@
                         <img src="assets/ig_7.jpg" alt="Torta Vintage Lavanda Plenilune" class="product-image">
                     </div>
                     <div class="product-info">
-                        <span class="product-tag">Vintage Chic</span>
-                        <h3>Torta Royal Lavanda</h3>
-                        <p class="product-desc">Un tributo a la repostería clásica europea. Detallada con volantes de crema en degradé lila, perlas comestibles y flores modeladas. Bizcocho aromático relleno de crema de arándanos silvestres.</p>
+                        <span class="product-tag" data-catalog-tag="lavanda">Vintage Chic</span>
+                        <h3 data-catalog-title="lavanda">Torta Royal Lavanda</h3>
+                        <p class="product-desc" data-catalog-desc="lavanda">Un tributo a la repostería clásica europea. Detallada con volantes de crema en degradé lila, perlas comestibles y flores modeladas. Bizcocho aromático relleno de crema de arándanos silvestres.</p>
                         <div class="product-meta">
                             <span>Complejidad: Muy Alta</span>
                             <span>Especial de Cumpleaños</span>
@@ -251,9 +251,9 @@
                         <img src="assets/ig_17.jpg" alt="Torta Corazón Cancer Baby Plenilune" class="product-image">
                     </div>
                     <div class="product-info">
-                        <span class="product-tag">Romántica y de Autor</span>
-                        <h3>Corazón de Crema y Cintas</h3>
-                        <p class="product-desc">Torta en forma de corazón con volantes rústicos, ribetes verdes bordados a mano y lazos de cinta satinada. Relleno de compota cítrica y mousse de chocolate blanco de alta pureza.</p>
+                        <span class="product-tag" data-catalog-tag="corazon">Romántica y de Autor</span>
+                        <h3 data-catalog-title="corazon">Corazón de Crema y Cintas</h3>
+                        <p class="product-desc" data-catalog-desc="corazon">Torta en forma de corazón con volantes rústicos, ribetes verdes bordados a mano y lazos de cinta satinada. Relleno de compota cítrica y mousse de chocolate blanco de alta pureza.</p>
                         <div class="product-meta">
                             <span>Complejidad: Alta</span>
                             <span>Diseño personalizado</span>
@@ -266,9 +266,9 @@
                         <img src="assets/ig_8.jpg" alt="Croissants Artesanales Plenilune" class="product-image">
                     </div>
                     <div class="product-info">
-                        <span class="product-tag">Bollería de Autor</span>
-                        <h3>Croissant Crujiente de Mantequilla</h3>
-                        <p class="product-desc">Hojaldrado artesanal de 24 capas elaborado pacientemente a mano en nuestro taller durante 3 días. Corteza sumamente crujiente de color dorado brillante y una miga alveolada y aromática.</p>
+                        <span class="product-tag" data-catalog-tag="croissant">Bollería de Autor</span>
+                        <h3 data-catalog-title="croissant">Croissant Crujiente de Mantequilla</h3>
+                        <p class="product-desc" data-catalog-desc="croissant">Hojaldrado artesanal de 24 capas elaborado pacientemente a mano en nuestro taller durante 3 días. Corteza sumamente crujiente de color dorado brillante y una miga alveolada y aromática.</p>
                         <div class="product-meta">
                             <span>Laminado: 100% a mano</span>
                             <span>Frescos del día</span>
@@ -595,9 +595,9 @@
             <div class="footer-contact">
                 <h4>Contacto de Autor</h4>
                 <p>Pedidos personalizados y consultas especiales</p>
-                <p><strong>WhatsApp:</strong> +51 936 037 502</p>
-                <p><strong>Email:</strong> hola@plenilunepasteleria.com</p>
-                <p><em>Lima, Perú</em></p>
+                <p><strong>WhatsApp:</strong> <span id="footer-phone">+51 936 037 502</span></p>
+                <p><strong>Email:</strong> <span id="footer-email">hola@plenilunepasteleria.com</span></p>
+                <p><em><span id="footer-location">Lima, Perú</span></em></p>
             </div>
         </div>
         
@@ -607,7 +607,7 @@
     </footer>
 
     <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/51936037502?text=%C2%A1Hola%20Plenilune%20Pasteler%C3%ADa%21%20%F0%9F%8C%99%20Me%20gustar%C3%ADa%20hacer%20una%20consulta%20sobre%20sus%20tortas%20de%20autor." class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contacto por WhatsApp">
+    <a href="https://wa.me/51936037502?text=%C2%A1Hola%20Plenilune%20Pasteler%C3%ADa%21%20%F0%9F%8C%99%20Me%20gustar%C3%ADa%20hacer%20una%20consulta%20sobre%20sus%20tortas%20de%20autor." class="whatsapp-float" id="whatsapp-float-link" target="_blank" rel="noopener noreferrer" aria-label="Contacto por WhatsApp">
         <svg class="whatsapp-icon" viewBox="0 0 24 24"><path d="M12.012 2c-5.506 0-9.988 4.47-9.988 9.957 0 1.764.465 3.488 1.347 5.016L2 22l5.19-1.353a9.96 9.96 0 0 0 4.822 1.233c5.506 0 9.988-4.47 9.988-9.957C22 6.47 17.518 2 12.012 2zm5.728 14.1c-.244.68-.96 1.258-1.597 1.393-.637.135-1.46.248-4.262-.907-3.58-1.478-5.894-5.11-6.073-5.347-.18-.238-1.455-1.921-1.455-3.663 0-1.742.915-2.6 1.236-2.936.32-.337.708-.423.94-.423.235 0 .47.004.673.013.212.01.498-.04.778.63.287.685.986 2.395 1.07 2.564.086.17.142.366.028.59-.113.227-.17.366-.34.56-.17.195-.357.437-.51.586-.17.165-.347.345-.15.68.197.337.876 1.436 1.877 2.325 1.293 1.147 2.383 1.503 2.723 1.673.34.17.537.14.738-.09.2-.23.864-1.002 1.096-1.344.23-.342.463-.284.778-.17.316.115 2.006.942 2.35.113.344-.17.574-.256.818-.596.244-.34.122-.652-.06-.992-.182-.34-.808-1.332-1.336-1.56-.528-.228-1.036-.34-1.502-.34h-.012c-.52 0-1.036.112-1.502.34z" fill="currentColor"/></svg>
     </a>
 

@@ -1,0 +1,253 @@
+{
+  "general": {
+    "phone": "51936037502",
+    "email": "hola@plenilunepasteleria.com",
+    "location": "Lima, Perú",
+    "heroTitle": "El tiempo, el detalle y el sabor real que merecen tus momentos especiales",
+    "heroSubtitle": "Pastelería hecha a mano y desde cero. Sin premezclas ultraprocesadas, sin conservantes químicos ni procesos automatizados. Solo ingredientes nobles en su estado más puro y el tiempo que requiere la excelencia."
+  },
+  "catalog": [
+    {
+      "id": "selene",
+      "tag": "Retro y Coquette",
+      "title": "Torta Cereza Retro",
+      "desc": "Decoración vintage con bordes ultra-piped en tonos crema y rojo pasión. Bizcochuelo súper húmedo bañado en almíbar casero, relleno de crema diplomática y un corazón de cerezas al marrasquino."
+    },
+    {
+      "id": "lavanda",
+      "tag": "Vintage Chic",
+      "title": "Torta Royal Lavanda",
+      "desc": "Un tributo a la repostería clásica europea. Detallada con volantes de crema en degradé lila, perlas comestibles y flores modeladas. Bizcocho aromático relleno de crema de arándanos silvestres."
+    },
+    {
+      "id": "corazon",
+      "tag": "Romántica y de Autor",
+      "title": "Corazón de Crema y Cintas",
+      "desc": "Torta en forma de corazón con volantes rústicos, ribetes verdes bordados a mano y lazos de cinta satinada. Relleno de compota cítrica y mousse de chocolate blanco de alta pureza."
+    },
+    {
+      "id": "croissant",
+      "tag": "Bollería de Autor",
+      "title": "Croissant Crujiente de Mantequilla",
+      "desc": "Hojaldrado artesanal de 24 capas elaborado pacientemente a mano en nuestro taller durante 3 días. Corteza sumamente crujiente de color dorado brillante y una miga alveolada y aromática."
+    }
+  ],
+  "ingredients": [
+    {
+      "id": "mantequilla",
+      "name": "Mantequilla 82% (kg)",
+      "cost": 30
+    },
+    {
+      "id": "harina",
+      "name": "Harina de trigo (kg)",
+      "cost": 4.5
+    },
+    {
+      "id": "azucar",
+      "name": "Azúcar rubia/blanca (kg)",
+      "cost": 3.8
+    },
+    {
+      "id": "huevos",
+      "name": "Huevos frescos (unidad)",
+      "cost": 0.6
+    },
+    {
+      "id": "chocolate_belga",
+      "name": "Chocolate belga 55-70% (kg)",
+      "cost": 65
+    },
+    {
+      "id": "mascarpone",
+      "name": "Queso Mascarpone (kg)",
+      "cost": 45
+    },
+    {
+      "id": "pistacho",
+      "name": "Pistachos (kg)",
+      "cost": 95
+    },
+    {
+      "id": "frutas_bosque",
+      "name": "Frutas del bosque frescas (kg)",
+      "cost": 22
+    },
+    {
+      "id": "crema_leche",
+      "name": "Crema de leche 35% (kg)",
+      "cost": 18
+    },
+    {
+      "id": "cerezas_marrasquino",
+      "name": "Cerezas al marrasquino (kg)",
+      "cost": 35
+    }
+  ],
+  "calculator": {
+    "sizes": {
+      "10": {
+        "hours": 3,
+        "price": 90,
+        "desc": "Torta compacta (1 piso)"
+      },
+      "20": {
+        "hours": 4.5,
+        "price": 170,
+        "desc": "Torta mediana (1 o 2 pisos)"
+      },
+      "30": {
+        "hours": 6,
+        "price": 250,
+        "desc": "Torta celebración (2 pisos)"
+      },
+      "40": {
+        "hours": 8.5,
+        "price": 340,
+        "desc": "Torta de gran evento (3 pisos)"
+      }
+    },
+    "flavors": {
+      "frutal": {
+        "factor": 1,
+        "desc": "Mantequilla 82%, limón natural, coulis de frambuesa y mascarpone fresco.",
+        "title": "Cítrico y Frutal"
+      },
+      "chocolate": {
+        "factor": 1.1,
+        "desc": "Chocolate belga 55%-70% de origen, praliné artesanal de avellanas tostadas.",
+        "title": "Chocolate Belga y Praliné"
+      },
+      "pistacho": {
+        "factor": 1.2,
+        "desc": "Pistachos seleccionados y tostados a mano en el taller, crema fresca de queso.",
+        "title": "Pistacho & Frutos Rojos"
+      }
+    },
+    "designs": {
+      "minimal": {
+        "hoursAdd": 0,
+        "priceAdd": 0,
+        "title": "Minimalista Texturada"
+      },
+      "floral": {
+        "hoursAdd": 1.5,
+        "priceAdd": 30,
+        "title": "Detalles & Flores Orgánicas"
+      },
+      "sculpture": {
+        "hoursAdd": 3,
+        "priceAdd": 70,
+        "title": "Escultórica de Autor"
+      }
+    }
+  },
+  "recipes": {
+    "10_frutal": {
+      "mantequilla": 0.2,
+      "harina": 0.3,
+      "azucar": 0.25,
+      "huevos": 4,
+      "mascarpone": 0.3,
+      "frutas_bosque": 0.25,
+      "crema_leche": 0.2
+    },
+    "10_chocolate": {
+      "mantequilla": 0.25,
+      "harina": 0.25,
+      "azucar": 0.3,
+      "huevos": 5,
+      "chocolate_belga": 0.35,
+      "crema_leche": 0.3
+    },
+    "10_pistacho": {
+      "mantequilla": 0.2,
+      "harina": 0.3,
+      "azucar": 0.25,
+      "huevos": 4,
+      "pistacho": 0.2,
+      "mascarpone": 0.2,
+      "crema_leche": 0.25
+    },
+    "20_frutal": {
+      "mantequilla": 0.4,
+      "harina": 0.6,
+      "azucar": 0.5,
+      "huevos": 8,
+      "mascarpone": 0.6,
+      "frutas_bosque": 0.5,
+      "crema_leche": 0.4
+    },
+    "20_chocolate": {
+      "mantequilla": 0.5,
+      "harina": 0.5,
+      "azucar": 0.6,
+      "huevos": 10,
+      "chocolate_belga": 0.7,
+      "crema_leche": 0.6
+    },
+    "20_pistacho": {
+      "mantequilla": 0.4,
+      "harina": 0.6,
+      "azucar": 0.5,
+      "huevos": 8,
+      "pistacho": 0.4,
+      "mascarpone": 0.4,
+      "crema_leche": 0.5
+    },
+    "30_frutal": {
+      "mantequilla": 0.6,
+      "harina": 0.9,
+      "azucar": 0.75,
+      "huevos": 12,
+      "mascarpone": 0.9,
+      "frutas_bosque": 0.75,
+      "crema_leche": 0.6
+    },
+    "30_chocolate": {
+      "mantequilla": 0.75,
+      "harina": 0.75,
+      "azucar": 0.9,
+      "huevos": 15,
+      "chocolate_belga": 1.05,
+      "crema_leche": 0.9
+    },
+    "30_pistacho": {
+      "mantequilla": 0.6,
+      "harina": 0.9,
+      "azucar": 0.75,
+      "huevos": 12,
+      "pistacho": 0.6,
+      "mascarpone": 0.6,
+      "crema_leche": 0.75
+    },
+    "40_frutal": {
+      "mantequilla": 0.8,
+      "harina": 1.2,
+      "azucar": 1,
+      "huevos": 16,
+      "mascarpone": 1.2,
+      "frutas_bosque": 1,
+      "crema_leche": 0.8
+    },
+    "40_chocolate": {
+      "mantequilla": 1,
+      "harina": 1,
+      "azucar": 1.2,
+      "huevos": 20,
+      "chocolate_belga": 1.4,
+      "crema_leche": 1.2
+    },
+    "40_pistacho": {
+      "mantequilla": 0.8,
+      "harina": 1.2,
+      "azucar": 1,
+      "huevos": 16,
+      "pistacho": 0.8,
+      "mascarpone": 0.8,
+      "crema_leche": 1
+    }
+  },
+  "calculatorLaborRate": 15,
+  "calculatorDefaultMarkup": 150
+}

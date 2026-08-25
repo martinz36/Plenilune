@@ -1,0 +1,13 @@
+{
+  "name": "plenilune-pasteleria",
+  "version": "1.0.0",
+  "description": "Landing page y panel de admin de Plenilune Pasteleria",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

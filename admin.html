@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | Plenilune Pastelería</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables - Celeste and Slate/Gold Theme matching the main website */
+        :root {
+            --color-bg-primary: #F4F7FA;
+            --color-bg-secondary: #EBF1F6;
+            --color-bg-dark: #1E2D3D;
+            --color-text-main: #253648;
+            --color-text-muted: #5F738A;
+            --color-text-light: #F4F7FA;
+            --color-accent-primary: #4A7A96;
+            --color-accent-primary-hover: #3E637A;
+            --color-accent-gold: #D2B06B;
+            --color-accent-celeste: #A7C2E4;
+            --color-accent-celeste-light: #EBF2F9;
+            --color-border: #D3DFEB;
+            --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            --border-radius-lg: 16px;
+            --border-radius-md: 8px;
+            --shadow-soft: 0 4px 20px rgba(35, 52, 70, 0.05);
+            --shadow-medium: 0 10px 30px rgba(35, 52, 70, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-main);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            line-height: 1.5;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-light);
+            padding: 16px 0;
+            border-bottom: 1.5px solid var(--color-accent-celeste);
+            margin-bottom: 40px;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--color-accent-gold);
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .admin-badge {
+            background-color: rgba(167, 194, 228, 0.2);
+            color: var(--color-accent-celeste);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            border: 1px solid var(--color-accent-celeste);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 30px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--color-accent-primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-accent-primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-text-light);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--color-text-light);
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: var(--border-radius-md);
+        }
+
+        .btn-danger {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c9302c;
+        }
+
+        /* Layout & Navigation */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 24px;
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .nav-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            border: none;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--color-bg-secondary);
+            color: var(--color-text-main);
+        }
+
+        .nav-btn.active {
+            background-color: var(--color-accent-celeste-light);
+            color: var(--color-accent-primary);
+            border-left: 3px solid var(--color-accent-primary);
+            border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+        }
+
+        /* Main Content panels */
+        .content-panel {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .content-panel.active {
+            display: block;
+        }
+
+        .panel-header {
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 16px;
+        }
+
+        .panel-title {
+            font-size: 1.8rem;
+            color: var(--color-text-main);
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .panel-desc {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Form styling */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-main);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            border: 1.5px solid var(--color-border);
+            border-radius: var(--border-radius-md);
+            font-family: inherit;
+            color: inherit;
+            background-color: var(--color-bg-primary);
+            transition: var(--transition-smooth);
+        }
+
+        .form-input:focus {
+            border-color: var(--color-accent-primary);
+            outline: none;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(167, 194, 228, 0.25);
+        }
+
+        textarea.form-input {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .form-footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+
+        /* Dynamic Inventory & Recipe Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--color-bg-secondary);
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-text-main);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 0.9rem;
+        }
+
+        tr:hover td {
+            background-color: rgba(235, 241, 246, 0.3);
+        }
+
+        /* Costing Selector Bar */
+        .calculator-selector-bar {
+            background-color: var(--color-bg-secondary);
+            padding: 20px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            border: 1px solid var(--color-border);
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            margin-top: 24px;
+        }
+
+        .calculator-summary-card {
+            background-color: var(--color-bg-secondary);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            border: 1px solid var(--color-border);
+            align-self: start;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .summary-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 10px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .summary-item.total {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .summary-item.selling-price {
+            font-size: 1.25rem;
+            color: var(--color-accent-primary);
+            font-weight: 700;
+            margin-top: 12px;
+            background-color: white;
+            padding: 10px 14px;
+            border-radius: var(--border-radius-md);
+            border: 1.5px dashed var(--color-accent-celeste);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background-color: var(--color-bg-dark);
+            color: white;
+            padding: 16px 28px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-medium);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+            z-index: 2000;
+            border: 1.5px solid var(--color-accent-gold);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 900px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Admin Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo-group">
+                <img src="assets/logo.png" alt="Logo" class="logo-img">
+                <span class="logo-text">Plenilune</span>
+                <span class="admin-badge">Admin Panel</span>
+            </div>
+            <a href="/" class="btn btn-secondary">Ir a la Web ↗</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="admin-layout">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <h3 class="nav-title">Gestión</h3>
+                <nav>
+                    <ul class="nav-list">
+                        <li><button class="nav-btn active" data-target="general">Ajustes Web</button></li>
+                        <li><button class="nav-btn" data-target="ingredients">Ingredientes</button></li>
+                        <li><button class="nav-btn" data-target="recipes">Recetas y Costos</button></li>
+                        <li><button class="nav-btn" data-target="catalog">Catálogo de Tortas</button></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="content-area">
+                
+                <!-- Panel 1: General Settings -->
+                <section class="content-panel active" id="panel-general">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Ajustes de la Web</h2>
+                        <p class="panel-desc">Modifica los textos principales y de contacto de la landing page.</p>
+                    </div>
+                    <form id="form-general">
+                        <div class="form-group">
+                            <label class="form-label" for="hero-title">Título del Encabezado (Hero)</label>
+                            <input class="form-input" type="text" id="hero-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="hero-subtitle">Subtítulo del Encabezado</label>
+                            <textarea class="form-input" id="hero-subtitle" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="contact-phone">WhatsApp de Contacto (9 dígitos, ej. 936037502)</label>
+                                <input class="form-input" type="text" id="contact-phone" placeholder="936037502" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="contact-email">Email</label>
+                                <input class="form-input" type="email" id="contact-email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="contact-location">Ubicación / Ciudad</label>
+                            <input class="form-input" type="text" id="contact-location" required>
+                        </div>
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary">Guardar Ajustes Web</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Panel 2: Ingredients Manager -->
+                <section class="content-panel" id="panel-ingredients">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Inventario de Ingredientes</h2>
+                        <p class="panel-desc">Administra tus materias primas y define sus costos por kilogramo o unidad.</p>
+                    </div>
+                    
+                    <!-- Table of current ingredients -->
+                    <table id="table-ingredients">
+                        <thead>
+                            <tr>
+                                <th>Ingrediente / Unidad de Medida</th>
+                                <th>Costo Unitario (S/)</th>
+                                <th style="width: 100px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ingredients-tbody">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+
+                    <!-- Form to add new ingredient -->
+                    <div style="background-color: var(--color-bg-primary); padding: 24px; border-radius: var(--border-radius-lg); border: 1px solid var(--color-border); margin-top: 32px;">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 16px; font-weight: bold;">+ Agregar Nuevo Ingrediente</h3>
+                        <form id="form-new-ingredient">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="ing-name">Nombre (Ej: Chocolate belga 70% (kg))</label>
+                                    <input class="form-input" type="text" id="ing-name" placeholder="Ej: Vainilla en vaina (unidad)" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="ing-cost">Costo en Soles (S/)</label>
+                                    <input class="form-input" type="number" step="0.01" id="ing-cost" placeholder="Ej: 15.50" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Agregar al Inventario</button>
+                        </form>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button type="button" id="save-ingredients-btn" class="btn btn-primary">Guardar Inventario de Ingredientes</button>
+                    </div>
+                </section>
+
+                <!-- Panel 3: Recipe & Cost Calculator -->
+                <section class="content-panel" id="panel-recipes">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Calculadora de Costos por Receta</h2>
+                        <p class="panel-desc">Define qué ingredientes componen cada tamaño y sabor de torta para calcular el costo de producción y fijar el precio.</p>
+                    </div>
+
+                    <!-- Step 1: Choose recipe to configure -->
+                    <div class="calculator-selector-bar">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label" for="recipe-size">1. Tamaño de la Torta</label>
+                            <select class="form-input" id="recipe-size">
+                                <option value="10">10 personas (Compacta)</option>
+                                <option value="20">20 personas (Mediana)</option>
+                                <option value="30">30 personas (Celebración)</option>
+                                <option value="40">40+ personas (Gran evento)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label" for="recipe-flavor">2. Perfil de Sabor</label>
+                            <select class="form-input" id="recipe-flavor">
+                                <option value="frutal">Cítrico y Frutal</option>
+                                <option value="chocolate">Chocolate Belga y Praliné</option>
+                                <option value="pistacho">Pistacho & Frutos Rojos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Configurator Grid -->
+                    <div class="calculator-grid">
+                        <!-- Ingredient quantities in recipe -->
+                        <div>
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 16px;">Ingredientes de la Receta</h3>
+                            <table id="table-recipe-ingredients">
+                                <thead>
+                                    <tr>
+                                        <th>Ingrediente</th>
+                                        <th style="width: 120px;">Cantidad</th>
+                                        <th style="width: 120px;">Costo (S/)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recipe-tbody">
+                                    <!-- Injected dynamically based on selected recipe -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Costing and Markup Card -->
+                        <div class="calculator-summary-card">
+                            <h3 class="summary-title">Resumen de Costeo</h3>
+                            
+                            <div class="summary-item">
+                                <span>Costo Ingredientes:</span>
+                                <span id="summary-ing-cost">S/ 0.00</span>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 16px; margin-bottom: 12px;">
+                                <label class="form-label" for="labor-hours" style="font-size: 0.75rem;">Horas de Trabajo Directo</label>
+                                <input class="form-input" type="number" step="0.5" id="labor-hours" value="3" style="padding: 8px 12px; font-size: 0.9rem;">
+                            </div>
+                            
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label class="form-label" for="labor-rate" style="font-size: 0.75rem;">Costo de Mano de Obra (S/ por Hora)</label>
+                                <input class="form-input" type="number" step="1.0" id="labor-rate" value="15" style="padding: 8px 12px; font-size: 0.9rem;">
+                            </div>
+
+                            <div class="summary-item">
+                                <span>Costo Mano de Obra:</span>
+                                <span id="summary-labor-cost">S/ 0.00</span>
+                            </div>
+
+                            <div class="summary-item total">
+                                <span>Costo Total de Receta:</span>
+                                <span id="summary-total-cost">S/ 0.00</span>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 16px; margin-bottom: 12px;">
+                                <label class="form-label" for="markup-percent" style="font-size: 0.75rem;">Margen / Markup (%)</label>
+                                <input class="form-input" type="number" step="10" id="markup-percent" value="150" style="padding: 8px 12px; font-size: 0.9rem;">
+                            </div>
+
+                            <div class="summary-item">
+                                <span>Precio Venta Sugerido:</span>
+                                <span id="summary-suggested-price" style="font-weight: 600;">S/ 0.00</span>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 16px; margin-bottom: 0;">
+                                <label class="form-label" for="established-price" style="font-size: 0.75rem; font-weight: bold; color: var(--color-accent-primary);">Precio de Venta Establecido (S/)</label>
+                                <input class="form-input" type="number" step="5" id="established-price" value="0" style="padding: 10px 14px; font-weight: 700; font-size: 1.1rem; border-color: var(--color-accent-celeste);">
+                            </div>
+
+                            <div class="summary-item selling-price">
+                                <span>Precio en la Web:</span>
+                                <span id="web-price-display">S/ 0.00</span>
+                            </div>
+
+                            <button type="button" id="save-recipe-btn" class="btn btn-primary btn-block" style="margin-top: 20px;">
+                                Guardar Receta y Actualizar Precio
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 4: Catalog Manager -->
+                <section class="content-panel" id="panel-catalog">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Catálogo de Productos Estrella</h2>
+                        <p class="panel-desc">Edita la descripción y los tags de las tortas e insumos que se visualizan en la galería.</p>
+                    </div>
+                    <form id="form-catalog">
+                        <div id="catalog-container">
+                            <!-- Injected dynamically -->
+                        </div>
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary">Guardar Catálogo</button>
+                        </div>
+                    </form>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="admin-toast">¡Configuración guardada con éxito! 🌙</div>
+
+    <!-- JavaScript Control logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Tab switching logic
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const panels = document.querySelectorAll('.content-panel');
+
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-target');
+                    
+                    navButtons.forEach(b => b.classList.remove('active'));
+                    panels.forEach(p => p.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    document.getElementById(`panel-${target}`).classList.add('active');
+                });
+            });
+
+            // State management
+            let state = null;
+
+            // Show toast notification helper
+            const showToast = (message) => {
+                const toast = document.getElementById('admin-toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            };
+
+            // Fetch current settings
+            const fetchConfig = async () => {
+                try {
+                    const res = await fetch('/api/config');
+                    state = await res.json();
+                    
+                    hydrateGeneralSettings();
+                    hydrateIngredientsTable();
+                    hydrateRecipeTab();
+                    hydrateCatalogSettings();
+                } catch (err) {
+                    console.error('Error fetching config:', err);
+                    showToast('Error al conectar con el servidor.');
+                }
+            };
+
+            // Post configuration changes to server
+            const saveConfig = async (successMsg = '¡Cambios guardados con éxito!') => {
+                try {
+                    const res = await fetch('/api/config', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(state)
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        showToast(successMsg);
+                    } else {
+                        showToast('Error al guardar la configuración: ' + result.error);
+                    }
+                } catch (err) {
+                    console.error('Error saving config:', err);
+                    showToast('Error de red al intentar guardar.');
+                }
+            };
+
+            // 1. General Settings Panel
+            const hydrateGeneralSettings = () => {
+                document.getElementById('hero-title').value = state.general.heroTitle;
+                document.getElementById('hero-subtitle').value = state.general.heroSubtitle;
+                document.getElementById('contact-phone').value = state.general.phone;
+                document.getElementById('contact-email').value = state.general.email;
+                document.getElementById('contact-location').value = state.general.location;
+            };
+
+            document.getElementById('form-general').addEventListener('submit', (e) => {
+                e.preventDefault();
+                state.general.heroTitle = document.getElementById('hero-title').value;
+                state.general.heroSubtitle = document.getElementById('hero-subtitle').value;
+                // clean spaces from phone if any
+                state.general.phone = document.getElementById('contact-phone').value.replace(/\s+/g, '');
+                state.general.email = document.getElementById('contact-email').value;
+                state.general.location = document.getElementById('contact-location').value;
+                
+                saveConfig('Ajustes generales actualizados con éxito.');
+            });
+
+            // 2. Ingredients Inventory Panel
+            const hydrateIngredientsTable = () => {
+                const tbody = document.getElementById('ingredients-tbody');
+                tbody.innerHTML = '';
+
+                state.ingredients.forEach((ing, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${ing.name}</strong></td>
+                        <td>
+                            <input type="number" step="0.01" class="form-input ing-cost-input" style="width: 120px; padding: 6px 12px;" value="${ing.cost}" data-index="${index}">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="btn btn-action btn-danger delete-ing-btn" data-index="${index}">Eliminar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // Set up event listeners for inputs
+                document.querySelectorAll('.ing-cost-input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        const newCost = parseFloat(e.target.value);
+                        if (!isNaN(newCost) && newCost >= 0) {
+                            state.ingredients[index].cost = newCost;
+                        }
+                    });
+                });
+
+                // Set up delete buttons
+                document.querySelectorAll('.delete-ing-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        const ing = state.ingredients[index];
+                        if (confirm(`¿Estás seguro de eliminar "${ing.name}"? Se quitará de todas las recetas.`)) {
+                            // Delete from ingredients
+                            state.ingredients.splice(index, 1);
+                            
+                            // Delete from all recipes
+                            Object.keys(state.recipes).forEach(key => {
+                                delete state.recipes[key][ing.id];
+                            });
+
+                            hydrateIngredientsTable();
+                            hydrateRecipeTab(); // Refresh recipes too
+                        }
+                    });
+                });
+            };
+
+            // Add new ingredient
+            document.getElementById('form-new-ingredient').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('ing-name').value;
+                const cost = parseFloat(document.getElementById('ing-cost').value);
+                
+                // Create unique ID
+                const id = name.toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '_')
+                    .replace(/(^_+|+$)/g, '');
+
+                if (state.ingredients.some(ing => ing.id === id)) {
+                    showToast('Ya existe un ingrediente con ese nombre o ID.');
+                    return;
+                }
+
+                state.ingredients.push({ id, name, cost });
+                
+                // Reset inputs
+                document.getElementById('ing-name').value = '';
+                document.getElementById('ing-cost').value = '';
+                
+                hydrateIngredientsTable();
+                hydrateRecipeTab();
+                showToast('Ingrediente agregado al inventario.');
+            });
+
+            // Save ingredients
+            document.getElementById('save-ingredients-btn').addEventListener('click', () => {
+                saveConfig('Inventario de ingredientes actualizado.');
+            });
+
+
+            // 3. Recipes & Cost Calculator Panel
+            const sizeSelector = document.getElementById('recipe-size');
+            const flavorSelector = document.getElementById('recipe-flavor');
+            const laborHoursInput = document.getElementById('labor-hours');
+            const laborRateInput = document.getElementById('labor-rate');
+            const markupInput = document.getElementById('markup-percent');
+            const establishedPriceInput = document.getElementById('established-price');
+
+            // Trigger updates on dropdown change
+            sizeSelector.addEventListener('change', () => hydrateRecipeTab());
+            flavorSelector.addEventListener('change', () => hydrateRecipeTab());
+
+            // Recalculate cost dynamically on quantity/labor/markup change
+            laborHoursInput.addEventListener('input', () => calculateCost());
+            laborRateInput.addEventListener('input', () => calculateCost());
+            markupInput.addEventListener('input', () => calculateCost());
+            establishedPriceInput.addEventListener('input', () => {
+                document.getElementById('web-price-display').textContent = `S/ ${parseFloat(establishedPriceInput.value || 0).toFixed(0)}`;
+            });
+
+            const hydrateRecipeTab = () => {
+                const size = sizeSelector.value;
+                const flavor = flavorSelector.value;
+                const recipeKey = `${size}_${flavor}`;
+                
+                // Initialize recipe if not exists
+                if (!state.recipes[recipeKey]) {
+                    state.recipes[recipeKey] = {};
+                }
+                
+                const recipeData = state.recipes[recipeKey];
+
+                // Load global rate/markup values
+                laborRateInput.value = state.calculatorLaborRate || 15;
+                markupInput.value = state.calculatorDefaultMarkup || 150;
+
+                // Load direct hours from calculator configuration
+                const hours = state.calculator.sizes[size].hours || 3;
+                laborHoursInput.value = hours;
+
+                const tbody = document.getElementById('recipe-tbody');
+                tbody.innerHTML = '';
+
+                // Loop through all inventory ingredients to configure their quantity in this recipe
+                state.ingredients.forEach(ing => {
+                    const quantity = recipeData[ing.id] !== undefined ? recipeData[ing.id] : 0;
+                    const totalCost = quantity * ing.cost;
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${ing.name}</strong><br><small style="color: var(--color-text-muted);">Costo unitario: S/ ${ing.cost.toFixed(2)}</small></td>
+                        <td>
+                            <input type="number" step="0.01" class="form-input recipe-qty-input" style="width: 100px; padding: 6px 12px;" value="${quantity}" data-ing-id="${ing.id}">
+                        </td>
+                        <td><span class="recipe-ing-cost" data-ing-id="${ing.id}">S/ ${totalCost.toFixed(2)}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // Attach event listener to recipe quantity inputs
+                document.querySelectorAll('.recipe-qty-input').forEach(input => {
+                    input.addEventListener('input', (e) => {
+                        const ingId = e.target.getAttribute('data-ing-id');
+                        const qty = parseFloat(e.target.value || 0);
+                        
+                        recipeData[ingId] = qty;
+                        
+                        // Update cost line
+                        const ing = state.ingredients.find(i => i.id === ingId);
+                        const costSpan = document.querySelector(`.recipe-ing-cost[data-ing-id="${ingId}"]`);
+                        costSpan.textContent = `S/ ${(qty * ing.cost).toFixed(2)}`;
+                        
+                        calculateCost();
+                    });
+                });
+
+                // Load current price from landing page calculator settings
+                // In app.js, the price is computed: Base Size Price * Flavor Factor
+                // So the Base Size Price is what we store. Let's load the current set base price.
+                const currentBasePrice = state.calculator.sizes[size].price || 90;
+                const flavorFactor = state.calculator.flavors[flavor].factor || 1.0;
+                const currentCalculatedPrice = Math.round(currentBasePrice * flavorFactor);
+                
+                establishedPriceInput.value = currentCalculatedPrice;
+                document.getElementById('web-price-display').textContent = `S/ ${currentCalculatedPrice}`;
+
+                calculateCost();
+            };
+
+            const calculateCost = () => {
+                const size = sizeSelector.value;
+                const flavor = flavorSelector.value;
+                const recipeKey = `${size}_${flavor}`;
+                const recipeData = state.recipes[recipeKey] || {};
+
+                // 1. Ingredients Cost Sum
+                let ingredientsCost = 0;
+                state.ingredients.forEach(ing => {
+                    const qty = recipeData[ing.id] || 0;
+                    ingredientsCost += qty * ing.cost;
+                });
+
+                // 2. Labor Cost
+                const laborHours = parseFloat(laborHoursInput.value || 0);
+                const laborRate = parseFloat(laborRateInput.value || 0);
+                const laborCost = laborHours * laborRate;
+
+                // 3. Totals
+                const totalCost = ingredientsCost + laborCost;
+                
+                // 4. Markup suggested price
+                const markupPercent = parseFloat(markupInput.value || 0);
+                const suggestedPrice = totalCost * (1 + markupPercent / 100);
+
+                // Update text outputs
+                document.getElementById('summary-ing-cost').textContent = `S/ ${ingredientsCost.toFixed(2)}`;
+                document.getElementById('summary-labor-cost').textContent = `S/ ${laborCost.toFixed(2)}`;
+                document.getElementById('summary-total-cost').textContent = `S/ ${totalCost.toFixed(2)}`;
+                document.getElementById('summary-suggested-price').textContent = `S/ ${suggestedPrice.toFixed(2)}`;
+
+                // Pre-fill established price if it is 0 or suggested has changed
+                // (Optional: let user keep manual override)
+            };
+
+            // Save recipe details and base prices
+            document.getElementById('save-recipe-btn').addEventListener('click', () => {
+                const size = sizeSelector.value;
+                const flavor = flavorSelector.value;
+                const recipeKey = `${size}_${flavor}`;
+                const finalPrice = parseFloat(establishedPriceInput.value || 0);
+
+                // Save global cost configurations
+                state.calculatorLaborRate = parseFloat(laborRateInput.value || 15);
+                state.calculatorDefaultMarkup = parseFloat(markupInput.value || 150);
+
+                // Update calculator configuration hours and prices
+                state.calculator.sizes[size].hours = parseFloat(laborHoursInput.value || 3.0);
+                
+                // In landing page, cost is calculated as BasePrice * FlavorFactor
+                // Therefore, if user establishes S/ 180 for "chocolate" (factor 1.1)
+                // We should store: BasePrice = establishedPrice / FlavorFactor
+                const factor = state.calculator.flavors[flavor].factor || 1.0;
+                const basePrice = Math.round(finalPrice / factor);
+                
+                state.calculator.sizes[size].price = basePrice;
+
+                saveConfig(`Receta y precio para ${sizeSelector.options[sizeSelector.selectedIndex].text} - ${flavorSelector.options[flavorSelector.selectedIndex].text} actualizados con éxito.`);
+            });
+
+
+            // 4. Products Catalog settings
+            const hydrateCatalogSettings = () => {
+                const container = document.getElementById('catalog-container');
+                container.innerHTML = '';
+
+                state.catalog.forEach((item, index) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.backgroundColor = 'var(--color-bg-primary)';
+                    wrapper.style.padding = '24px';
+                    wrapper.style.borderRadius = 'var(--border-radius-lg)';
+                    wrapper.style.border = '1px solid var(--color-border)';
+                    wrapper.style.marginBottom = '20px';
+                    
+                    wrapper.innerHTML = `
+                        <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 16px; border-bottom: 1.5px solid var(--color-accent-celeste); padding-bottom: 6px;">Torta #${index + 1}: ${item.title}</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Nombre del Producto</label>
+                                <input class="form-input catalog-title-input" type="text" value="${item.title}" data-index="${index}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Etiqueta / Tag</label>
+                                <input class="form-input catalog-tag-input" type="text" value="${item.tag}" data-index="${index}">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Descripción Sensorial (Ingredientes, texturas, etc)</label>
+                            <textarea class="form-input catalog-desc-input" data-index="${index}">${item.desc}</textarea>
+                        </div>
+                    `;
+                    container.appendChild(wrapper);
+                });
+
+                // Attach listeners
+                document.querySelectorAll('.catalog-title-input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        state.catalog[index].title = e.target.value;
+                    });
+                });
+                document.querySelectorAll('.catalog-tag-input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        state.catalog[index].tag = e.target.value;
+                    });
+                });
+                document.querySelectorAll('.catalog-desc-input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        state.catalog[index].desc = e.target.value;
+                    });
+                });
+            };
+
+            document.getElementById('form-catalog').addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveConfig('Catálogo de tortas actualizado.');
+            });
+
+            // Initial load
+            fetchConfig();
+        });
+    </script>
+</body>
+</html>
