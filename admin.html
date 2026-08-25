@@ -803,7 +803,7 @@
                 // Create unique ID
                 const id = name.toLowerCase()
                     .replace(/[^a-z0-9]+/g, '_')
-                    .replace(/(^_+|+$)/g, '');
+                    .replace(/^_+|_+$/g, '');
 
                 if (state.ingredients.some(ing => ing.id === id)) {
                     showToast('Ya existe un ingrediente con ese nombre o ID.');
