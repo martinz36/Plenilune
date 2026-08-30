@@ -47,7 +47,84 @@ document.addEventListener('DOMContentLoaded', () => {
      });
  
      /* ==========================================================================
-        3. INTERACTIVE VALUE CALCULATOR STATE & REGULAR SETUP
+        3. MAP INTERACTIVE ADDRESS PICKER (Leaflet & OpenStreetMap)
+        ========================================================================== */
+     let deliveryMap = null;
+     let deliveryMarker = null;
+     let deliveryCoords = { lat: -12.046374, lng: -77.042793 }; // Lima, Peru default
+ 
+     const initMap = () => {
+         const mapDiv = document.getElementById('delivery-map');
+         if (!mapDiv) return;
+ 
+         // Initialize Map
+         deliveryMap = L.map('delivery-map').setView([deliveryCoords.lat, deliveryCoords.lng], 13);
+ 
+         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+             attribution: '© OpenStreetMap contributors'
+         }).addTo(deliveryMap);
+ 
+         // Initial draggable Marker
+         deliveryMarker = L.marker([deliveryCoords.lat, deliveryCoords.lng], {
+             draggable: true
+         }).addTo(deliveryMap);
+ 
+         // Save coords on dragend
+         deliveryMarker.on('dragend', () => {
+             const pos = deliveryMarker.getLatLng();
+             deliveryCoords = { lat: pos.lat, lng: pos.lng };
+         });
+ 
+         // Move marker on map click
+         deliveryMap.on('click', (e) => {
+             const pos = e.latlng;
+             deliveryCoords = { lat: pos.lat, lng: pos.lng };
+             deliveryMarker.setLatLng(pos);
+         });
+     };
+ 
+     // GPS Location Finder Button
+     const gpsBtn = document.getElementById('btn-gps-location');
+     if (gpsBtn) {
+         gpsBtn.addEventListener('click', () => {
+             if (navigator.geolocation) {
+                 gpsBtn.textContent = 'Obteniendo...';
+                 navigator.geolocation.getCurrentPosition((pos) => {
+                     gpsBtn.textContent = '📍 GPS';
+                     const lat = pos.coords.latitude;
+                     const lng = pos.coords.longitude;
+                     deliveryCoords = { lat, lng };
+                     if (deliveryMap) {
+                         deliveryMap.setView([lat, lng], 16);
+                         deliveryMarker.setLatLng([lat, lng]);
+                     }
+                 }, (err) => {
+                     gpsBtn.textContent = '📍 GPS';
+                     alert('No pudimos acceder a tu GPS. Por favor ubica tu dirección manualmente en el mapa.');
+                 }, { enableHighAccuracy: true });
+             } else {
+                 alert('Tu navegador no soporta geolocalización.');
+             }
+         });
+     }
+ 
+     // Date picker setting (Min 3 days in future)
+     const dateInput = document.getElementById('client-event-date');
+     if (dateInput) {
+         const today = new Date();
+         today.setDate(today.getDate() + 3);
+         const yyyy = today.getFullYear();
+         const mm = String(today.getMonth() + 1).padStart(2, '0');
+         const dd = String(today.getDate()).padStart(2, '0');
+         dateInput.min = `${yyyy}-${mm}-${dd}`;
+         dateInput.value = `${yyyy}-${mm}-${dd}`;
+     }
+ 
+     // Initialize the map on load
+     initMap();
+ 
+     /* ==========================================================================
+        4. INTERACTIVE VALUE CALCULATOR STATE & REGULAR SETUP
         ========================================================================== */
      const hoursDisplay = document.getElementById('calc-hours-display');
      const ingredientsDisplay = document.getElementById('calc-ingredients-display');
@@ -125,6 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
          const name = clientNameInput.value.trim();
          const email = clientEmailInput.value.trim();
          const whatsapp = clientWhatsappInput.value.trim();
+         const dateVal = dateInput ? dateInput.value : '';
+         const addressVal = document.getElementById('client-address').value.trim();
  
          if (!name) {
              alert('Por favor, ingresa tu Nombre y Apellido.');
@@ -142,6 +221,18 @@ document.addEventListener('DOMContentLoaded', () => {
          if (!whatsapp || whatsapp.length < 9) {
              alert('Por favor, ingresa un número de WhatsApp válido (mínimo 9 dígitos).');
              clientWhatsappInput.focus();
+             return;
+         }
+ 
+         if (!dateVal) {
+             alert('Por favor, selecciona la fecha del evento.');
+             if (dateInput) dateInput.focus();
+             return;
+         }
+ 
+         if (!addressVal) {
+             alert('Por favor, ingresa tu dirección de entrega.');
+             document.getElementById('client-address').focus();
              return;
          }
  
@@ -172,6 +263,15 @@ document.addEventListener('DOMContentLoaded', () => {
          const name = clientNameInput.value.trim();
          const email = clientEmailInput.value.trim();
          const whatsapp = clientWhatsappInput.value.trim();
+         const dateVal = dateInput ? dateInput.value : '';
+         const addressVal = document.getElementById('client-address').value.trim();
+         const mapsLink = `https://www.google.com/maps?q=${deliveryCoords.lat},${deliveryCoords.lng}`;
+ 
+         let formattedDate = dateVal;
+         if (dateVal.includes('-')) {
+             const parts = dateVal.split('-');
+             formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+         }
  
          let designPart = `• *Estilo de diseño:* ${selectedDesign.text}`;
          if (selectedDesign.value === 'custom') {
@@ -190,10 +290,13 @@ document.addEventListener('DOMContentLoaded', () => {
          // Build clear, informative WhatsApp copywriting
          const messageText = `¡Hola Plenilune Pastelería! \u{1F319} Vengo desde su página web y me gustaría cotizar una torta artesanal personalizada:
  
- \u{1F464} *Datos de Contacto:*
+ \u{1F464} *Datos de Contacto y Entrega:*
  • *Cliente:* ${name}
  • *Email:* ${email}
  • *WhatsApp:* ${whatsapp}
+ • *Fecha de Entrega:* ${formattedDate}
+ • *Dirección de Entrega:* ${addressVal}
+ • *Ubicación GPS (Google Maps):* ${mapsLink}
  
  \u{2728} *Detalles seleccionados:*
  • *Porciones:* ${selectedSize.text}
@@ -214,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
      });
  
      /* ==========================================================================
-        4. CAROUSEL ENGINE LOGIC
+        5. CAROUSEL ENGINE LOGIC
         ========================================================================== */
      let currentSlide = 0;
  
@@ -252,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
      };
  
      /* ==========================================================================
-        5. FETCH CONFIG & HYDRATION
+        6. FETCH CONFIG & HYDRATION
         ========================================================================== */
      const loadSettings = async () => {
          try {
@@ -682,6 +785,11 @@ document.addEventListener('DOMContentLoaded', () => {
  
              updateCalculator();
  
+             // Trigger map resize fix once hydrations are done and container is ready
+             setTimeout(() => {
+                 if (deliveryMap) deliveryMap.invalidateSize();
+             }, 300);
+ 
          } catch (err) {
              console.warn('Failed to load settings from API, using default fallbacks:', err);
              updateCalculator();
@@ -758,7 +866,7 @@ document.addEventListener('DOMContentLoaded', () => {
      loadSettings();
  
      /* ==========================================================================
-        6. SCROLL ENTRANCE ANIMATIONS (INTERSECTION OBSERVER)
+        7. SCROLL ENTRANCE ANIMATIONS (INTERSECTION OBSERVER)
         ========================================================================== */
      const animatedElements = document.querySelectorAll(
           '.hero-content, .hero-image-container, .comparison-card, .process-step, .testimonial-card, .calculator-info, .calculator-card'

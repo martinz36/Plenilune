@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
+    <!-- Leaflet.js Map CDNs -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -316,8 +319,23 @@
                                 <label class="form-label" for="client-whatsapp">WhatsApp / Celular *</label>
                                 <input type="tel" id="client-whatsapp" class="calc-input" placeholder="Ej: 936037502" required>
                             </div>
+
+                            <div class="form-input-group">
+                                <label class="form-label" for="client-event-date">Fecha del evento / entrega *</label>
+                                <input type="date" id="client-event-date" class="calc-input" required>
+                            </div>
+
+                            <div class="form-input-group">
+                                <label class="form-label" for="client-address">Dirección de entrega *</label>
+                                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                                    <input type="text" id="client-address" class="calc-input" placeholder="Av. Larco 123, Miraflores, Dpto 402" required style="flex-grow: 1;">
+                                    <button type="button" id="btn-gps-location" class="btn btn-primary" style="padding: 0 16px; border-radius: var(--border-radius-md); font-size: 0.8rem; white-space: nowrap;">📍 GPS</button>
+                                </div>
+                                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 8px;">Mueve el marcador en el mapa para ubicar el lugar exacto de tu entrega:</p>
+                                <div id="delivery-map" style="width: 100%; height: 220px; border-radius: var(--border-radius-md); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft); z-index: 1;"></div>
+                            </div>
                             
-                            <button type="button" id="btn-next-step" class="btn btn-primary btn-block" style="margin-top: 16px;">
+                            <button type="button" id="btn-next-step" class="btn btn-primary btn-block" style="margin-top: 24px;">
                                 Continuar a personalizar mi pastel &rarr;
                             </button>
                         </div>
