@@ -113,28 +113,55 @@
   ],
   "calculator": {
     "sizes": {
+      "2": {
+        "hours": 1.5,
+        "price": 45,
+        "desc": "2 personas – 10cm diámetro"
+      },
+      "4": {
+        "hours": 2,
+        "price": 60,
+        "desc": "4 personas – 12cm diámetro"
+      },
       "10": {
         "hours": 3,
         "price": 90,
-        "desc": "Torta compacta (1 piso)"
+        "desc": "10 personas – 16cm diámetro"
       },
       "20": {
         "hours": 4.5,
         "price": 170,
-        "desc": "Torta mediana (1 o 2 pisos)"
+        "desc": "20 personas – 24cm diámetro"
       },
       "30": {
         "hours": 6,
         "price": 250,
-        "desc": "Torta celebración (2 pisos)"
+        "desc": "30 personas – 1 piso de 24cm 1 piso de 16cm"
       },
       "40": {
         "hours": 8.5,
         "price": 340,
-        "desc": "Torta de gran evento (3 pisos)"
+        "desc": "40 personas – 1 piso de 24, 1 piso de 16cm 1 piso de 10cm"
       }
     },
-    "flavors": {
+    "biscuits": {
+      "vainilla": {
+        "factor": 1,
+        "desc": "Bizcocho aromático de vainilla de Madagascar",
+        "title": "Vainilla Clásica"
+      },
+      "chocolate": {
+        "factor": 1.05,
+        "desc": "Bizcocho húmedo de cacao belga de origen",
+        "title": "Cacao Húmedo"
+      },
+      "red_velvet": {
+        "factor": 1.1,
+        "desc": "Bizcocho suave y aterciopelado de cacao y vainilla",
+        "title": "Red Velvet"
+      }
+    },
+    "fillings": {
       "frutal": {
         "factor": 1,
         "desc": "Mantequilla 82%, limón natural, coulis de frambuesa y mascarpone fresco.",
@@ -155,17 +182,30 @@
       "minimal": {
         "hoursAdd": 0,
         "priceAdd": 0,
-        "title": "Minimalista Texturada"
+        "title": "Minimalista Texturada",
+        "image": "assets/ig_3.jpg",
+        "desc": "Texturizado sutil con espátula, elegante y minimalista."
       },
       "floral": {
         "hoursAdd": 1.5,
         "priceAdd": 30,
-        "title": "Detalles & Flores Orgánicas"
+        "title": "Detalles & Flores Orgánicas",
+        "image": "assets/ig_14.jpg",
+        "desc": "Decorada con flores orgánicas frescas/secas y detalles de pan de oro 24k."
       },
       "sculpture": {
         "hoursAdd": 3,
         "priceAdd": 70,
-        "title": "Escultórica de Autor"
+        "title": "Escultórica de Autor",
+        "image": "assets/ig_7.jpg",
+        "desc": "Modelado escultórico a mano, detalles tridimensionales y altura de autor."
+      },
+      "custom": {
+        "hoursAdd": 0,
+        "priceAdd": 0,
+        "title": "Diseño Personalizado",
+        "image": "",
+        "desc": "Sube hasta 2 fotos de referencia y detalla tu diseño personalizado."
       }
     }
   },

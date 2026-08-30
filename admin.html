@@ -440,6 +440,7 @@
                         <li><button class="nav-btn active" data-target="general">Ajustes Web</button></li>
                         <li><button class="nav-btn" data-target="cloudinary">Credenciales API</button></li>
                         <li><button class="nav-btn" data-target="sections">Textos Secciones</button></li>
+                        <li><button class="nav-btn" data-target="calc-settings">Ajustes Cotizador</button></li>
                         <li><button class="nav-btn" data-target="ingredients">Ingredientes</button></li>
                         <li><button class="nav-btn" data-target="recipes">Recetas y Costos</button></li>
                         <li><button class="nav-btn" data-target="gallery">Galería Carrusel</button></li>
@@ -694,6 +695,145 @@
                     </form>
                 </section>
 
+                <!-- Panel: Calculator Settings -->
+                <section class="content-panel" id="panel-calc-settings">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Variables del Cotizador</h2>
+                        <p class="panel-desc">Modifica los tamaños de porciones, bizcochos, rellenos y estilos de decoración disponibles en tu calculadora interactiva.</p>
+                    </div>
+
+                    <!-- Tabs inside Calculator Settings -->
+                    <div style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1.5px solid var(--color-border); padding-bottom: 12px; overflow-x: auto;">
+                        <button type="button" class="btn btn-action calc-tab-btn active" data-calc-target="calc-sizes">Porciones (Tamaños)</button>
+                        <button type="button" class="btn btn-action calc-tab-btn" data-calc-target="calc-biscuits">Bizcochos (Sabores)</button>
+                        <button type="button" class="btn btn-action calc-tab-btn" data-calc-target="calc-fillings">Rellenos (Sabores)</button>
+                        <button type="button" class="btn btn-action calc-tab-btn" data-calc-target="calc-designs">Estilos & Decoraciones</button>
+                    </div>
+
+                    <form id="form-calc-settings">
+                        <!-- Subpanel: Sizes -->
+                        <div class="calc-subpanel active" id="calc-sizes">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 16px;">Configuración de Porciones (Diámetro y Precios Base)</h3>
+                            <div id="calc-sizes-list" style="display: flex; flex-direction: column; gap: 16px;">
+                                <!-- Injected dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Subpanel: Biscuits -->
+                        <div class="calc-subpanel" id="calc-biscuits" style="display: none;">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 16px;">Sabores de Bizcocho</h3>
+                            <div id="calc-biscuits-list" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
+                                <!-- Injected dynamically -->
+                            </div>
+                            <!-- Add new biscuit -->
+                            <div style="background-color: var(--color-bg-primary); padding: 20px; border-radius: var(--border-radius-md); border: 1px solid var(--color-border);">
+                                <h4 style="font-size: 0.9rem; font-weight: bold; margin-bottom: 12px;">+ Agregar Sabor de Bizcocho</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">ID único (ej: red_velvet)</label>
+                                        <input class="form-input" type="text" id="new-bisc-id" placeholder="red_velvet">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Título Comercial (ej: Red Velvet)</label>
+                                        <input class="form-input" type="text" id="new-bisc-title" placeholder="Red Velvet">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Multiplicador de Costo / Factor (ej: 1.10)</label>
+                                        <input class="form-input" type="number" step="0.01" id="new-bisc-factor" placeholder="1.0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Descripción Corta</label>
+                                        <input class="form-input" type="text" id="new-bisc-desc" placeholder="Bizcocho aterciopelado...">
+                                    </div>
+                                </div>
+                                <button type="button" id="btn-add-bisc" class="btn btn-primary btn-action">Agregar Bizcocho</button>
+                            </div>
+                        </div>
+
+                        <!-- Subpanel: Fillings -->
+                        <div class="calc-subpanel" id="calc-fillings" style="display: none;">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 16px;">Sabores de Relleno</h3>
+                            <div id="calc-fillings-list" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
+                                <!-- Injected dynamically -->
+                            </div>
+                            <!-- Add new filling -->
+                            <div style="background-color: var(--color-bg-primary); padding: 20px; border-radius: var(--border-radius-md); border: 1px solid var(--color-border);">
+                                <h4 style="font-size: 0.9rem; font-weight: bold; margin-bottom: 12px;">+ Agregar Sabor de Relleno</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">ID único (ej: pistacho)</label>
+                                        <input class="form-input" type="text" id="new-fill-id" placeholder="pistacho">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Título Comercial (ej: Pistacho & Frutos Rojos)</label>
+                                        <input class="form-input" type="text" id="new-fill-title" placeholder="Pistacho & Frutos Rojos">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Multiplicador de Costo / Factor (ej: 1.20)</label>
+                                        <input class="form-input" type="number" step="0.01" id="new-fill-factor" placeholder="1.0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Descripción Corta</label>
+                                        <input class="form-input" type="text" id="new-fill-desc" placeholder="Pistachos seleccionados...">
+                                    </div>
+                                </div>
+                                <button type="button" id="btn-add-fill" class="btn btn-primary btn-action">Agregar Relleno</button>
+                            </div>
+                        </div>
+
+                        <!-- Subpanel: Designs -->
+                        <div class="calc-subpanel" id="calc-designs" style="display: none;">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 16px;">Estilos y Decoraciones</h3>
+                            <div id="calc-designs-list" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
+                                <!-- Injected dynamically -->
+                            </div>
+                            <!-- Add new design style -->
+                            <div style="background-color: var(--color-bg-primary); padding: 20px; border-radius: var(--border-radius-md); border: 1px solid var(--color-border);">
+                                <h4 style="font-size: 0.9rem; font-weight: bold; margin-bottom: 12px;">+ Agregar Estilo de Decoración</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">ID único (ej: floral)</label>
+                                        <input class="form-input" type="text" id="new-des-id" placeholder="floral">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Título Comercial (ej: Detalles & Flores)</label>
+                                        <input class="form-input" type="text" id="new-des-title" placeholder="Detalles & Flores Orgánicas">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Horas Adicionales</label>
+                                        <input class="form-input" type="number" step="0.5" id="new-des-hours" placeholder="1.5">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Precio Adicional (S/)</label>
+                                        <input class="form-input" type="number" step="5" id="new-des-price" placeholder="30">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">URL Imagen de Ejemplo</label>
+                                        <input class="form-input" type="text" id="new-des-image" placeholder="URL de la imagen o deja vacío">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" style="font-size: 0.75rem;">Descripción Corta</label>
+                                        <input class="form-input" type="text" id="new-des-desc" placeholder="Decorada con flores orgánicas...">
+                                    </div>
+                                </div>
+                                <button type="button" id="btn-add-des" class="btn btn-primary btn-action">Agregar Estilo</button>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary">Guardar Ajustes del Cotizador</button>
+                        </div>
+                    </form>
+                </section>
+
                 <!-- Panel 4: Ingredients Manager -->
                 <section class="content-panel" id="panel-ingredients">
                     <div class="panel-header">
@@ -740,25 +880,20 @@
                 <section class="content-panel" id="panel-recipes">
                     <div class="panel-header">
                         <h2 class="panel-title">Calculadora de Costos por Receta</h2>
-                        <p class="panel-desc">Define qué ingredientes componen cada tamaño y sabor de torta para calcular el costo de producción y fijar el precio.</p>
+                        <p class="panel-desc">Define qué ingredientes componen cada tamaño y sabor de relleno para calcular el costo de producción y fijar el precio.</p>
                     </div>
 
                     <div class="calculator-selector-bar">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label class="form-label" for="recipe-size">1. Tamaño de la Torta</label>
                             <select class="form-input" id="recipe-size">
-                                <option value="10">10 personas (Compacta)</option>
-                                <option value="20">20 personas (Mediana)</option>
-                                <option value="30">30 personas (Celebración)</option>
-                                <option value="40">40+ personas (Gran evento)</option>
+                                <!-- Inyectado dinámicamente -->
                             </select>
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label class="form-label" for="recipe-flavor">2. Perfil de Sabor</label>
+                            <label class="form-label" for="recipe-flavor">2. Perfil de Relleno</label>
                             <select class="form-input" id="recipe-flavor">
-                                <option value="frutal">Cítrico y Frutal</option>
-                                <option value="chocolate">Chocolate Belga y Praliné</option>
-                                <option value="pistacho">Pistacho & Frutos Rojos</option>
+                                <!-- Inyectado dinámicamente -->
                             </select>
                         </div>
                     </div>
@@ -919,6 +1054,20 @@
                 });
             });
 
+            // Subpanels inside Calculator Settings
+            const calcTabButtons = document.querySelectorAll('.calc-tab-btn');
+            const calcSubpanels = document.querySelectorAll('.calc-subpanel');
+
+            calcTabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-calc-target');
+                    calcTabButtons.forEach(b => b.classList.remove('active'));
+                    calcSubpanels.forEach(p => p.style.display = 'none');
+                    btn.classList.add('active');
+                    document.getElementById(target).style.display = 'block';
+                });
+            });
+
             // State management
             let state = null;
 
@@ -941,6 +1090,7 @@
                     hydrateGeneralSettings();
                     hydrateCloudinarySettings();
                     hydrateCMSSectionsSettings();
+                    hydrateCalculatorSettings();
                     hydrateIngredientsTable();
                     hydrateRecipeTab();
                     hydrateGalleryTab();
@@ -1153,7 +1303,6 @@
                         stepsListContainer.appendChild(stepItem);
                     });
 
-                    // Inputs listeners for steps
                     document.querySelectorAll('.cms-step-title-input').forEach(input => {
                         input.addEventListener('change', (e) => {
                             const idx = parseInt(e.target.getAttribute('data-index'));
@@ -1311,7 +1460,363 @@
                 saveConfig('Textos de las secciones actualizados con éxito.');
             });
 
-            // 4. Ingredients Inventory Panel
+            // 4. Calculator Variables Panel
+            const hydrateCalculatorSettings = () => {
+                const calc = state.calculator;
+
+                // 1. Sizes List
+                const sizesList = document.getElementById('calc-sizes-list');
+                sizesList.innerHTML = '';
+                Object.keys(calc.sizes).forEach(key => {
+                    const size = calc.sizes[key];
+                    const item = document.createElement('div');
+                    item.style.border = '1px solid var(--color-border)';
+                    item.style.borderRadius = 'var(--border-radius-md)';
+                    item.style.padding = '16px';
+                    item.style.backgroundColor = 'var(--color-bg-primary)';
+                    
+                    item.innerHTML = `
+                        <div style="font-weight: bold; font-size: 0.95rem; margin-bottom: 12px; color: var(--color-accent-primary);">Tamaño: ${key} personas</div>
+                        <div class="form-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Descripción de Medida (Diámetros/Pisos)</label>
+                                <input class="form-input calc-size-desc-input" type="text" value="${size.desc}" data-key="${key}">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Horas de Trabajo Base</label>
+                                <input class="form-input calc-size-hours-input" type="number" step="0.5" value="${size.hours}" data-key="${key}">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Precio Base (S/)</label>
+                                <input class="form-input calc-size-price-input" type="number" step="5" value="${size.price}" data-key="${key}">
+                            </div>
+                        </div>
+                    `;
+                    sizesList.appendChild(item);
+                });
+
+                hydrateCalcBiscuitsList();
+                hydrateCalcFillingsList();
+                hydrateCalcDesignsList();
+            };
+
+            const hydrateCalcBiscuitsList = () => {
+                const container = document.getElementById('calc-biscuits-list');
+                container.innerHTML = '';
+                const biscuits = state.calculator.biscuits;
+
+                Object.keys(biscuits).forEach(key => {
+                    const bisc = biscuits[key];
+                    const item = document.createElement('div');
+                    item.style.border = '1px solid var(--color-border)';
+                    item.style.borderRadius = 'var(--border-radius-md)';
+                    item.style.padding = '16px';
+                    item.style.backgroundColor = 'var(--color-bg-primary)';
+                    
+                    item.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <strong style="color: var(--color-accent-primary); font-size: 0.9rem;">ID: ${key}</strong>
+                            <button type="button" class="btn btn-action btn-danger delete-calc-bisc-btn" data-key="${key}" style="padding: 4px 10px; font-size: 0.75rem;">Eliminar</button>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Título</label>
+                                <input class="form-input calc-bisc-title-input" type="text" value="${bisc.title}" data-key="${key}">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Multiplicador (Factor)</label>
+                                <input class="form-input calc-bisc-factor-input" type="number" step="0.01" value="${bisc.factor}" data-key="${key}">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 12px; margin-bottom: 0;">
+                            <label class="form-label" style="font-size: 0.75rem;">Descripción</label>
+                            <input class="form-input calc-bisc-desc-input" type="text" value="${bisc.desc}" data-key="${key}">
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+
+                document.querySelectorAll('.delete-calc-bisc-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const key = btn.getAttribute('data-key');
+                        if (confirm(`¿Estás seguro de eliminar el bizcocho "${key}"?`)) {
+                            delete state.calculator.biscuits[key];
+                            hydrateCalcBiscuitsList();
+                        }
+                    });
+                });
+            };
+
+            const hydrateCalcFillingsList = () => {
+                const container = document.getElementById('calc-fillings-list');
+                container.innerHTML = '';
+                const fillings = state.calculator.fillings;
+
+                Object.keys(fillings).forEach(key => {
+                    const fill = fillings[key];
+                    const item = document.createElement('div');
+                    item.style.border = '1px solid var(--color-border)';
+                    item.style.borderRadius = 'var(--border-radius-md)';
+                    item.style.padding = '16px';
+                    item.style.backgroundColor = 'var(--color-bg-primary)';
+                    
+                    item.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <strong style="color: var(--color-accent-primary); font-size: 0.9rem;">ID: ${key}</strong>
+                            <button type="button" class="btn btn-action btn-danger delete-calc-fill-btn" data-key="${key}" style="padding: 4px 10px; font-size: 0.75rem;">Eliminar</button>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Título</label>
+                                <input class="form-input calc-fill-title-input" type="text" value="${fill.title}" data-key="${key}">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Multiplicador (Factor)</label>
+                                <input class="form-input calc-fill-factor-input" type="number" step="0.01" value="${fill.factor}" data-key="${key}">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 12px; margin-bottom: 0;">
+                            <label class="form-label" style="font-size: 0.75rem;">Descripción</label>
+                            <input class="form-input calc-fill-desc-input" type="text" value="${fill.desc}" data-key="${key}">
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+
+                document.querySelectorAll('.delete-calc-fill-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const key = btn.getAttribute('data-key');
+                        if (confirm(`¿Estás seguro de eliminar el relleno "${key}"?`)) {
+                            delete state.calculator.fillings[key];
+                            hydrateCalcFillingsList();
+                        }
+                    });
+                });
+            };
+
+            const hydrateCalcDesignsList = () => {
+                const container = document.getElementById('calc-designs-list');
+                container.innerHTML = '';
+                const designs = state.calculator.designs;
+
+                Object.keys(designs).forEach(key => {
+                    const des = designs[key];
+                    const item = document.createElement('div');
+                    item.style.border = '1px solid var(--color-border)';
+                    item.style.borderRadius = 'var(--border-radius-md)';
+                    item.style.padding = '16px';
+                    item.style.backgroundColor = 'var(--color-bg-primary)';
+                    
+                    item.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <strong style="color: var(--color-accent-primary); font-size: 0.9rem;">ID: ${key}</strong>
+                            ${key === 'custom' ? '<small style="color: var(--color-text-muted);">Estilo Requerido por Formulario</small>' : `<button type="button" class="btn btn-action btn-danger delete-calc-des-btn" data-key="${key}" style="padding: 4px 10px; font-size: 0.75rem;">Eliminar</button>`}
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Título</label>
+                                <input class="form-input calc-des-title-input" type="text" value="${des.title}" data-key="${key}">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Horas Adicionales</label>
+                                <input class="form-input calc-des-hours-input" type="number" step="0.5" value="${des.hoursAdd}" data-key="${key}">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Precio Adicional (S/)</label>
+                                <input class="form-input calc-des-price-input" type="number" step="5" value="${des.priceAdd}" data-key="${key}">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 12px; margin-bottom: 0;">
+                            <label class="form-label" style="font-size: 0.75rem;">Imagen de Ejemplo (Cloudinary / Local URL)</label>
+                            <div style="display: flex; gap: 12px; align-items: center; margin-top: 8px;">
+                                ${des.image ? `<img src="${des.image}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid var(--color-border);">` : '<div style="width: 50px; height: 50px; border-radius: 4px; border: 1px dashed var(--color-border); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--color-text-muted);">Sin foto</div>'}
+                                <div style="flex-grow: 1;">
+                                    <input type="text" class="form-input calc-des-image-input" value="${des.image || ''}" data-key="${key}" placeholder="URL de la foto de ejemplo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 12px; margin-bottom: 0;">
+                            <label class="form-label" style="font-size: 0.75rem;">Descripción</label>
+                            <input class="form-input calc-des-desc-input" type="text" value="${des.desc}" data-key="${key}">
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+
+                document.querySelectorAll('.delete-calc-des-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const key = btn.getAttribute('data-key');
+                        if (confirm(`¿Estás seguro de eliminar el estilo de decoración "${key}"?`)) {
+                            delete state.calculator.designs[key];
+                            hydrateCalcDesignsList();
+                        }
+                    });
+                });
+            };
+
+            // Add Biscuit button
+            document.getElementById('btn-add-bisc').addEventListener('click', () => {
+                const idInput = document.getElementById('new-bisc-id');
+                const titleInput = document.getElementById('new-bisc-title');
+                const factorInput = document.getElementById('new-bisc-factor');
+                const descInput = document.getElementById('new-bisc-desc');
+
+                const id = idInput.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                const title = titleInput.value.trim();
+                const factor = parseFloat(factorInput.value || 1.0);
+                const desc = descInput.value.trim();
+
+                if (!id || !title) {
+                    alert('Por favor ingresa ID y Título.');
+                    return;
+                }
+
+                if (!state.calculator.biscuits) state.calculator.biscuits = {};
+                state.calculator.biscuits[id] = { factor, desc, title };
+                
+                idInput.value = '';
+                titleInput.value = '';
+                factorInput.value = '';
+                descInput.value = '';
+
+                hydrateCalcBiscuitsList();
+                showToast('Sabor de bizcocho agregado.');
+            });
+
+            // Add Filling button
+            document.getElementById('btn-add-fill').addEventListener('click', () => {
+                const idInput = document.getElementById('new-fill-id');
+                const titleInput = document.getElementById('new-fill-title');
+                const factorInput = document.getElementById('new-fill-factor');
+                const descInput = document.getElementById('new-fill-desc');
+
+                const id = idInput.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                const title = titleInput.value.trim();
+                const factor = parseFloat(factorInput.value || 1.0);
+                const desc = descInput.value.trim();
+
+                if (!id || !title) {
+                    alert('Por favor ingresa ID y Título.');
+                    return;
+                }
+
+                if (!state.calculator.fillings) state.calculator.fillings = {};
+                state.calculator.fillings[id] = { factor, desc, title };
+                
+                idInput.value = '';
+                titleInput.value = '';
+                factorInput.value = '';
+                descInput.value = '';
+
+                hydrateCalcFillingsList();
+                showToast('Sabor de relleno agregado.');
+            });
+
+            // Add Design Style button
+            document.getElementById('btn-add-des').addEventListener('click', () => {
+                const idInput = document.getElementById('new-des-id');
+                const titleInput = document.getElementById('new-des-title');
+                const hoursInput = document.getElementById('new-des-hours');
+                const priceInput = document.getElementById('new-des-price');
+                const imageInput = document.getElementById('new-des-image');
+                const descInput = document.getElementById('new-des-desc');
+
+                const id = idInput.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                const title = titleInput.value.trim();
+                const hoursAdd = parseFloat(hoursInput.value || 0.0);
+                const priceAdd = parseInt(priceInput.value || 0);
+                const image = imageInput.value.trim();
+                const desc = descInput.value.trim();
+
+                if (!id || !title) {
+                    alert('Por favor ingresa ID y Título.');
+                    return;
+                }
+
+                state.calculator.designs[id] = { hoursAdd, priceAdd, title, image, desc };
+                
+                idInput.value = '';
+                titleInput.value = '';
+                hoursInput.value = '';
+                priceInput.value = '';
+                imageInput.value = '';
+                descInput.value = '';
+
+                hydrateCalcDesignsList();
+                showToast('Estilo de decoración agregado.');
+            });
+
+            document.getElementById('form-calc-settings').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Save Sizes
+                document.querySelectorAll('.calc-size-desc-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.sizes[key].desc = input.value.trim();
+                });
+                document.querySelectorAll('.calc-size-hours-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.sizes[key].hours = parseFloat(input.value || 0.0);
+                });
+                document.querySelectorAll('.calc-size-price-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.sizes[key].price = parseInt(input.value || 0);
+                });
+
+                // Save Biscuits
+                document.querySelectorAll('.calc-bisc-title-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.biscuits[key].title = input.value.trim();
+                });
+                document.querySelectorAll('.calc-bisc-factor-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.biscuits[key].factor = parseFloat(input.value || 1.0);
+                });
+                document.querySelectorAll('.calc-bisc-desc-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.biscuits[key].desc = input.value.trim();
+                });
+
+                // Save Fillings
+                document.querySelectorAll('.calc-fill-title-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.fillings[key].title = input.value.trim();
+                });
+                document.querySelectorAll('.calc-fill-factor-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.fillings[key].factor = parseFloat(input.value || 1.0);
+                });
+                document.querySelectorAll('.calc-fill-desc-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.fillings[key].desc = input.value.trim();
+                });
+
+                // Save Designs
+                document.querySelectorAll('.calc-des-title-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.designs[key].title = input.value.trim();
+                });
+                document.querySelectorAll('.calc-des-hours-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.designs[key].hoursAdd = parseFloat(input.value || 0.0);
+                });
+                document.querySelectorAll('.calc-des-price-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.designs[key].priceAdd = parseInt(input.value || 0);
+                });
+                document.querySelectorAll('.calc-des-image-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.designs[key].image = input.value.trim();
+                });
+                document.querySelectorAll('.calc-des-desc-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    state.calculator.designs[key].desc = input.value.trim();
+                });
+
+                saveConfig('Configuración del cotizador actualizada.');
+            });
+
+            // 5. Ingredients Inventory Panel
             const hydrateIngredientsTable = () => {
                 const tbody = document.getElementById('ingredients-tbody');
                 tbody.innerHTML = '';
@@ -1381,7 +1886,7 @@
                 saveConfig('Inventario de ingredientes actualizado.');
             });
 
-            // 5. Recipes & Cost Calculator Panel
+            // 6. Recipes & Cost Calculator Panel
             const sizeSelector = document.getElementById('recipe-size');
             const flavorSelector = document.getElementById('recipe-flavor');
             const laborHoursInput = document.getElementById('labor-hours');
@@ -1389,8 +1894,8 @@
             const markupInput = document.getElementById('markup-percent');
             const establishedPriceInput = document.getElementById('established-price');
 
-            sizeSelector.addEventListener('change', () => hydrateRecipeTab());
-            flavorSelector.addEventListener('change', () => hydrateRecipeTab());
+            sizeSelector.addEventListener('change', () => hydrateRecipeTab(false));
+            flavorSelector.addEventListener('change', () => hydrateRecipeTab(false));
             laborHoursInput.addEventListener('input', () => calculateCost());
             laborRateInput.addEventListener('input', () => calculateCost());
             markupInput.addEventListener('input', () => calculateCost());
@@ -1398,9 +1903,40 @@
                 document.getElementById('web-price-display').textContent = `S/ ${parseFloat(establishedPriceInput.value || 0).toFixed(0)}`;
             });
 
-            const hydrateRecipeTab = () => {
+            const hydrateRecipeTab = (repopulateSelectors = true) => {
+                if (repopulateSelectors) {
+                    // Repopulate sizes
+                    const selectedSizeVal = sizeSelector.value;
+                    sizeSelector.innerHTML = '';
+                    Object.keys(state.calculator.sizes).forEach(key => {
+                        const opt = document.createElement('option');
+                        opt.value = key;
+                        opt.textContent = `${key} personas (${state.calculator.sizes[key].desc})`;
+                        sizeSelector.appendChild(opt);
+                    });
+                    if (selectedSizeVal && sizeSelector.querySelector(`option[value="${selectedSizeVal}"]`)) {
+                        sizeSelector.value = selectedSizeVal;
+                    }
+
+                    // Repopulate fillings
+                    const selectedFlavorVal = flavorSelector.value;
+                    flavorSelector.innerHTML = '';
+                    Object.keys(state.calculator.fillings).forEach(key => {
+                        const opt = document.createElement('option');
+                        opt.value = key;
+                        opt.textContent = state.calculator.fillings[key].title;
+                        flavorSelector.appendChild(opt);
+                    });
+                    if (selectedFlavorVal && flavorSelector.querySelector(`option[value="${selectedFlavorVal}"]`)) {
+                        flavorSelector.value = selectedFlavorVal;
+                    }
+                }
+
                 const size = sizeSelector.value;
                 const flavor = flavorSelector.value;
+
+                if (!size || !flavor) return;
+
                 const recipeKey = `${size}_${flavor}`;
                 
                 if (!state.recipes[recipeKey]) {
@@ -1410,7 +1946,7 @@
                 const recipeData = state.recipes[recipeKey];
                 laborRateInput.value = state.calculatorLaborRate || 15;
                 markupInput.value = state.calculatorDefaultMarkup || 150;
-                laborHoursInput.value = state.calculator.sizes[size].hours || 3;
+                laborHoursInput.value = state.calculator.sizes[size] ? state.calculator.sizes[size].hours : 3;
 
                 const tbody = document.getElementById('recipe-tbody');
                 tbody.innerHTML = '';
@@ -1445,8 +1981,8 @@
                     });
                 });
 
-                const currentBasePrice = state.calculator.sizes[size].price || 90;
-                const flavorFactor = state.calculator.flavors[flavor].factor || 1.0;
+                const currentBasePrice = state.calculator.sizes[size] ? state.calculator.sizes[size].price : 90;
+                const flavorFactor = state.calculator.fillings[flavor] ? state.calculator.fillings[flavor].factor : 1.0;
                 const currentCalculatedPrice = Math.round(currentBasePrice * flavorFactor);
                 
                 establishedPriceInput.value = currentCalculatedPrice;
@@ -1458,6 +1994,8 @@
             const calculateCost = () => {
                 const size = sizeSelector.value;
                 const flavor = flavorSelector.value;
+                if (!size || !flavor) return;
+
                 const recipeKey = `${size}_${flavor}`;
                 const recipeData = state.recipes[recipeKey] || {};
 
@@ -1487,15 +2025,20 @@
 
                 state.calculatorLaborRate = parseFloat(laborRateInput.value || 15);
                 state.calculatorDefaultMarkup = parseFloat(markupInput.value || 150);
-                state.calculator.sizes[size].hours = parseFloat(laborHoursInput.value || 3.0);
                 
-                const factor = state.calculator.flavors[flavor].factor || 1.0;
-                state.calculator.sizes[size].price = Math.round(finalPrice / factor);
+                if (state.calculator.sizes[size]) {
+                    state.calculator.sizes[size].hours = parseFloat(laborHoursInput.value || 3.0);
+                }
+                
+                const factor = state.calculator.fillings[flavor] ? state.calculator.fillings[flavor].factor : 1.0;
+                if (state.calculator.sizes[size]) {
+                    state.calculator.sizes[size].price = Math.round(finalPrice / factor);
+                }
 
                 saveConfig(`Receta y precio actualizados.`);
             });
 
-            // 6. Gallery Management Panel
+            // 7. Gallery Management Panel
             const hydrateGalleryTab = () => {
                 const grid = document.getElementById('gallery-items-grid');
                 grid.innerHTML = '';
@@ -1573,7 +2116,7 @@
                 saveConfig('Galería de fotos guardada correctamente.');
             });
 
-            // 7. Catalog Manager Panel
+            // 8. Catalog Manager Panel
             const hydrateCatalogSettings = () => {
                 const container = document.getElementById('catalog-container');
                 container.innerHTML = '';

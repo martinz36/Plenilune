@@ -49,10 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
      /* ==========================================================================
         3. INTERACTIVE VALUE CALCULATOR STATE & REGULAR SETUP
         ========================================================================== */
-     const sizeButtons = document.querySelectorAll('#size-options .option-btn');
-     const flavorButtons = document.querySelectorAll('#flavor-options .option-btn');
-     const designButtons = document.querySelectorAll('#design-options .option-btn');
- 
      const hoursDisplay = document.getElementById('calc-hours-display');
      const ingredientsDisplay = document.getElementById('calc-ingredients-display');
      const priceDisplay = document.getElementById('calc-price-display');
@@ -70,27 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
  
      // Default State Variables (Fallback)
      let contactPhone = "51936037502";
-     let selectedSize = {
-         value: "10",
-         hours: 3.0,
-         price: 90,
-         text: "10 personas"
-     };
- 
-     let selectedFlavor = {
-         value: "frutal",
-         factor: 1.0,
-         desc: "Mantequilla 82%, limón natural, coulis de frambuesa y mascarpone fresco.",
-         text: "Cítrico y Frutal"
-     };
- 
-     let selectedDesign = {
-         value: "minimal",
-         hoursAdd: 0,
-         priceAdd: 0,
-         desc: "Texturizado sutil con espátula, elegante y minimalista.",
-         text: "Minimalista Texturada"
-     };
+     let selectedSize = { value: "10", hours: 3.0, price: 90, text: "10 personas" };
+     let selectedBiscuit = { value: "vainilla", factor: 1.0, text: "Vainilla Clásica" };
+     let selectedFlavor = { value: "frutal", factor: 1.0, desc: "Mantequilla 82%, limón natural.", text: "Cítrico y Frutal" };
+     let selectedDesign = { value: "minimal", hoursAdd: 0, priceAdd: 0, desc: "Texturizado sutil.", text: "Minimalista Texturada" };
+     let uploadedDesignImages = [];
  
      // Formatter for Peruvian Sol (PEN)
      const formatCurrency = (amount) => {
@@ -103,20 +83,25 @@ document.addEventListener('DOMContentLoaded', () => {
  
      // Calculate and Update UI Function
      const updateCalculator = () => {
-         // Calculate dynamic values
          const totalHours = selectedSize.hours + selectedDesign.hoursAdd;
          
-         // Base Price * Flavor Factor + Design Price Addition
-         const baseCalculatedPrice = Math.round((selectedSize.price * selectedFlavor.factor) + selectedDesign.priceAdd);
+         // Base Price * Biscuit Factor * Flavor Factor + Design Price Addition
+         const baseCalculatedPrice = Math.round(
+             (selectedSize.price * selectedBiscuit.factor * selectedFlavor.factor) + selectedDesign.priceAdd
+         );
          
-         // Build a range to sound consultative and flexible
          const priceMin = baseCalculatedPrice;
          const priceMax = baseCalculatedPrice + Math.round(selectedSize.price * 0.08); // 8% range variation
          
          // Update values in HTML
          hoursDisplay.innerHTML = `<strong>${totalHours} Horas</strong> de batido, horneado, ensamblado manual y decoración a mano.`;
-         ingredientsDisplay.innerHTML = `<strong>${selectedFlavor.text}</strong>: ${selectedFlavor.desc}`;
-         priceDisplay.textContent = `${formatCurrency(priceMin)} - ${formatCurrency(priceMax)}`;
+         ingredientsDisplay.innerHTML = `<strong>Bizcocho:</strong> ${selectedBiscuit.text}. <strong>Relleno:</strong> ${selectedFlavor.text}.`;
+         
+         if (selectedDesign.value === 'custom') {
+             priceDisplay.innerHTML = `${formatCurrency(priceMin)} - ${formatCurrency(priceMax)} <br><span style="font-size: 0.75rem; color: var(--color-accent-primary); font-weight: 500;">(Sujeto a variación por diseño personalizado)</span>`;
+         } else {
+             priceDisplay.textContent = `${formatCurrency(priceMin)} - ${formatCurrency(priceMax)}`;
+         }
      };
  
      // Button selection handler utility
@@ -134,40 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
              });
          });
      };
- 
-     // Size Selection Setup
-     setupOptionGroup(sizeButtons, (btn) => {
-         selectedSize = {
-             value: btn.getAttribute('data-value'),
-             hours: parseFloat(btn.getAttribute('data-hours')),
-             price: parseInt(btn.getAttribute('data-price')),
-             text: btn.querySelector('strong').textContent
-         };
-         updateCalculator();
-     });
- 
-     // Flavor Selection Setup
-     setupOptionGroup(flavorButtons, (btn) => {
-         selectedFlavor = {
-             value: btn.getAttribute('data-value'),
-             factor: parseFloat(btn.getAttribute('data-factor')),
-             desc: btn.getAttribute('data-desc'),
-             text: btn.querySelector('strong').textContent
-         };
-         updateCalculator();
-     });
- 
-     // Design Selection Setup
-     setupOptionGroup(designButtons, (btn) => {
-         selectedDesign = {
-             value: btn.getAttribute('data-value'),
-             hoursAdd: parseFloat(btn.getAttribute('data-hours-add')),
-             priceAdd: parseInt(btn.getAttribute('data-price-add')),
-             desc: btn.getAttribute('data-desc'),
-             text: btn.querySelector('strong').textContent
-         };
-         updateCalculator();
-     });
  
      // Wizard step transition listeners
      btnNextStep.addEventListener('click', () => {
@@ -212,7 +163,9 @@ document.addEventListener('DOMContentLoaded', () => {
      // WhatsApp Form Submission
      whatsappSubmit.addEventListener('click', () => {
          const totalHours = selectedSize.hours + selectedDesign.hoursAdd;
-         const baseCalculatedPrice = Math.round((selectedSize.price * selectedFlavor.factor) + selectedDesign.priceAdd);
+         const baseCalculatedPrice = Math.round(
+             (selectedSize.price * selectedBiscuit.factor * selectedFlavor.factor) + selectedDesign.priceAdd
+         );
          const priceMin = baseCalculatedPrice;
          const priceMax = baseCalculatedPrice + Math.round(selectedSize.price * 0.08);
          
@@ -220,7 +173,21 @@ document.addEventListener('DOMContentLoaded', () => {
          const email = clientEmailInput.value.trim();
          const whatsapp = clientWhatsappInput.value.trim();
  
-         // Build clear, informative WhatsApp copywriting prepended with customer details
+         let designPart = `• *Estilo de diseño:* ${selectedDesign.text}`;
+         if (selectedDesign.value === 'custom') {
+             const customDesc = document.getElementById('calc-custom-desc').value.trim();
+             designPart = `• *Estilo de diseño:* Personalizado
+ • *Detalles del diseño:* ${customDesc || 'Sin descripción adicional.'}`;
+             
+             if (uploadedDesignImages.length > 0) {
+                 designPart += `\n • *Fotos de referencia:*`;
+                 uploadedDesignImages.forEach((url, i) => {
+                     designPart += `\n   - Foto ${i + 1}: ${url}`;
+                 });
+             }
+         }
+ 
+         // Build clear, informative WhatsApp copywriting
          const messageText = `¡Hola Plenilune Pastelería! \u{1F319} Vengo desde su página web y me gustaría cotizar una torta artesanal personalizada:
  
  \u{1F464} *Datos de Contacto:*
@@ -230,11 +197,12 @@ document.addEventListener('DOMContentLoaded', () => {
  
  \u{2728} *Detalles seleccionados:*
  • *Porciones:* ${selectedSize.text}
- • *Sabor/Relleno:* ${selectedFlavor.text}
- • *Estilo de diseño:* ${selectedDesign.text}
+ • *Bizcocho:* ${selectedBiscuit.text}
+ • *Relleno:* ${selectedFlavor.text}
+ ${designPart}
   
  \u{23F1}\u{FE0F} *Dedicación estimada:* ${totalHours} horas de trabajo artesanal.
- \u{1F4B0} *Inversión aproximada:* ${formatCurrency(priceMin)} - ${formatCurrency(priceMax)}
+ \u{1F4B0} *Inversión aproximada:* ${formatCurrency(priceMin)} - ${formatCurrency(priceMax)}${selectedDesign.value === 'custom' ? ' (Sujeto a variación por diseño)' : ''}
   
  ¿Tienen disponibilidad en su taller para la fecha de mi evento? Me gustaría coordinar más detalles del diseño y la entrega. ¡Muchas gracias!`;
  
@@ -274,7 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
              updateSlide();
          });
  
-         // Attach event listeners to newly generated indicators
          const indicators = indicatorsContainer.querySelectorAll('.indicator');
          indicators.forEach(ind => {
              ind.addEventListener('click', () => {
@@ -313,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
              if (config.landing) {
                  const land = config.landing;
  
-                 // 1. Hero
+                 // Hero
                  if (land.hero) {
                      const tag = document.getElementById('hero-tag-display');
                      const slogan = document.getElementById('hero-slogan-display');
@@ -326,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      if (subtitle) subtitle.textContent = land.hero.subtitle;
                  }
  
-                 // 2. Comparison
+                 // Comparison
                  if (land.comparison) {
                      const tag = document.getElementById('comparison-tag-display');
                      const title = document.getElementById('comparison-title-display');
@@ -369,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      }
                  }
  
-                 // 3. Process
+                 // Process
                  if (land.process) {
                      const tag = document.getElementById('process-tag-display');
                      const title = document.getElementById('process-title-display');
@@ -403,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      }
                  }
  
-                 // 4. Gallery (Nuestras Creaciones Estrella)
+                 // Gallery
                  if (land.gallery) {
                      const tag = document.getElementById('gallery-tag-display');
                      const title = document.getElementById('gallery-title-display');
@@ -414,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      if (desc) desc.textContent = land.gallery.desc;
                  }
  
-                 // 5. Calculator Header
+                 // Calculator Header
                  if (land.calculator) {
                      const tag = document.getElementById('calc-tag-display');
                      const title = document.getElementById('calc-title-display');
@@ -425,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      if (desc) desc.innerHTML = land.calculator.desc;
                  }
  
-                 // 6. FAQs Accordion
+                 // FAQs Accordion
                  if (land.faqs) {
                      const tag = document.getElementById('faq-tag-display');
                      const title = document.getElementById('faq-title-display');
@@ -467,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  }
              }
  
-             // Hydrate Catalog Items in gallery (Null-safe for backward compatibility)
+             // Hydrate Catalog Items
              if (config.catalog) {
                  config.catalog.forEach(item => {
                      const titleEl = document.querySelector(`[data-catalog-title="${item.id}"]`);
@@ -517,7 +484,6 @@ document.addEventListener('DOMContentLoaded', () => {
                      slide.appendChild(grid);
                      track.appendChild(slide);
                      
-                     // Add indicator dot
                      const indicator = document.createElement('span');
                      indicator.className = `indicator ${i === 0 ? 'active' : ''}`;
                      indicator.setAttribute('data-slide', i);
@@ -527,38 +493,152 @@ document.addEventListener('DOMContentLoaded', () => {
                  setupCarousel(totalSlides);
              }
  
-             // Hydrate Calculator values in buttons
-             sizeButtons.forEach(btn => {
-                 const val = btn.getAttribute('data-value');
-                 if (config.calculator.sizes[val]) {
-                     btn.setAttribute('data-price', config.calculator.sizes[val].price);
-                     btn.setAttribute('data-hours', config.calculator.sizes[val].hours);
-                     const span = btn.querySelector('span');
-                     if (span) span.textContent = config.calculator.sizes[val].desc;
-                 }
+             // Hydrate dynamic sizes
+             const sizeContainer = document.getElementById('size-options');
+             if (sizeContainer && config.calculator.sizes) {
+                 sizeContainer.innerHTML = '';
+                 Object.keys(config.calculator.sizes).forEach((key, idx) => {
+                     const size = config.calculator.sizes[key];
+                     const btn = document.createElement('button');
+                     btn.type = 'button';
+                     btn.className = `option-btn ${key === "10" ? 'active' : ''}`; // Default to 10 personas
+                     btn.setAttribute('data-value', key);
+                     btn.setAttribute('data-hours', size.hours);
+                     btn.setAttribute('data-price', size.price);
+                     btn.innerHTML = `
+                         <strong>${key === '40' ? '40 personas' : key + ' personas'}</strong>
+                         <span>${size.desc.includes('–') ? size.desc.split('–')[1].trim() : size.desc}</span>
+                     `;
+                     sizeContainer.appendChild(btn);
+                 });
+             }
+ 
+             // Hydrate biscuit flavors
+             const biscuitContainer = document.getElementById('biscuit-options');
+             if (biscuitContainer && config.calculator.biscuits) {
+                 biscuitContainer.innerHTML = '';
+                 Object.keys(config.calculator.biscuits).forEach((key, idx) => {
+                     const bisc = config.calculator.biscuits[key];
+                     const btn = document.createElement('button');
+                     btn.type = 'button';
+                     btn.className = `option-btn ${idx === 0 ? 'active' : ''}`;
+                     btn.setAttribute('data-value', key);
+                     btn.setAttribute('data-factor', bisc.factor);
+                     btn.innerHTML = `
+                         <strong>${bisc.title}</strong>
+                         <span>${bisc.desc}</span>
+                     `;
+                     biscuitContainer.appendChild(btn);
+                 });
+             }
+ 
+             // Hydrate filling flavors
+             const flavorContainer = document.getElementById('flavor-options');
+             if (flavorContainer && config.calculator.fillings) {
+                 flavorContainer.innerHTML = '';
+                 Object.keys(config.calculator.fillings).forEach((key, idx) => {
+                     const fill = config.calculator.fillings[key];
+                     const btn = document.createElement('button');
+                     btn.type = 'button';
+                     btn.className = `option-btn ${idx === 0 ? 'active' : ''}`;
+                     btn.setAttribute('data-value', key);
+                     btn.setAttribute('data-factor', fill.factor);
+                     btn.setAttribute('data-desc', fill.desc);
+                     btn.innerHTML = `
+                         <strong>${fill.title}</strong>
+                         <span>${fill.desc}</span>
+                     `;
+                     flavorContainer.appendChild(btn);
+                 });
+             }
+ 
+             // Hydrate design types
+             const designContainer = document.getElementById('design-options');
+             if (designContainer && config.calculator.designs) {
+                 designContainer.innerHTML = '';
+                 Object.keys(config.calculator.designs).forEach((key, idx) => {
+                     const des = config.calculator.designs[key];
+                     const btn = document.createElement('button');
+                     btn.type = 'button';
+                     btn.className = `option-btn ${idx === 0 ? 'active' : ''}`;
+                     btn.setAttribute('data-value', key);
+                     btn.setAttribute('data-hours-add', des.hoursAdd);
+                     btn.setAttribute('data-price-add', des.priceAdd);
+                     btn.setAttribute('data-desc', des.desc);
+                     btn.setAttribute('data-image', des.image || '');
+                     btn.innerHTML = `
+                         <strong>${des.title}</strong>
+                         <span>${des.desc}</span>
+                     `;
+                     designContainer.appendChild(btn);
+                 });
+             }
+ 
+             // Grab generated buttons and bind listeners
+             const sizeButtons = document.querySelectorAll('#size-options .option-btn');
+             const biscuitButtons = document.querySelectorAll('#biscuit-options .option-btn');
+             const flavorButtons = document.querySelectorAll('#flavor-options .option-btn');
+             const designButtons = document.querySelectorAll('#design-options .option-btn');
+ 
+             setupOptionGroup(sizeButtons, (btn) => {
+                 selectedSize = {
+                     value: btn.getAttribute('data-value'),
+                     hours: parseFloat(btn.getAttribute('data-hours')),
+                     price: parseInt(btn.getAttribute('data-price')),
+                     text: btn.querySelector('strong').textContent
+                 };
+                 updateCalculator();
              });
  
-             flavorButtons.forEach(btn => {
-                 const val = btn.getAttribute('data-value');
-                 if (config.calculator.flavors[val]) {
-                     btn.setAttribute('data-factor', config.calculator.flavors[val].factor);
-                     btn.setAttribute('data-desc', config.calculator.flavors[val].desc);
-                     const strong = btn.querySelector('strong');
-                     if (strong) strong.textContent = config.calculator.flavors[val].title;
-                 }
+             setupOptionGroup(biscuitButtons, (btn) => {
+                 selectedBiscuit = {
+                     value: btn.getAttribute('data-value'),
+                     factor: parseFloat(btn.getAttribute('data-factor')),
+                     text: btn.querySelector('strong').textContent
+                 };
+                 updateCalculator();
              });
  
-             designButtons.forEach(btn => {
-                 const val = btn.getAttribute('data-value');
-                 if (config.calculator.designs[val]) {
-                     btn.setAttribute('data-price-add', config.calculator.designs[val].priceAdd);
-                     btn.setAttribute('data-hours-add', config.calculator.designs[val].hoursAdd);
-                     const strong = btn.querySelector('strong');
-                     if (strong) strong.textContent = config.calculator.designs[val].title;
-                 }
+             setupOptionGroup(flavorButtons, (btn) => {
+                 selectedFlavor = {
+                     value: btn.getAttribute('data-value'),
+                     factor: parseFloat(btn.getAttribute('data-factor')),
+                     desc: btn.getAttribute('data-desc'),
+                     text: btn.querySelector('strong').textContent
+                 };
+                 updateCalculator();
              });
  
-             // Re-initialize active variables with newly loaded values
+             setupOptionGroup(designButtons, (btn) => {
+                 selectedDesign = {
+                     value: btn.getAttribute('data-value'),
+                     hoursAdd: parseFloat(btn.getAttribute('data-hours-add')),
+                     priceAdd: parseInt(btn.getAttribute('data-price-add')),
+                     desc: btn.getAttribute('data-desc'),
+                     image: btn.getAttribute('data-image'),
+                     text: btn.querySelector('strong').textContent
+                 };
+ 
+                 const previewContainer = document.getElementById('design-preview-container');
+                 const previewImg = document.getElementById('design-preview-img');
+                 const customModule = document.getElementById('custom-design-module');
+ 
+                 if (selectedDesign.value === 'custom') {
+                     if (previewContainer) previewContainer.style.display = 'none';
+                     if (customModule) customModule.style.display = 'block';
+                 } else {
+                     if (customModule) customModule.style.display = 'none';
+                     if (selectedDesign.image) {
+                         if (previewImg) previewImg.src = selectedDesign.image;
+                         if (previewContainer) previewContainer.style.display = 'block';
+                     } else {
+                         if (previewContainer) previewContainer.style.display = 'none';
+                     }
+                 }
+                 updateCalculator();
+             });
+ 
+             // Re-initialize active variables with loaded values
              const activeSizeBtn = document.querySelector('#size-options .option-btn.active');
              if (activeSizeBtn) {
                  selectedSize = {
@@ -566,6 +646,15 @@ document.addEventListener('DOMContentLoaded', () => {
                      hours: parseFloat(activeSizeBtn.getAttribute('data-hours')),
                      price: parseInt(activeSizeBtn.getAttribute('data-price')),
                      text: activeSizeBtn.querySelector('strong').textContent
+                 };
+             }
+ 
+             const activeBiscuitBtn = document.querySelector('#biscuit-options .option-btn.active');
+             if (activeBiscuitBtn) {
+                 selectedBiscuit = {
+                     value: activeBiscuitBtn.getAttribute('data-value'),
+                     factor: parseFloat(activeBiscuitBtn.getAttribute('data-factor')),
+                     text: activeBiscuitBtn.querySelector('strong').textContent
                  };
              }
  
@@ -586,11 +675,11 @@ document.addEventListener('DOMContentLoaded', () => {
                      hoursAdd: parseFloat(activeDesignBtn.getAttribute('data-hours-add')),
                      priceAdd: parseInt(activeDesignBtn.getAttribute('data-price-add')),
                      desc: activeDesignBtn.getAttribute('data-desc'),
+                     image: activeDesignBtn.getAttribute('data-image'),
                      text: activeDesignBtn.querySelector('strong').textContent
                  };
              }
  
-             // Update calculator view
              updateCalculator();
  
          } catch (err) {
@@ -599,6 +688,72 @@ document.addEventListener('DOMContentLoaded', () => {
          }
      };
  
+     // Custom Design Reference Photos Uploader
+     const filesInput = document.getElementById('calc-custom-files');
+     const uploadStatus = document.getElementById('calc-upload-status');
+     const previewsContainer = document.getElementById('calc-custom-previews');
+ 
+     if (filesInput) {
+         filesInput.addEventListener('change', async (e) => {
+             const files = Array.from(e.target.files);
+             if (files.length > 2) {
+                 alert('Solo puedes subir un máximo de 2 fotos de referencia.');
+                 filesInput.value = '';
+                 return;
+             }
+ 
+             uploadedDesignImages = [];
+             previewsContainer.innerHTML = '';
+             uploadStatus.textContent = 'Iniciando subida...';
+ 
+             for (let i = 0; i < files.length; i++) {
+                 const file = files[i];
+                 uploadStatus.textContent = `Subiendo foto ${i + 1} de ${files.length}...`;
+                 
+                 // Show temporary thumbnail
+                 const tempImg = document.createElement('img');
+                 tempImg.src = URL.createObjectURL(file);
+                 tempImg.style.width = '65px';
+                 tempImg.style.height = '65px';
+                 tempImg.style.objectFit = 'cover';
+                 tempImg.style.borderRadius = '8px';
+                 tempImg.style.border = '1px solid var(--color-border)';
+                 tempImg.style.opacity = '0.5';
+                 previewsContainer.appendChild(tempImg);
+ 
+                 const formData = new FormData();
+                 formData.append('image', file);
+ 
+                 try {
+                     const res = await fetch('/api/upload', {
+                         method: 'POST',
+                         body: formData
+                     });
+                     const data = await res.json();
+                     
+                     if (res.status === 200 && data.url) {
+                         uploadedDesignImages.push(data.url);
+                         tempImg.style.opacity = '1';
+                         tempImg.src = data.url;
+                     } else {
+                         tempImg.remove();
+                         alert(`Error al subir la foto ${i + 1}: ${data.error || 'Servidor'}`);
+                     }
+                 } catch (err) {
+                     tempImg.remove();
+                     console.error(err);
+                     alert(`Error al conectar para subir la foto ${i + 1}`);
+                 }
+             }
+ 
+             if (uploadedDesignImages.length > 0) {
+                 uploadStatus.textContent = `¡Listo! ${uploadedDesignImages.length} foto(s) de referencia cargadas con éxito.`;
+             } else {
+                 uploadStatus.textContent = '';
+             }
+         });
+     }
+ 
      // Load config and hydrate
      loadSettings();
  
@@ -606,10 +761,9 @@ document.addEventListener('DOMContentLoaded', () => {
         6. SCROLL ENTRANCE ANIMATIONS (INTERSECTION OBSERVER)
         ========================================================================== */
      const animatedElements = document.querySelectorAll(
-         '.hero-content, .hero-image-container, .comparison-card, .process-step, .testimonial-card, .calculator-info, .calculator-card'
+          '.hero-content, .hero-image-container, .comparison-card, .process-step, .testimonial-card, .calculator-info, .calculator-card'
      );
  
-     // Setup animated styling dynamically to avoid layout shifting if JS fails
      animatedElements.forEach(el => {
          el.style.opacity = '0';
          el.style.transform = 'translateY(24px)';

@@ -333,60 +333,58 @@
                             <div class="form-group">
                                 <label class="form-label">1. ¿Para cuántas personas es el evento?</label>
                                 <div class="options-grid" id="size-options">
-                                    <button type="button" class="option-btn active" data-value="10" data-hours="3" data-price="90">
-                                        <strong>10 personas</strong>
-                                        <span>Torta compacta (1 piso)</span>
-                                    </button>
-                                    <button type="button" class="option-btn" data-value="20" data-hours="4.5" data-price="170">
-                                        <strong>20 personas</strong>
-                                        <span>Torta mediana (1 o 2 pisos)</span>
-                                    </button>
-                                    <button type="button" class="option-btn" data-value="30" data-hours="6" data-price="250">
-                                        <strong>30 personas</strong>
-                                        <span>Torta celebración (2 pisos)</span>
-                                    </button>
-                                    <button type="button" class="option-btn" data-value="40" data-hours="8.5" data-price="340">
-                                        <strong>40+ personas</strong>
-                                        <span>Torta de gran evento (3 pisos)</span>
-                                    </button>
+                                    <!-- Inyectado dinámicamente -->
                                 </div>
                             </div>
 
-                            <!-- Step 2: Flavor -->
+                            <!-- Step 2: Biscuit Flavor -->
                             <div class="form-group">
-                                <label class="form-label">2. Perfil de Sabor y Rellenos Nobles</label>
+                                <label class="form-label">2. Perfil del sabor del bizcocho</label>
+                                <div class="options-grid" id="biscuit-options">
+                                    <!-- Inyectado dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Filling Flavor -->
+                            <div class="form-group">
+                                <label class="form-label">3. Perfil del sabor del relleno</label>
                                 <div class="options-grid" id="flavor-options">
-                                    <button type="button" class="option-btn active" data-value="frutal" data-factor="1.0" data-desc="Mantequilla 82%, limón natural, coulis de frambuesa y mascarpone fresco.">
-                                        <strong>Cítrico y Frutal</strong>
-                                        <span>Frescura balanceada</span>
-                                    </button>
-                                    <button type="button" class="option-btn" data-value="chocolate" data-factor="1.1" data-desc="Chocolate belga 55%-70% de origen, praliné artesanal de avellanas tostadas.">
-                                        <strong>Chocolate Belga y Praliné</strong>
-                                        <span>Intensidad y texturas</span>
-                                    </button>
-                                    <button type="button" class="option-btn" data-value="pistacho" data-factor="1.2" data-desc="Pistachos seleccionados y tostados a mano en el taller, crema fresca de queso.">
-                                        <strong>Pistacho & Frutos Rojos</strong>
-                                        <span>Sabor Premium y sofisticado</span>
-                                    </button>
+                                    <!-- Inyectado dinámicamente (fillings) -->
                                 </div>
                             </div>
 
-                            <!-- Step 3: Design Complexity -->
+                            <!-- Step 4: Design Complexity -->
                             <div class="form-group">
-                                <label class="form-label">3. Nivel de Complejidad y Decoración</label>
+                                <label class="form-label">4. Estilo y decoración de la torta</label>
                                 <div class="options-grid" id="design-options">
-                                    <button type="button" class="option-btn active" data-value="minimal" data-hours-add="0" data-price-add="0" data-desc="Texturizado sutil con espátula, elegante y minimalista.">
-                                        <strong>Minimalista Texturada</strong>
-                                        <span>Elegancia simple (0h extra)</span>
-                                    </button>
-                                    <button type="button" class="option-btn" data-value="floral" data-hours-add="1.5" data-price-add="30" data-desc="Decorada con flores orgánicas frescas/secas y detalles de pan de oro 24k.">
-                                        <strong>Detalles & Flores Orgánicas</strong>
-                                        <span>Romántica y natural (+1.5h)</span>
-                                    </button>
-                                    <button type="button" class="option-btn" data-value="sculpture" data-hours-add="3" data-price-add="70" data-desc="Modelado escultórico a mano, detalles tridimensionales y altura de autor.">
-                                        <strong>Escultórica de Autor</strong>
-                                        <span>Diseño único de alta costura (+3h)</span>
-                                    </button>
+                                    <!-- Inyectado dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Image Example Preview -->
+                            <div id="design-preview-container" style="margin-top: 16px; display: none; text-align: center;">
+                                <p class="form-label" style="font-size: 0.8rem; margin-bottom: 8px; text-transform: none; letter-spacing: 0;">Ejemplo visual del estilo:</p>
+                                <img id="design-preview-img" src="" style="max-width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--border-radius-md); border: 1px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                            </div>
+
+                            <!-- Custom Design Upload Module -->
+                            <div id="custom-design-module" class="glass-panel" style="margin-top: 20px; padding: 20px; border-radius: var(--border-radius-md); border: 1.5px dashed var(--color-accent-celeste); display: none;">
+                                <h4 class="form-label" style="color: var(--color-accent-primary); margin-bottom: 12px; font-weight: bold; text-transform: none; letter-spacing: 0;">Referencia del Diseño Personalizado</h4>
+                                <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 16px; line-height: 1.4;">Sube hasta 2 fotos de referencia (ejemplos que te gusten) y describe las especificaciones.</p>
+                                
+                                <div class="form-input-group" style="margin-bottom: 16px;">
+                                    <label class="form-label" for="calc-custom-files" style="font-size: 0.75rem;">Fotos de Referencia (Máx 2)</label>
+                                    <input type="file" id="calc-custom-files" accept="image/*" multiple class="calc-input" style="padding: 8px 12px; font-size: 0.85rem;">
+                                    <div id="calc-upload-status" style="font-size: 0.75rem; color: var(--color-accent-primary); margin-top: 6px; font-weight: 600;"></div>
+                                </div>
+
+                                <div id="calc-custom-previews" style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                                    <!-- Previsualizaciones de imágenes cargadas -->
+                                </div>
+
+                                <div class="form-input-group" style="margin-bottom: 0;">
+                                    <label class="form-label" for="calc-custom-desc" style="font-size: 0.75rem;">Detalles del Diseño Deseado</label>
+                                    <textarea id="calc-custom-desc" class="calc-input" placeholder="Describe colores, personajes, temática o detalles especiales..." style="height: 100px; padding: 12px; font-size: 0.9rem;"></textarea>
                                 </div>
                             </div>
 
