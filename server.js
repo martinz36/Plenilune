@@ -99,65 +99,6 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     });
 });
 
-// Proxy HTTP requests to Nominatim
-const fetchHttpsJson = (url, callback) => {
-    const options = {
-        headers: {
-            'User-Agent': 'PlenilunePasteleriaWebsite/1.0'
-        }
-    };
-    https.get(url, options, (res) => {
-        let body = '';
-        res.on('data', (chunk) => {
-            body += chunk;
-        });
-        res.on('end', () => {
-            try {
-                callback(null, JSON.parse(body));
-            } catch (err) {
-                callback(err);
-            }
-        });
-    }).on('error', (err) => {
-        callback(err);
-    });
-};
-
-// API Proxy: Geocoding Search (Bias: Lima, Peru)
-app.get('/api/geocode', (req, res) => {
-    const q = req.query.q;
-    if (!q) {
-        return res.status(400).json({ error: 'Missing query parameter q' });
-    }
-    const encodedQ = encodeURIComponent(q + ', Lima, Peru');
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedQ}&limit=5&countrycodes=pe&addressdetails=1`;
-    
-    fetchHttpsJson(url, (err, data) => {
-        if (err) {
-            console.error('Geocoding search proxy error:', err);
-            return res.status(500).json({ error: 'Failed to search address' });
-        }
-        res.json(data);
-    });
-});
-
-// API Proxy: Reverse Geocoding Coordinates to Address
-app.get('/api/reverse', (req, res) => {
-    const { lat, lng } = req.query;
-    if (!lat || !lng) {
-        return res.status(400).json({ error: 'Missing lat or lng parameters' });
-    }
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
-    
-    fetchHttpsJson(url, (err, data) => {
-        if (err) {
-            console.error('Reverse geocoding proxy error:', err);
-            return res.status(500).json({ error: 'Failed to reverse address' });
-        }
-        res.json(data);
-    });
-});
-
 // Admin panel route
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));

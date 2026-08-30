@@ -47,148 +47,99 @@ document.addEventListener('DOMContentLoaded', () => {
      });
  
      /* ==========================================================================
-        3. MAP INTERACTIVE ADDRESS PICKER (Leaflet & OpenStreetMap)
+        3. MAP INTERACTIVE ADDRESS PICKER (Google Maps JavaScript API & Autocomplete)
         ========================================================================== */
      let deliveryMap = null;
      let deliveryMarker = null;
      let deliveryCoords = { lat: -12.046374, lng: -77.042793 }; // Lima, Peru default
  
      const addressInput = document.getElementById('client-address');
-     const suggestionsBox = document.getElementById('address-suggestions');
  
-     // Reverse Geocoding helper: Get Address name from Coordinates
-     const reverseGeocode = async (lat, lng) => {
-         try {
-             const res = await fetch(`/api/reverse?lat=${lat}&lng=${lng}`);
-             const data = await res.json();
-             
-             if (data && addressInput) {
-                 let cleanAddress = data.display_name;
-                 
-                 // If structured address details are present, format them cleanly
-                 if (data.address) {
-                     const addr = data.address;
-                     const road = addr.road || addr.pedestrian || addr.cycleway || addr.suburb || '';
-                     const houseNum = addr.house_number || '';
-                     const suburb = addr.suburb || addr.neighbourhood || '';
-                     const city = addr.city || addr.town || addr.municipality || '';
- 
-                     if (road) {
-                         cleanAddress = `${road} ${houseNum}`.trim();
-                         if (suburb && suburb !== road) cleanAddress += `, ${suburb}`;
-                         if (city) cleanAddress += `, ${city}`;
-                     }
-                 }
-                 addressInput.value = cleanAddress;
-             }
-         } catch (err) {
-             console.error('Failed to reverse geocode:', err);
+     // Load Google Maps SDK Script dynamically
+     const loadGoogleMapsScript = (key) => {
+         if (window.google && window.google.maps) {
+             window.initGoogleMap();
+             return;
          }
+         const script = document.createElement('script');
+         script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&callback=initGoogleMap`;
+         script.async = true;
+         script.defer = true;
+         document.head.appendChild(script);
      };
  
-     // Autocomplete suggestions debounce timer
-     let searchDebounceTimer = null;
- 
-     if (addressInput) {
-         addressInput.addEventListener('input', (e) => {
-             clearTimeout(searchDebounceTimer);
-             const query = e.target.value.trim();
-             
-             if (query.length < 3) {
-                 if (suggestionsBox) suggestionsBox.style.display = 'none';
-                 return;
-             }
- 
-             // Debounce API calls by 400ms to save server bandwidth
-             searchDebounceTimer = setTimeout(async () => {
-                 try {
-                     const res = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
-                     const results = await res.json();
-                     
-                     if (results && results.length > 0 && suggestionsBox) {
-                         suggestionsBox.innerHTML = '';
-                         suggestionsBox.style.display = 'block';
- 
-                         results.forEach(item => {
-                             const div = document.createElement('div');
-                             div.style.padding = '10px 14px';
-                             div.style.cursor = 'pointer';
-                             div.style.fontSize = '0.85rem';
-                             div.style.borderBottom = '1px solid var(--color-border)';
-                             div.style.transition = 'background-color 0.2s';
-                             div.textContent = item.display_name;
- 
-                             // Hover styling
-                             div.addEventListener('mouseenter', () => {
-                                 div.style.backgroundColor = 'var(--color-bg-secondary)';
-                             });
-                             div.addEventListener('mouseleave', () => {
-                                 div.style.backgroundColor = 'transparent';
-                             });
- 
-                             // Select click event
-                             div.addEventListener('click', () => {
-                                 addressInput.value = item.display_name;
-                                 suggestionsBox.style.display = 'none';
-                                 
-                                 const lat = parseFloat(item.lat);
-                                 const lng = parseFloat(item.lon);
-                                 deliveryCoords = { lat, lng };
-                                 
-                                 if (deliveryMap) {
-                                     deliveryMap.setView([lat, lng], 16);
-                                     deliveryMarker.setLatLng([lat, lng]);
-                                 }
-                             });
- 
-                             suggestionsBox.appendChild(div);
-                         });
-                     } else {
-                         if (suggestionsBox) suggestionsBox.style.display = 'none';
-                     }
-                 } catch (err) {
-                     console.error('Autocomplete search error:', err);
+     // Reverse Geocoding helper: Get address name from coordinates via Google Geocoder
+     const reverseGeocode = (lat, lng) => {
+         if (!window.google || !window.google.maps) return;
+         const geocoder = new google.maps.Geocoder();
+         geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+             if (status === 'OK') {
+                 if (results[0] && addressInput) {
+                     addressInput.value = results[0].formatted_address;
                  }
-             }, 400);
-         });
- 
-         // Hide suggestions on document click
-         document.addEventListener('click', (e) => {
-             if (suggestionsBox && !addressInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
-                 suggestionsBox.style.display = 'none';
+             } else {
+                 console.error('Google Geocoder failed due to: ' + status);
              }
          });
-     }
+     };
  
-     const initMap = () => {
+     // Google Map Initialization callback
+     window.initGoogleMap = () => {
          const mapDiv = document.getElementById('delivery-map');
          if (!mapDiv) return;
  
          // Initialize Map
-         deliveryMap = L.map('delivery-map').setView([deliveryCoords.lat, deliveryCoords.lng], 13);
- 
-         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-             attribution: '© OpenStreetMap contributors'
-         }).addTo(deliveryMap);
- 
-         // Initial draggable Marker
-         deliveryMarker = L.marker([deliveryCoords.lat, deliveryCoords.lng], {
-             draggable: true
-         }).addTo(deliveryMap);
- 
-         // Reverse geocode and update address input when user drags pin
-         deliveryMarker.on('dragend', async () => {
-             const pos = deliveryMarker.getLatLng();
-             deliveryCoords = { lat: pos.lat, lng: pos.lng };
-             await reverseGeocode(pos.lat, pos.lng);
+         deliveryMap = new google.maps.Map(mapDiv, {
+             center: deliveryCoords,
+             zoom: 13,
+             mapTypeControl: false,
+             fullscreenControl: false,
+             streetViewControl: false
          });
  
-         // Reverse geocode and move marker when user clicks on map
-         deliveryMap.on('click', async (e) => {
-             const pos = e.latlng;
-             deliveryCoords = { lat: pos.lat, lng: pos.lng };
-             deliveryMarker.setLatLng(pos);
-             await reverseGeocode(pos.lat, pos.lng);
+         // Draggable Marker
+         deliveryMarker = new google.maps.Marker({
+             position: deliveryCoords,
+             map: deliveryMap,
+             draggable: true
+         });
+ 
+         // Hook Google Places Autocomplete
+         if (addressInput) {
+             const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                 componentRestrictions: { country: 'pe' }, // Limit to Peru
+                 fields: ['address_components', 'geometry', 'formatted_address']
+             });
+ 
+             autocomplete.addListener('place_changed', () => {
+                 const place = autocomplete.getPlace();
+                 if (!place.geometry || !place.geometry.location) {
+                     return;
+                 }
+                 
+                 const lat = place.geometry.location.lat();
+                 const lng = place.geometry.location.lng();
+                 deliveryCoords = { lat, lng };
+ 
+                 deliveryMap.setCenter(deliveryCoords);
+                 deliveryMap.setZoom(16);
+                 deliveryMarker.setPosition(deliveryCoords);
+             });
+         }
+ 
+         // Reverse geocode on marker dragend
+         deliveryMarker.addListener('dragend', () => {
+             const pos = deliveryMarker.getPosition();
+             deliveryCoords = { lat: pos.lat(), lng: pos.lng() };
+             reverseGeocode(deliveryCoords.lat, deliveryCoords.lng);
+         });
+ 
+         // Move marker and reverse geocode on map click
+         deliveryMap.addListener('click', (e) => {
+             const pos = e.latLng;
+             deliveryCoords = { lat: pos.lat(), lng: pos.lng() };
+             deliveryMarker.setPosition(pos);
+             reverseGeocode(deliveryCoords.lat, deliveryCoords.lng);
          });
      };
  
@@ -198,16 +149,19 @@ document.addEventListener('DOMContentLoaded', () => {
          gpsBtn.addEventListener('click', () => {
              if (navigator.geolocation) {
                  gpsBtn.textContent = 'Obteniendo...';
-                 navigator.geolocation.getCurrentPosition(async (pos) => {
+                 navigator.geolocation.getCurrentPosition((pos) => {
                      gpsBtn.textContent = '📍 GPS';
                      const lat = pos.coords.latitude;
                      const lng = pos.coords.longitude;
                      deliveryCoords = { lat, lng };
-                     if (deliveryMap) {
-                         deliveryMap.setView([lat, lng], 16);
-                         deliveryMarker.setLatLng([lat, lng]);
+                     
+                     if (deliveryMap && deliveryMarker) {
+                         const latlng = new google.maps.LatLng(lat, lng);
+                         deliveryMap.setCenter(latlng);
+                         deliveryMap.setZoom(16);
+                         deliveryMarker.setPosition(latlng);
+                         reverseGeocode(lat, lng);
                      }
-                     await reverseGeocode(lat, lng);
                  }, (err) => {
                      gpsBtn.textContent = '📍 GPS';
                      alert('No pudimos acceder a tu GPS. Por favor ubica tu dirección manualmente en el mapa.');
@@ -229,9 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
          dateInput.min = `${yyyy}-${mm}-${dd}`;
          dateInput.value = `${yyyy}-${mm}-${dd}`;
      }
- 
-     // Initialize the map on load
-     initMap();
  
      /* ==========================================================================
         4. INTERACTIVE VALUE CALCULATOR STATE & REGULAR SETUP
@@ -895,10 +846,21 @@ document.addEventListener('DOMContentLoaded', () => {
  
              updateCalculator();
  
-             // Trigger map resize fix once hydrations are done and container is ready
-             setTimeout(() => {
-                 if (deliveryMap) deliveryMap.invalidateSize();
-             }, 300);
+             // Load Google Maps script if API Key is configured
+             if (config.general && config.general.googleMapsApiKey) {
+                 loadGoogleMapsScript(config.general.googleMapsApiKey);
+             } else {
+                 const mapDiv = document.getElementById('delivery-map');
+                 if (mapDiv) {
+                     mapDiv.innerHTML = `
+                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 20px; text-align: center; background-color: var(--color-bg-secondary); border-radius: var(--border-radius-md); border: 1.5px dashed var(--color-accent-primary);">
+                             <svg viewBox="0 0 24 24" width="36" height="36" style="color: var(--color-accent-primary); margin-bottom: 8px;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/></svg>
+                             <p style="font-size: 0.8rem; font-weight: 600; margin-bottom: 4px;">Google Maps no configurado</p>
+                             <p style="font-size: 0.75rem; color: var(--color-text-muted);">Por favor, ingresa tu API Key en la pestaña "Ajustes Web" del panel <a href="/admin" target="_blank" style="color: var(--color-accent-primary); font-weight: 600; text-decoration: underline;">/admin</a>.</p>
+                         </div>
+                     `;
+                 }
+             }
  
          } catch (err) {
              console.warn('Failed to load settings from API, using default fallbacks:', err);

@@ -4,7 +4,8 @@
     "email": "hola@plenilunepasteleria.com",
     "location": "Lima, Perú",
     "heroTitle": "El tiempo, el detalle y el sabor real que merecen tus momentos especiales",
-    "heroSubtitle": "Pastelería hecha a mano y desde cero. Sin premezclas ultraprocesadas, sin conservantes químicos ni procesos automatizados. Solo ingredientes nobles en su estado más puro y el tiempo que requiere la excelencia."
+    "heroSubtitle": "Pastelería hecha a mano y desde cero. Sin premezclas ultraprocesadas, sin conservantes químicos ni procesos automatizados. Solo ingredientes nobles en su estado más puro y el tiempo que requiere la excelencia.",
+    "googleMapsApiKey": ""
   },
   "cloudinary": {
     "cloudName": "",

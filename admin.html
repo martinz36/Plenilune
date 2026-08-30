@@ -481,6 +481,10 @@
                             <label class="form-label" for="contact-location">Ubicación / Ciudad</label>
                             <input class="form-input" type="text" id="contact-location" required>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label" for="google-maps-key">Google Maps API Key (Habilitar Maps JavaScript API, Places API y Geocoding API)</label>
+                            <input class="form-input" type="text" id="google-maps-key" placeholder="Ingresa tu clave de API de Google Maps">
+                        </div>
                         <div class="form-footer">
                             <button type="submit" class="btn btn-primary">Guardar Ajustes Web</button>
                         </div>
@@ -1128,6 +1132,7 @@
                 document.getElementById('contact-phone').value = state.general.phone;
                 document.getElementById('contact-email').value = state.general.email;
                 document.getElementById('contact-location').value = state.general.location;
+                document.getElementById('google-maps-key').value = state.general.googleMapsApiKey || '';
             };
 
             document.getElementById('form-general').addEventListener('submit', (e) => {
@@ -1137,6 +1142,7 @@
                 state.general.phone = document.getElementById('contact-phone').value.replace(/\s+/g, '');
                 state.general.email = document.getElementById('contact-email').value;
                 state.general.location = document.getElementById('contact-location').value;
+                state.general.googleMapsApiKey = document.getElementById('google-maps-key').value.trim();
                 
                 saveConfig('Ajustes generales actualizados con éxito.');
             });
