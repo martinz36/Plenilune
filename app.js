@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
  ¿Tienen disponibilidad en su taller para la fecha de mi evento? Me gustaría coordinar más detalles del diseño y la entrega. ¡Muchas gracias!`;
  
          const encodedMessage = encodeURIComponent(messageText);
-         const whatsappUrl = `https://wa.me/${contactPhone}?text=${encodedMessage}`;
+         const whatsappUrl = `https://api.whatsapp.com/send?phone=${contactPhone}&text=${encodedMessage}`;
          
          // Open WhatsApp in new tab
          window.open(whatsappUrl, '_blank');
@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
              // Update floating WhatsApp button
              const floatLink = document.getElementById('whatsapp-float-link');
              if (floatLink) {
-                 floatLink.setAttribute('href', `https://wa.me/${contactPhone}?text=${encodeURIComponent("¡Hola Plenilune Pastelería! \u{1F319} Me gustaría hacer una consulta sobre sus tortas de autor.")}`);
+                 floatLink.setAttribute('href', `https://api.whatsapp.com/send?phone=${contactPhone}&text=${encodeURIComponent("¡Hola Plenilune Pastelería! \u{1F319} Me gustaría hacer una consulta sobre sus tortas de autor.")}`);
              }
  
              // Hydrate Catalog Items in gallery (Null-safe for backward compatibility)
