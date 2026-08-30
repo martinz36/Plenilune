@@ -68,6 +68,16 @@ document.addEventListener('DOMContentLoaded', () => {
      const priceDisplay = document.getElementById('calc-price-display');
      const whatsappSubmit = document.getElementById('whatsapp-submit');
  
+     // Step Wizard Elements
+     const step1 = document.getElementById('calc-step-1');
+     const step2 = document.getElementById('calc-step-2');
+     const btnNextStep = document.getElementById('btn-next-step');
+     const btnPrevStep = document.getElementById('btn-prev-step');
+ 
+     const clientNameInput = document.getElementById('client-name');
+     const clientEmailInput = document.getElementById('client-email');
+     const clientWhatsappInput = document.getElementById('client-whatsapp');
+ 
      // Default State Variables (Fallback)
      let contactPhone = "51936037502";
      let selectedSize = {
@@ -169,6 +179,46 @@ document.addEventListener('DOMContentLoaded', () => {
          updateCalculator();
      });
  
+     // Wizard step transition listeners
+     btnNextStep.addEventListener('click', () => {
+         const name = clientNameInput.value.trim();
+         const email = clientEmailInput.value.trim();
+         const whatsapp = clientWhatsappInput.value.trim();
+ 
+         if (!name) {
+             alert('Por favor, ingresa tu Nombre y Apellido.');
+             clientNameInput.focus();
+             return;
+         }
+ 
+         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+         if (!email || !emailRegex.test(email)) {
+             alert('Por favor, ingresa un correo electrónico válido.');
+             clientEmailInput.focus();
+             return;
+         }
+ 
+         if (!whatsapp || whatsapp.length < 9) {
+             alert('Por favor, ingresa un número de WhatsApp válido (mínimo 9 dígitos).');
+             clientWhatsappInput.focus();
+             return;
+         }
+ 
+         // Unlock step 2
+         step1.classList.add('hidden');
+         step2.classList.remove('hidden');
+ 
+         // Scroll to top of calculator smoothly
+         document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+     });
+ 
+     btnPrevStep.addEventListener('click', () => {
+         step2.classList.add('hidden');
+         step1.classList.remove('hidden');
+ 
+         document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+     });
+ 
      // WhatsApp Form Submission
      whatsappSubmit.addEventListener('click', () => {
          const totalHours = selectedSize.hours + selectedDesign.hoursAdd;
@@ -176,9 +226,18 @@ document.addEventListener('DOMContentLoaded', () => {
          const priceMin = baseCalculatedPrice;
          const priceMax = baseCalculatedPrice + Math.round(selectedSize.price * 0.08);
          
-         // Build clear, informative WhatsApp copywriting
+         const name = clientNameInput.value.trim();
+         const email = clientEmailInput.value.trim();
+         const whatsapp = clientWhatsappInput.value.trim();
+ 
+         // Build clear, informative WhatsApp copywriting prepended with customer details
          const messageText = `¡Hola Plenilune Pastelería! 🌙 Vengo desde su página web y me gustaría cotizar una torta artesanal personalizada:
  
+👤 *Datos de Contacto:*
+• *Cliente:* ${name}
+• *Email:* ${email}
+• *WhatsApp:* ${whatsapp}
+
 ✨ *Detalles seleccionados:*
 • *Porciones:* ${selectedSize.text}
 • *Sabor/Relleno:* ${selectedFlavor.text}
@@ -197,7 +256,46 @@ document.addEventListener('DOMContentLoaded', () => {
      });
  
      /* ==========================================================================
-        4. FETCH CONFIG & HYDRATION
+        4. CAROUSEL ENGINE LOGIC
+        ========================================================================== */
+     let currentSlide = 0;
+ 
+     const setupCarousel = (totalSlides) => {
+         const track = document.getElementById('gallery-track');
+         const prevBtn = document.getElementById('gallery-prev');
+         const nextBtn = document.getElementById('gallery-next');
+         const indicatorsContainer = document.getElementById('gallery-indicators');
+ 
+         const updateSlide = () => {
+             track.style.transform = `translateX(-${currentSlide * 100}%)`;
+             const indicators = indicatorsContainer.querySelectorAll('.indicator');
+             indicators.forEach((ind, i) => {
+                 ind.classList.toggle('active', i === currentSlide);
+             });
+         };
+ 
+         prevBtn.addEventListener('click', () => {
+             currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+             updateSlide();
+         });
+ 
+         nextBtn.addEventListener('click', () => {
+             currentSlide = (currentSlide + 1) % totalSlides;
+             updateSlide();
+         });
+ 
+         // Attach event listeners to newly generated indicators
+         const indicators = indicatorsContainer.querySelectorAll('.indicator');
+         indicators.forEach(ind => {
+             ind.addEventListener('click', () => {
+                 currentSlide = parseInt(ind.getAttribute('data-slide'));
+                 updateSlide();
+             });
+         });
+     };
+ 
+     /* ==========================================================================
+        5. FETCH CONFIG & HYDRATION
         ========================================================================== */
      const loadSettings = async () => {
          try {
@@ -221,15 +319,65 @@ document.addEventListener('DOMContentLoaded', () => {
                  floatLink.setAttribute('href', `https://wa.me/${contactPhone}?text=${encodeURIComponent("¡Hola Plenilune Pastelería! 🌙 Me gustaría hacer una consulta sobre sus tortas de autor.")}`);
              }
  
-             // Hydrate Catalog Items in gallery
-             config.catalog.forEach(item => {
-                 const titleEl = document.querySelector(`[data-catalog-title="${item.id}"]`);
-                 const tagEl = document.querySelector(`[data-catalog-tag="${item.id}"]`);
-                 const descEl = document.querySelector(`[data-catalog-desc="${item.id}"]`);
-                 if (titleEl) titleEl.textContent = item.title;
-                 if (tagEl) tagEl.textContent = item.tag;
-                 if (descEl) descEl.textContent = item.desc;
-             });
+             // Hydrate Catalog Items in gallery (Null-safe for backward compatibility)
+             if (config.catalog) {
+                 config.catalog.forEach(item => {
+                     const titleEl = document.querySelector(`[data-catalog-title="${item.id}"]`);
+                     const tagEl = document.querySelector(`[data-catalog-tag="${item.id}"]`);
+                     const descEl = document.querySelector(`[data-catalog-desc="${item.id}"]`);
+                     if (titleEl) titleEl.textContent = item.title;
+                     if (tagEl) tagEl.textContent = item.tag;
+                     if (descEl) descEl.textContent = item.desc;
+                 });
+             }
+ 
+             // Hydrate 4x2 Grid Carousel Gallery
+             if (config.gallery && config.gallery.length > 0) {
+                 const track = document.getElementById('gallery-track');
+                 const indicatorsContainer = document.getElementById('gallery-indicators');
+                 
+                 track.innerHTML = '';
+                 indicatorsContainer.innerHTML = '';
+                 
+                 const imagesPerSlide = 8;
+                 const totalSlides = Math.ceil(config.gallery.length / imagesPerSlide);
+                 
+                 for (let i = 0; i < totalSlides; i++) {
+                     const slide = document.createElement('div');
+                     slide.className = 'gallery-slide';
+                     
+                     const grid = document.createElement('div');
+                     grid.className = 'gallery-grid-4x2';
+                     
+                     const startIndex = i * imagesPerSlide;
+                     const endIndex = Math.min(startIndex + imagesPerSlide, config.gallery.length);
+                     
+                     for (let j = startIndex; j < endIndex; j++) {
+                         const imgWrapper = document.createElement('div');
+                         imgWrapper.className = 'gallery-img-wrapper';
+                         
+                         const img = document.createElement('img');
+                         img.src = config.gallery[j];
+                         img.alt = 'Creación Plenilune';
+                         img.className = 'gallery-img';
+                         img.loading = 'lazy';
+                         
+                         imgWrapper.appendChild(img);
+                         grid.appendChild(imgWrapper);
+                     }
+                     
+                     slide.appendChild(grid);
+                     track.appendChild(slide);
+                     
+                     // Add indicator dot
+                     const indicator = document.createElement('span');
+                     indicator.className = `indicator ${i === 0 ? 'active' : ''}`;
+                     indicator.setAttribute('data-slide', i);
+                     indicatorsContainer.appendChild(indicator);
+                 }
+                 
+                 setupCarousel(totalSlides);
+             }
  
              // Hydrate Calculator values in buttons
              sizeButtons.forEach(btn => {
@@ -299,7 +447,6 @@ document.addEventListener('DOMContentLoaded', () => {
  
          } catch (err) {
              console.warn('Failed to load settings from API, using default fallbacks:', err);
-             // Trigger fallback calculation anyway
              updateCalculator();
          }
      };
@@ -308,10 +455,10 @@ document.addEventListener('DOMContentLoaded', () => {
      loadSettings();
  
      /* ==========================================================================
-        5. SCROLL ENTRANCE ANIMATIONS (INTERSECTION OBSERVER)
+        6. SCROLL ENTRANCE ANIMATIONS (INTERSECTION OBSERVER)
         ========================================================================== */
      const animatedElements = document.querySelectorAll(
-         '.hero-content, .hero-image-container, .comparison-card, .process-step, .product-card, .testimonial-card, .calculator-info, .calculator-card, .instagram-item'
+         '.hero-content, .hero-image-container, .comparison-card, .process-step, .testimonial-card, .calculator-info, .calculator-card'
      );
  
      // Setup animated styling dynamically to avoid layout shifting if JS fails

@@ -438,8 +438,10 @@
                 <nav>
                     <ul class="nav-list">
                         <li><button class="nav-btn active" data-target="general">Ajustes Web</button></li>
+                        <li><button class="nav-btn" data-target="cloudinary">Credenciales API</button></li>
                         <li><button class="nav-btn" data-target="ingredients">Ingredientes</button></li>
                         <li><button class="nav-btn" data-target="recipes">Recetas y Costos</button></li>
+                        <li><button class="nav-btn" data-target="gallery">Galería Carrusel</button></li>
                         <li><button class="nav-btn" data-target="catalog">Catálogo de Tortas</button></li>
                     </ul>
                 </nav>
@@ -483,14 +485,38 @@
                     </form>
                 </section>
 
-                <!-- Panel 2: Ingredients Manager -->
+                <!-- Panel 2: Cloudinary API Config -->
+                <section class="content-panel" id="panel-cloudinary">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Credenciales API de Cloudinary</h2>
+                        <p class="panel-desc">Configura las credenciales de tu cuenta de Cloudinary para permitir la carga y almacenamiento de imágenes en la nube de forma directa.</p>
+                    </div>
+                    <form id="form-cloudinary">
+                        <div class="form-group">
+                            <label class="form-label" for="cloud-name">Cloud Name *</label>
+                            <input class="form-input" type="text" id="cloud-name" placeholder="Ej: dpmyzcake" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="api-key">API Key *</label>
+                            <input class="form-input" type="text" id="api-key" placeholder="Ej: 846934259871649" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="api-secret">API Secret *</label>
+                            <input class="form-input" type="password" id="api-secret" placeholder="Tu API Secret" required>
+                        </div>
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary">Guardar Credenciales</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Panel 3: Ingredients Manager -->
                 <section class="content-panel" id="panel-ingredients">
                     <div class="panel-header">
                         <h2 class="panel-title">Inventario de Ingredientes</h2>
                         <p class="panel-desc">Administra tus materias primas y define sus costos por kilogramo o unidad.</p>
                     </div>
                     
-                    <!-- Table of current ingredients -->
                     <table id="table-ingredients">
                         <thead>
                             <tr>
@@ -504,7 +530,6 @@
                         </tbody>
                     </table>
 
-                    <!-- Form to add new ingredient -->
                     <div style="background-color: var(--color-bg-primary); padding: 24px; border-radius: var(--border-radius-lg); border: 1px solid var(--color-border); margin-top: 32px;">
                         <h3 style="font-size: 1.1rem; margin-bottom: 16px; font-weight: bold;">+ Agregar Nuevo Ingrediente</h3>
                         <form id="form-new-ingredient">
@@ -527,14 +552,13 @@
                     </div>
                 </section>
 
-                <!-- Panel 3: Recipe & Cost Calculator -->
+                <!-- Panel 4: Recipe & Cost Calculator -->
                 <section class="content-panel" id="panel-recipes">
                     <div class="panel-header">
                         <h2 class="panel-title">Calculadora de Costos por Receta</h2>
                         <p class="panel-desc">Define qué ingredientes componen cada tamaño y sabor de torta para calcular el costo de producción y fijar el precio.</p>
                     </div>
 
-                    <!-- Step 1: Choose recipe to configure -->
                     <div class="calculator-selector-bar">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label class="form-label" for="recipe-size">1. Tamaño de la Torta</label>
@@ -555,9 +579,7 @@
                         </div>
                     </div>
 
-                    <!-- Configurator Grid -->
                     <div class="calculator-grid">
-                        <!-- Ingredient quantities in recipe -->
                         <div>
                             <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 16px;">Ingredientes de la Receta</h3>
                             <table id="table-recipe-ingredients">
@@ -569,12 +591,11 @@
                                     </tr>
                                 </thead>
                                 <tbody id="recipe-tbody">
-                                    <!-- Injected dynamically based on selected recipe -->
+                                    <!-- Injected dynamically -->
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- Costing and Markup Card -->
                         <div class="calculator-summary-card">
                             <h3 class="summary-title">Resumen de Costeo</h3>
                             
@@ -630,11 +651,36 @@
                     </div>
                 </section>
 
-                <!-- Panel 4: Catalog Manager -->
+                <!-- Panel 5: Gallery Management -->
+                <section class="content-panel" id="panel-gallery">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Gestión de Galería (Carrusel 4x2)</h2>
+                        <p class="panel-desc">Sube y gestiona las imágenes del carrusel interactivo en Cloudinary. El carrusel agrupa las fotos en páginas de 8 fotos cada una (cuadrícula 4x2).</p>
+                    </div>
+
+                    <div style="background-color: var(--color-bg-primary); padding: 24px; border-radius: var(--border-radius-lg); border: 1px solid var(--color-border); margin-bottom: 32px;">
+                        <h3 style="font-size: 1rem; font-weight: bold; margin-bottom: 12px;">+ Cargar nueva imagen a la Galería</h3>
+                        <div style="display: flex; gap: 16px; align-items: center;">
+                            <input type="file" id="gallery-new-file" accept="image/*" style="flex-grow: 1;">
+                            <button type="button" id="btn-add-gallery-img" class="btn btn-primary">Subir a Cloudinary</button>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 16px;" id="gallery-title-count">Imágenes de Galería</h3>
+                    <div id="gallery-items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+                        <!-- Injected dynamically -->
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="button" id="save-gallery-btn" class="btn btn-primary">Guardar Lista de Galería</button>
+                    </div>
+                </section>
+
+                <!-- Panel 6: Catalog Manager -->
                 <section class="content-panel" id="panel-catalog">
                     <div class="panel-header">
                         <h2 class="panel-title">Catálogo de Productos Estrella</h2>
-                        <p class="panel-desc">Edita la descripción y los tags de las tortas e insumos que se visualizan en la galería.</p>
+                        <p class="panel-desc">Edita la descripción, los tags y las imágenes de las tortas e insumos que se visualizan en la galería.</p>
                     </div>
                     <form id="form-catalog">
                         <div id="catalog-container">
@@ -693,8 +739,10 @@
                     state = await res.json();
                     
                     hydrateGeneralSettings();
+                    hydrateCloudinarySettings();
                     hydrateIngredientsTable();
                     hydrateRecipeTab();
+                    hydrateGalleryTab();
                     hydrateCatalogSettings();
                 } catch (err) {
                     console.error('Error fetching config:', err);
@@ -735,7 +783,6 @@
                 e.preventDefault();
                 state.general.heroTitle = document.getElementById('hero-title').value;
                 state.general.heroSubtitle = document.getElementById('hero-subtitle').value;
-                // clean spaces from phone if any
                 state.general.phone = document.getElementById('contact-phone').value.replace(/\s+/g, '');
                 state.general.email = document.getElementById('contact-email').value;
                 state.general.location = document.getElementById('contact-location').value;
@@ -743,7 +790,26 @@
                 saveConfig('Ajustes generales actualizados con éxito.');
             });
 
-            // 2. Ingredients Inventory Panel
+            // 2. Cloudinary Settings Panel
+            const hydrateCloudinarySettings = () => {
+                if (state.cloudinary) {
+                    document.getElementById('cloud-name').value = state.cloudinary.cloudName || '';
+                    document.getElementById('api-key').value = state.cloudinary.apiKey || '';
+                    document.getElementById('api-secret').value = state.cloudinary.apiSecret || '';
+                }
+            };
+
+            document.getElementById('form-cloudinary').addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!state.cloudinary) state.cloudinary = {};
+                state.cloudinary.cloudName = document.getElementById('cloud-name').value.trim();
+                state.cloudinary.apiKey = document.getElementById('api-key').value.trim();
+                state.cloudinary.apiSecret = document.getElementById('api-secret').value.trim();
+                
+                saveConfig('Credenciales de Cloudinary actualizadas con éxito.');
+            });
+
+            // 3. Ingredients Inventory Panel
             const hydrateIngredientsTable = () => {
                 const tbody = document.getElementById('ingredients-tbody');
                 tbody.innerHTML = '';
@@ -762,7 +828,6 @@
                     tbody.appendChild(tr);
                 });
 
-                // Set up event listeners for inputs
                 document.querySelectorAll('.ing-cost-input').forEach(input => {
                     input.addEventListener('change', (e) => {
                         const index = parseInt(e.target.getAttribute('data-index'));
@@ -773,46 +838,35 @@
                     });
                 });
 
-                // Set up delete buttons
                 document.querySelectorAll('.delete-ing-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const index = parseInt(e.target.getAttribute('data-index'));
                         const ing = state.ingredients[index];
                         if (confirm(`¿Estás seguro de eliminar "${ing.name}"? Se quitará de todas las recetas.`)) {
-                            // Delete from ingredients
                             state.ingredients.splice(index, 1);
-                            
-                            // Delete from all recipes
                             Object.keys(state.recipes).forEach(key => {
                                 delete state.recipes[key][ing.id];
                             });
 
                             hydrateIngredientsTable();
-                            hydrateRecipeTab(); // Refresh recipes too
+                            hydrateRecipeTab();
                         }
                     });
                 });
             };
 
-            // Add new ingredient
             document.getElementById('form-new-ingredient').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const name = document.getElementById('ing-name').value;
                 const cost = parseFloat(document.getElementById('ing-cost').value);
-                
-                // Create unique ID
-                const id = name.toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '_')
-                    .replace(/^_+|_+$/g, '');
+                const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
                 if (state.ingredients.some(ing => ing.id === id)) {
-                    showToast('Ya existe un ingrediente con ese nombre o ID.');
+                    showToast('Ya existe un ingrediente con ese nombre.');
                     return;
                 }
 
                 state.ingredients.push({ id, name, cost });
-                
-                // Reset inputs
                 document.getElementById('ing-name').value = '';
                 document.getElementById('ing-cost').value = '';
                 
@@ -821,13 +875,11 @@
                 showToast('Ingrediente agregado al inventario.');
             });
 
-            // Save ingredients
             document.getElementById('save-ingredients-btn').addEventListener('click', () => {
                 saveConfig('Inventario de ingredientes actualizado.');
             });
 
-
-            // 3. Recipes & Cost Calculator Panel
+            // 4. Recipes & Cost Calculator Panel
             const sizeSelector = document.getElementById('recipe-size');
             const flavorSelector = document.getElementById('recipe-flavor');
             const laborHoursInput = document.getElementById('labor-hours');
@@ -835,11 +887,8 @@
             const markupInput = document.getElementById('markup-percent');
             const establishedPriceInput = document.getElementById('established-price');
 
-            // Trigger updates on dropdown change
             sizeSelector.addEventListener('change', () => hydrateRecipeTab());
             flavorSelector.addEventListener('change', () => hydrateRecipeTab());
-
-            // Recalculate cost dynamically on quantity/labor/markup change
             laborHoursInput.addEventListener('input', () => calculateCost());
             laborRateInput.addEventListener('input', () => calculateCost());
             markupInput.addEventListener('input', () => calculateCost());
@@ -852,32 +901,25 @@
                 const flavor = flavorSelector.value;
                 const recipeKey = `${size}_${flavor}`;
                 
-                // Initialize recipe if not exists
                 if (!state.recipes[recipeKey]) {
                     state.recipes[recipeKey] = {};
                 }
                 
                 const recipeData = state.recipes[recipeKey];
-
-                // Load global rate/markup values
                 laborRateInput.value = state.calculatorLaborRate || 15;
                 markupInput.value = state.calculatorDefaultMarkup || 150;
-
-                // Load direct hours from calculator configuration
-                const hours = state.calculator.sizes[size].hours || 3;
-                laborHoursInput.value = hours;
+                laborHoursInput.value = state.calculator.sizes[size].hours || 3;
 
                 const tbody = document.getElementById('recipe-tbody');
                 tbody.innerHTML = '';
 
-                // Loop through all inventory ingredients to configure their quantity in this recipe
                 state.ingredients.forEach(ing => {
                     const quantity = recipeData[ing.id] !== undefined ? recipeData[ing.id] : 0;
                     const totalCost = quantity * ing.cost;
                     
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td><strong>${ing.name}</strong><br><small style="color: var(--color-text-muted);">Costo unitario: S/ ${ing.cost.toFixed(2)}</small></td>
+                        <td><strong>${ing.name}</strong><br><small style="color: var(--color-text-muted);">Costo: S/ ${ing.cost.toFixed(2)}</small></td>
                         <td>
                             <input type="number" step="0.01" class="form-input recipe-qty-input" style="width: 100px; padding: 6px 12px;" value="${quantity}" data-ing-id="${ing.id}">
                         </td>
@@ -886,7 +928,6 @@
                     tbody.appendChild(tr);
                 });
 
-                // Attach event listener to recipe quantity inputs
                 document.querySelectorAll('.recipe-qty-input').forEach(input => {
                     input.addEventListener('input', (e) => {
                         const ingId = e.target.getAttribute('data-ing-id');
@@ -894,7 +935,6 @@
                         
                         recipeData[ingId] = qty;
                         
-                        // Update cost line
                         const ing = state.ingredients.find(i => i.id === ingId);
                         const costSpan = document.querySelector(`.recipe-ing-cost[data-ing-id="${ingId}"]`);
                         costSpan.textContent = `S/ ${(qty * ing.cost).toFixed(2)}`;
@@ -903,9 +943,6 @@
                     });
                 });
 
-                // Load current price from landing page calculator settings
-                // In app.js, the price is computed: Base Size Price * Flavor Factor
-                // So the Base Size Price is what we store. Let's load the current set base price.
                 const currentBasePrice = state.calculator.sizes[size].price || 90;
                 const flavorFactor = state.calculator.flavors[flavor].factor || 1.0;
                 const currentCalculatedPrice = Math.round(currentBasePrice * flavorFactor);
@@ -922,62 +959,119 @@
                 const recipeKey = `${size}_${flavor}`;
                 const recipeData = state.recipes[recipeKey] || {};
 
-                // 1. Ingredients Cost Sum
                 let ingredientsCost = 0;
                 state.ingredients.forEach(ing => {
                     const qty = recipeData[ing.id] || 0;
                     ingredientsCost += qty * ing.cost;
                 });
 
-                // 2. Labor Cost
                 const laborHours = parseFloat(laborHoursInput.value || 0);
                 const laborRate = parseFloat(laborRateInput.value || 0);
                 const laborCost = laborHours * laborRate;
-
-                // 3. Totals
                 const totalCost = ingredientsCost + laborCost;
-                
-                // 4. Markup suggested price
                 const markupPercent = parseFloat(markupInput.value || 0);
                 const suggestedPrice = totalCost * (1 + markupPercent / 100);
 
-                // Update text outputs
                 document.getElementById('summary-ing-cost').textContent = `S/ ${ingredientsCost.toFixed(2)}`;
                 document.getElementById('summary-labor-cost').textContent = `S/ ${laborCost.toFixed(2)}`;
                 document.getElementById('summary-total-cost').textContent = `S/ ${totalCost.toFixed(2)}`;
                 document.getElementById('summary-suggested-price').textContent = `S/ ${suggestedPrice.toFixed(2)}`;
-
-                // Pre-fill established price if it is 0 or suggested has changed
-                // (Optional: let user keep manual override)
             };
 
-            // Save recipe details and base prices
             document.getElementById('save-recipe-btn').addEventListener('click', () => {
                 const size = sizeSelector.value;
                 const flavor = flavorSelector.value;
-                const recipeKey = `${size}_${flavor}`;
                 const finalPrice = parseFloat(establishedPriceInput.value || 0);
 
-                // Save global cost configurations
                 state.calculatorLaborRate = parseFloat(laborRateInput.value || 15);
                 state.calculatorDefaultMarkup = parseFloat(markupInput.value || 150);
-
-                // Update calculator configuration hours and prices
                 state.calculator.sizes[size].hours = parseFloat(laborHoursInput.value || 3.0);
                 
-                // In landing page, cost is calculated as BasePrice * FlavorFactor
-                // Therefore, if user establishes S/ 180 for "chocolate" (factor 1.1)
-                // We should store: BasePrice = establishedPrice / FlavorFactor
                 const factor = state.calculator.flavors[flavor].factor || 1.0;
-                const basePrice = Math.round(finalPrice / factor);
-                
-                state.calculator.sizes[size].price = basePrice;
+                state.calculator.sizes[size].price = Math.round(finalPrice / factor);
 
-                saveConfig(`Receta y precio para ${sizeSelector.options[sizeSelector.selectedIndex].text} - ${flavorSelector.options[flavorSelector.selectedIndex].text} actualizados con éxito.`);
+                saveConfig(`Receta y precio actualizados.`);
             });
 
+            // 5. Gallery Management Panel
+            const hydrateGalleryTab = () => {
+                const grid = document.getElementById('gallery-items-grid');
+                grid.innerHTML = '';
+                
+                document.getElementById('gallery-title-count').textContent = `Imágenes de Galería (${state.gallery.length} fotos)`;
 
-            // 4. Products Catalog settings
+                state.gallery.forEach((url, index) => {
+                    const item = document.createElement('div');
+                    item.style.border = '1px solid var(--color-border)';
+                    item.style.borderRadius = 'var(--border-radius-md)';
+                    item.style.padding = '12px';
+                    item.style.backgroundColor = 'var(--color-bg-primary)';
+                    item.style.display = 'flex';
+                    item.style.flexDirection = 'column';
+                    item.style.gap = '8px';
+                    item.style.position = 'relative';
+
+                    item.innerHTML = `
+                        <img src="${url}" style="width: 100%; height: 120px; object-fit: cover; border-radius: var(--border-radius-md);">
+                        <div style="font-size: 0.75rem; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${url}">
+                            ${url.startsWith('http') ? 'Cloudinary Nube' : 'Local Carpeta'}
+                        </div>
+                        <button type="button" class="btn btn-action btn-danger delete-gallery-btn" data-index="${index}" style="width: 100%; padding: 4px 8px;">Eliminar</button>
+                    `;
+                    grid.appendChild(item);
+                });
+
+                document.querySelectorAll('.delete-gallery-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        state.gallery.splice(index, 1);
+                        hydrateGalleryTab();
+                    });
+                });
+            };
+
+            document.getElementById('btn-add-gallery-img').addEventListener('click', async () => {
+                const fileInput = document.getElementById('gallery-new-file');
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert('Por favor, selecciona una foto de tu computadora.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('image', file);
+
+                showToast('Subiendo imagen a Cloudinary...');
+                try {
+                    const res = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await res.json();
+                    
+                    if (res.status !== 200) {
+                        throw new Error(result.error || 'Server error');
+                    }
+
+                    if (result.url) {
+                        state.gallery.push(result.url);
+                        fileInput.value = ''; // Reset file input
+                        hydrateGalleryTab();
+                        showToast('¡Imagen cargada exitosamente a la galería!');
+                    } else {
+                        alert('Error al subir: ' + result.error);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Error: ' + err.message);
+                }
+            });
+
+            document.getElementById('save-gallery-btn').addEventListener('click', () => {
+                saveConfig('Galería de fotos guardada correctamente.');
+            });
+
+            // 6. Catalog Manager Panel
             const hydrateCatalogSettings = () => {
                 const container = document.getElementById('catalog-container');
                 container.innerHTML = '';
@@ -1002,15 +1096,24 @@
                                 <input class="form-input catalog-tag-input" type="text" value="${item.tag}" data-index="${index}">
                             </div>
                         </div>
-                        <div class="form-group" style="margin-bottom: 0;">
+                        <div class="form-group">
                             <label class="form-label">Descripción Sensorial (Ingredientes, texturas, etc)</label>
                             <textarea class="form-input catalog-desc-input" data-index="${index}">${item.desc}</textarea>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Imagen de Cloudinary / URL</label>
+                            <div style="display: flex; gap: 16px; align-items: center; margin-top: 8px;">
+                                <img src="${item.image || 'assets/logo.png'}" id="catalog-preview-${index}" style="width: 80px; height: 80px; object-fit: cover; border-radius: var(--border-radius-md); border: 1px solid var(--color-border);">
+                                <div style="flex-grow: 1;">
+                                    <input type="text" class="form-input catalog-image-input" value="${item.image || ''}" data-index="${index}" id="catalog-url-${index}" style="margin-bottom: 8px;" placeholder="URL de la imagen">
+                                    <input type="file" class="catalog-file-input" data-index="${index}" accept="image/*">
+                                </div>
+                            </div>
                         </div>
                     `;
                     container.appendChild(wrapper);
                 });
 
-                // Attach listeners
                 document.querySelectorAll('.catalog-title-input').forEach(input => {
                     input.addEventListener('change', (e) => {
                         const index = parseInt(e.target.getAttribute('data-index'));
@@ -1027,6 +1130,49 @@
                     input.addEventListener('change', (e) => {
                         const index = parseInt(e.target.getAttribute('data-index'));
                         state.catalog[index].desc = e.target.value;
+                    });
+                });
+                document.querySelectorAll('.catalog-image-input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        state.catalog[index].image = e.target.value;
+                        document.getElementById(`catalog-preview-${index}`).src = e.target.value;
+                    });
+                });
+
+                document.querySelectorAll('.catalog-file-input').forEach(input => {
+                    input.addEventListener('change', async (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        const file = e.target.files[0];
+                        if (!file) return;
+
+                        const formData = new FormData();
+                        formData.append('image', file);
+
+                        showToast('Subiendo imagen de catálogo...');
+                        try {
+                            const res = await fetch('/api/upload', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            const result = await res.json();
+                            
+                            if (res.status !== 200) {
+                                throw new Error(result.error || 'Server error');
+                            }
+
+                            if (result.url) {
+                                state.catalog[index].image = result.url;
+                                document.getElementById(`catalog-url-${index}`).value = result.url;
+                                document.getElementById(`catalog-preview-${index}`).src = result.url;
+                                showToast('¡Imagen de catálogo subida!');
+                            } else {
+                                alert('Error al subir: ' + result.error);
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            alert('Error al subir: ' + err.message);
+                        }
                     });
                 });
             };

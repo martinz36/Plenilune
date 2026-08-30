@@ -6,30 +6,57 @@
     "heroTitle": "El tiempo, el detalle y el sabor real que merecen tus momentos especiales",
     "heroSubtitle": "Pastelería hecha a mano y desde cero. Sin premezclas ultraprocesadas, sin conservantes químicos ni procesos automatizados. Solo ingredientes nobles en su estado más puro y el tiempo que requiere la excelencia."
   },
+  "cloudinary": {
+    "cloudName": "",
+    "apiKey": "",
+    "apiSecret": ""
+  },
+  "gallery": [
+    "assets/ig_1.jpg",
+    "assets/ig_2.jpg",
+    "assets/ig_3.jpg",
+    "assets/ig_4.jpg",
+    "assets/ig_5.jpg",
+    "assets/ig_6.jpg",
+    "assets/ig_7.jpg",
+    "assets/ig_8.jpg",
+    "assets/ig_9.jpg",
+    "assets/ig_10.jpg",
+    "assets/ig_11.jpg",
+    "assets/ig_12.jpg",
+    "assets/ig_13.jpg",
+    "assets/ig_14.jpg",
+    "assets/ig_15.jpg",
+    "assets/ig_16.jpg"
+  ],
   "catalog": [
     {
       "id": "selene",
       "tag": "Retro y Coquette",
       "title": "Torta Cereza Retro",
-      "desc": "Decoración vintage con bordes ultra-piped en tonos crema y rojo pasión. Bizcochuelo súper húmedo bañado en almíbar casero, relleno de crema diplomática y un corazón de cerezas al marrasquino."
+      "desc": "Decoración vintage con bordes ultra-piped en tonos crema y rojo pasión. Bizcochuelo súper húmedo bañado en almíbar casero, relleno de crema diplomática y un corazón de cerezas al marrasquino.",
+      "image": "assets/ig_11.jpg"
     },
     {
       "id": "lavanda",
       "tag": "Vintage Chic",
       "title": "Torta Royal Lavanda",
-      "desc": "Un tributo a la repostería clásica europea. Detallada con volantes de crema en degradé lila, perlas comestibles y flores modeladas. Bizcocho aromático relleno de crema de arándanos silvestres."
+      "desc": "Un tributo a la repostería clásica europea. Detallada con volantes de crema en degradé lila, perlas comestibles y flores modeladas. Bizcocho aromático relleno de crema de arándanos silvestres.",
+      "image": "assets/ig_7.jpg"
     },
     {
       "id": "corazon",
       "tag": "Romántica y de Autor",
       "title": "Corazón de Crema y Cintas",
-      "desc": "Torta en forma de corazón con volantes rústicos, ribetes verdes bordados a mano y lazos de cinta satinada. Relleno de compota cítrica y mousse de chocolate blanco de alta pureza."
+      "desc": "Torta en forma de corazón con volantes rústicos, ribetes verdes bordados a mano y lazos de cinta satinada. Relleno de compota cítrica y mousse de chocolate blanco de alta pureza.",
+      "image": "assets/ig_17.jpg"
     },
     {
       "id": "croissant",
       "tag": "Bollería de Autor",
       "title": "Croissant Crujiente de Mantequilla",
-      "desc": "Hojaldrado artesanal de 24 capas elaborado pacientemente a mano en nuestro taller durante 3 días. Corteza sumamente crujiente de color dorado brillante y una miga alveolada y aromática."
+      "desc": "Hojaldrado artesanal de 24 capas elaborado pacientemente a mano en nuestro taller durante 3 días. Corteza sumamente crujiente de color dorado brillante y una miga alveolada y aromática.",
+      "image": "assets/ig_8.jpg"
     }
   ],
   "ingredients": [

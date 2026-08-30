@@ -52,6 +52,7 @@
         <div class="container hero-container">
             <div class="hero-content">
                 <span class="hero-tag">Pastelería 100% Honesta y de Autor</span>
+                <p class="hero-slogan">«El estrés no existe en presencia de un pastel»</p>
                 <h1 class="hero-title" id="hero-title-display">El tiempo, el detalle y el sabor real que merecen tus momentos especiales</h1>
                 <p class="hero-subtitle" id="hero-subtitle-display">Pastelería hecha a mano y desde cero. Sin premezclas ultraprocesadas, sin conservantes químicos ni procesos automatizados. Solo ingredientes nobles en su estado más puro y el tiempo que requiere la excelencia.</p>
                 <div class="hero-actions">
@@ -211,70 +212,20 @@
             <div class="section-header text-center">
                 <span class="section-tag">Colección de Autor</span>
                 <h2 class="section-title">Nuestras Creaciones Estrella</h2>
-                <p class="section-desc">Diseñadas para deleitar los sentidos tanto en lo visual como en lo gustativo. Tres perfiles pensados para paladares exigentes.</p>
+                <p class="section-desc">Un recorrido visual por las obras de repostería fina diseñadas en nuestro taller artesanal.</p>
             </div>
 
-            <div class="gallery-grid">
-                <!-- Product 1: Red coquette cherry cake -->
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="assets/ig_11.jpg" alt="Torta Vintage Coquette de Cerezas Plenilune" class="product-image">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag" data-catalog-tag="selene">Retro y Coquette</span>
-                        <h3 data-catalog-title="selene">Torta Cereza Retro</h3>
-                        <p class="product-desc" data-catalog-desc="selene">Decoración vintage con bordes ultra-piped en tonos crema y rojo pasión. Bizcochuelo súper húmedo bañado en almíbar casero, relleno de crema diplomática y un corazón de cerezas al marrasquino.</p>
-                        <div class="product-meta">
-                            <span>Complejidad: Exclusiva</span>
-                            <span>La más solicitada</span>
-                        </div>
+            <div class="gallery-carousel-wrapper">
+                <button type="button" class="carousel-control prev" id="gallery-prev" aria-label="Anterior">&lsaquo;</button>
+                <div class="gallery-carousel-container">
+                    <div class="gallery-carousel-track" id="gallery-track">
+                        <!-- Cargar dinámicamente en app.js con diapositivas en grilla de 4x2 -->
                     </div>
                 </div>
-                <!-- Product 2: Vintage purple cake -->
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="assets/ig_7.jpg" alt="Torta Vintage Lavanda Plenilune" class="product-image">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag" data-catalog-tag="lavanda">Vintage Chic</span>
-                        <h3 data-catalog-title="lavanda">Torta Royal Lavanda</h3>
-                        <p class="product-desc" data-catalog-desc="lavanda">Un tributo a la repostería clásica europea. Detallada con volantes de crema en degradé lila, perlas comestibles y flores modeladas. Bizcocho aromático relleno de crema de arándanos silvestres.</p>
-                        <div class="product-meta">
-                            <span>Complejidad: Muy Alta</span>
-                            <span>Especial de Cumpleaños</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product 3: Heart cake green/white -->
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="assets/ig_17.jpg" alt="Torta Corazón Cancer Baby Plenilune" class="product-image">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag" data-catalog-tag="corazon">Romántica y de Autor</span>
-                        <h3 data-catalog-title="corazon">Corazón de Crema y Cintas</h3>
-                        <p class="product-desc" data-catalog-desc="corazon">Torta en forma de corazón con volantes rústicos, ribetes verdes bordados a mano y lazos de cinta satinada. Relleno de compota cítrica y mousse de chocolate blanco de alta pureza.</p>
-                        <div class="product-meta">
-                            <span>Complejidad: Alta</span>
-                            <span>Diseño personalizado</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product 4: Golden croissants -->
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="assets/ig_8.jpg" alt="Croissants Artesanales Plenilune" class="product-image">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag" data-catalog-tag="croissant">Bollería de Autor</span>
-                        <h3 data-catalog-title="croissant">Croissant Crujiente de Mantequilla</h3>
-                        <p class="product-desc" data-catalog-desc="croissant">Hojaldrado artesanal de 24 capas elaborado pacientemente a mano en nuestro taller durante 3 días. Corteza sumamente crujiente de color dorado brillante y una miga alveolada y aromática.</p>
-                        <div class="product-meta">
-                            <span>Laminado: 100% a mano</span>
-                            <span>Frescos del día</span>
-                        </div>
-                    </div>
-                </div>
+                <button type="button" class="carousel-control next" id="gallery-next" aria-label="Siguiente">&rsaquo;</button>
+            </div>
+            <div class="carousel-indicators" id="gallery-indicators">
+                <!-- Indicadores cargados dinámicamente en app.js -->
             </div>
 
             <!-- Testimonials Grid -->
@@ -307,97 +258,7 @@
         </div>
     </section>
 
-    <!-- Instagram Feed Grid Section -->
-    <section class="instagram-feed" id="instagram-feed">
-        <div class="container">
-            <div class="section-header text-center">
-                <span class="section-tag">Galería de Diseños</span>
-                <h2 class="section-title">Nuestra Vitrina en Instagram</h2>
-                <p class="section-desc">Historias horneadas a pedido en nuestro taller. Cada torta representa una celebración y horas de dedicación única.</p>
-            </div>
-            
-            <div class="instagram-grid">
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_1.jpg" alt="Torta Minecraft Creeper" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_2.jpg" alt="Torta Calendario Personalizado" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_3.jpg" alt="Torta de Chocolate Antonio" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_4.jpg" alt="Torta Born to Die" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_5.jpg" alt="Torta de Patitos en el Lago" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_6.jpg" alt="Tarta de Frutillas de Autor" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_13.jpg" alt="Torta Corazón 1 Year" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_14.jpg" alt="Torta de Girasoles" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_15.jpg" alt="Galletas de Personajes" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_16.jpg" alt="Torta Corazón HB LU" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_10.jpg" alt="Galletas One Piece" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="instagram-item">
-                    <img src="assets/ig_18.jpg" alt="Cheesecake con Frutas y Placa" class="instagram-img">
-                    <div class="instagram-overlay">
-                        <span class="instagram-icon">📸</span>
-                    </div>
-                </a>
-            </div>
-            
-            <div class="text-center instagram-cta">
-                <a href="https://www.instagram.com/plenilune.pasteleria/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-                    Ver Galería Completa en Instagram
-                </a>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Interactive Value & Quote Calculator -->
     <section class="calculator-section" id="calculator">
@@ -433,79 +294,114 @@
 
                 <!-- Calculator Form -->
                 <div class="calculator-card glass-panel">
-                    <form id="quote-form">
-                        <!-- Step 1: Size -->
-                        <div class="form-group">
-                            <label class="form-label">1. ¿Para cuántas personas es el evento?</label>
-                            <div class="options-grid" id="size-options">
-                                <button type="button" class="option-btn active" data-value="10" data-hours="3" data-price="90">
-                                    <strong>10 personas</strong>
-                                    <span>Torta compacta (1 piso)</span>
-                                </button>
-                                <button type="button" class="option-btn" data-value="20" data-hours="4.5" data-price="170">
-                                    <strong>20 personas</strong>
-                                    <span>Torta mediana (1 o 2 pisos)</span>
-                                </button>
-                                <button type="button" class="option-btn" data-value="30" data-hours="6" data-price="250">
-                                    <strong>30 personas</strong>
-                                    <span>Torta celebración (2 pisos)</span>
-                                </button>
-                                <button type="button" class="option-btn" data-value="40" data-hours="8.5" data-price="340">
-                                    <strong>40+ personas</strong>
-                                    <span>Torta de gran evento (3 pisos)</span>
-                                </button>
+                    <form id="quote-form" onsubmit="return false;">
+                        
+                        <!-- Paso 1: Tus Datos -->
+                        <div class="calculator-step" id="calc-step-1">
+                            <span class="step-badge">Paso 1 de 2</span>
+                            <h3 class="step-title">Ingresa tus datos de contacto</h3>
+                            <p class="step-subtitle">Para cotizar, primero requerimos los siguientes datos obligatorios:</p>
+                            
+                            <div class="form-input-group">
+                                <label class="form-label" for="client-name">Nombre y Apellido *</label>
+                                <input type="text" id="client-name" class="calc-input" placeholder="Tu nombre completo" required>
                             </div>
-                        </div>
-
-                        <!-- Step 2: Flavor -->
-                        <div class="form-group">
-                            <label class="form-label">2. Perfil de Sabor y Rellenos Nobles</label>
-                            <div class="options-grid" id="flavor-options">
-                                <button type="button" class="option-btn active" data-value="frutal" data-factor="1.0" data-desc="Mantequilla 82%, limón natural, coulis de frambuesa y mascarpone fresco.">
-                                    <strong>Cítrico y Frutal</strong>
-                                    <span>Frescura balanceada</span>
-                                </button>
-                                <button type="button" class="option-btn" data-value="chocolate" data-factor="1.1" data-desc="Chocolate belga 55%-70% de origen, praliné artesanal de avellanas tostadas.">
-                                    <strong>Chocolate Belga y Praliné</strong>
-                                    <span>Intensidad y texturas</span>
-                                </button>
-                                <button type="button" class="option-btn" data-value="pistacho" data-factor="1.2" data-desc="Pistachos seleccionados y tostados a mano en el taller, crema fresca de queso.">
-                                    <strong>Pistacho & Frutos Rojos</strong>
-                                    <span>Sabor Premium y sofisticado</span>
-                                </button>
+                            
+                            <div class="form-input-group">
+                                <label class="form-label" for="client-email">Correo electrónico *</label>
+                                <input type="email" id="client-email" class="calc-input" placeholder="ejemplo@correo.com" required>
                             </div>
-                        </div>
-
-                        <!-- Step 3: Design Complexity -->
-                        <div class="form-group">
-                            <label class="form-label">3. Nivel de Complejidad y Decoración</label>
-                            <div class="options-grid" id="design-options">
-                                <button type="button" class="option-btn active" data-value="minimal" data-hours-add="0" data-price-add="0" data-desc="Texturizado sutil con espátula, elegante y minimalista.">
-                                    <strong>Minimalista Texturada</strong>
-                                    <span>Elegancia simple (0h extra)</span>
-                                </button>
-                                <button type="button" class="option-btn" data-value="floral" data-hours-add="1.5" data-price-add="30" data-desc="Decorada con flores orgánicas frescas/secas y detalles de pan de oro 24k.">
-                                    <strong>Detalles & Flores Orgánicas</strong>
-                                    <span>Romántica y natural (+1.5h)</span>
-                                </button>
-                                <button type="button" class="option-btn" data-value="sculpture" data-hours-add="3" data-price-add="70" data-desc="Modelado escultórico a mano, detalles tridimensionales y altura de autor.">
-                                    <strong>Escultórica de Autor</strong>
-                                    <span>Diseño único de alta costura (+3h)</span>
-                                </button>
+                            
+                            <div class="form-input-group">
+                                <label class="form-label" for="client-whatsapp">WhatsApp / Celular *</label>
+                                <input type="tel" id="client-whatsapp" class="calc-input" placeholder="Ej: 936037502" required>
                             </div>
-                        </div>
-
-                        <!-- Dynamic Output Summary -->
-                        <div class="calc-summary">
-                            <div class="summary-row">
-                                <span>Inversión estimada:</span>
-                                <strong class="summary-price" id="calc-price-display">S/ 90 - S/ 105</strong>
-                            </div>
-                            <p class="summary-note">El valor exacto se define tras afinar detalles específicos del diseño y alergias en nuestra conversación directa.</p>
-                            <button type="button" id="whatsapp-submit" class="btn btn-primary btn-block">
-                                <svg class="btn-icon" viewBox="0 0 24 24" width="20" height="20"><path d="M12.012 2c-5.506 0-9.988 4.47-9.988 9.957 0 1.764.465 3.488 1.347 5.016L2 22l5.19-1.353a9.96 9.96 0 0 0 4.822 1.233c5.506 0 9.988-4.47 9.988-9.957C22 6.47 17.518 2 12.012 2zm5.728 14.1c-.244.68-.96 1.258-1.597 1.393-.637.135-1.46.248-4.262-.907-3.58-1.478-5.894-5.11-6.073-5.347-.18-.238-1.455-1.921-1.455-3.663 0-1.742.915-2.6 1.236-2.936.32-.337.708-.423.94-.423.235 0 .47.004.673.013.212.01.498-.04.778.63.287.685.986 2.395 1.07 2.564.086.17.142.366.028.59-.113.227-.17.366-.34.56-.17.195-.357.437-.51.586-.17.165-.347.345-.15.68.197.337.876 1.436 1.877 2.325 1.293 1.147 2.383 1.503 2.723 1.673.34.17.537.14.738-.09.2-.23.864-1.002 1.096-1.344.23-.342.463-.284.778-.17.316.115 2.006.942 2.35.113.344-.17.574-.256.818-.596.244-.34.122-.652-.06-.992-.182-.34-.808-1.332-1.336-1.56-.528-.228-1.036-.34-1.502-.34h-.012c-.52 0-1.036.112-1.502.34z" fill="currentColor"/></svg>
-                                Cotizar detalles por WhatsApp
+                            
+                            <button type="button" id="btn-next-step" class="btn btn-primary btn-block" style="margin-top: 16px;">
+                                Continuar a personalizar mi pastel &rarr;
                             </button>
+                        </div>
+
+                        <!-- Paso 2: Personalización del Pastel -->
+                        <div class="calculator-step hidden" id="calc-step-2">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                <span class="step-badge">Paso 2 de 2</span>
+                                <button type="button" id="btn-prev-step" class="btn-text">&larr; Editar mis datos</button>
+                            </div>
+                            
+                            <!-- Step 1: Size -->
+                            <div class="form-group">
+                                <label class="form-label">1. ¿Para cuántas personas es el evento?</label>
+                                <div class="options-grid" id="size-options">
+                                    <button type="button" class="option-btn active" data-value="10" data-hours="3" data-price="90">
+                                        <strong>10 personas</strong>
+                                        <span>Torta compacta (1 piso)</span>
+                                    </button>
+                                    <button type="button" class="option-btn" data-value="20" data-hours="4.5" data-price="170">
+                                        <strong>20 personas</strong>
+                                        <span>Torta mediana (1 o 2 pisos)</span>
+                                    </button>
+                                    <button type="button" class="option-btn" data-value="30" data-hours="6" data-price="250">
+                                        <strong>30 personas</strong>
+                                        <span>Torta celebración (2 pisos)</span>
+                                    </button>
+                                    <button type="button" class="option-btn" data-value="40" data-hours="8.5" data-price="340">
+                                        <strong>40+ personas</strong>
+                                        <span>Torta de gran evento (3 pisos)</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Flavor -->
+                            <div class="form-group">
+                                <label class="form-label">2. Perfil de Sabor y Rellenos Nobles</label>
+                                <div class="options-grid" id="flavor-options">
+                                    <button type="button" class="option-btn active" data-value="frutal" data-factor="1.0" data-desc="Mantequilla 82%, limón natural, coulis de frambuesa y mascarpone fresco.">
+                                        <strong>Cítrico y Frutal</strong>
+                                        <span>Frescura balanceada</span>
+                                    </button>
+                                    <button type="button" class="option-btn" data-value="chocolate" data-factor="1.1" data-desc="Chocolate belga 55%-70% de origen, praliné artesanal de avellanas tostadas.">
+                                        <strong>Chocolate Belga y Praliné</strong>
+                                        <span>Intensidad y texturas</span>
+                                    </button>
+                                    <button type="button" class="option-btn" data-value="pistacho" data-factor="1.2" data-desc="Pistachos seleccionados y tostados a mano en el taller, crema fresca de queso.">
+                                        <strong>Pistacho & Frutos Rojos</strong>
+                                        <span>Sabor Premium y sofisticado</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Design Complexity -->
+                            <div class="form-group">
+                                <label class="form-label">3. Nivel de Complejidad y Decoración</label>
+                                <div class="options-grid" id="design-options">
+                                    <button type="button" class="option-btn active" data-value="minimal" data-hours-add="0" data-price-add="0" data-desc="Texturizado sutil con espátula, elegante y minimalista.">
+                                        <strong>Minimalista Texturada</strong>
+                                        <span>Elegancia simple (0h extra)</span>
+                                    </button>
+                                    <button type="button" class="option-btn" data-value="floral" data-hours-add="1.5" data-price-add="30" data-desc="Decorada con flores orgánicas frescas/secas y detalles de pan de oro 24k.">
+                                        <strong>Detalles & Flores Orgánicas</strong>
+                                        <span>Romántica y natural (+1.5h)</span>
+                                    </button>
+                                    <button type="button" class="option-btn" data-value="sculpture" data-hours-add="3" data-price-add="70" data-desc="Modelado escultórico a mano, detalles tridimensionales y altura de autor.">
+                                        <strong>Escultórica de Autor</strong>
+                                        <span>Diseño único de alta costura (+3h)</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Output Summary -->
+                            <div class="calc-summary" style="margin-top: 32px;">
+                                <div class="summary-row">
+                                    <span>Inversión estimada:</span>
+                                    <strong class="summary-price" id="calc-price-display">S/ 90 - S/ 105</strong>
+                                </div>
+                                <p class="summary-note">El valor exacto se define tras afinar detalles específicos del diseño y alergias en nuestra conversación directa.</p>
+                                <button type="button" id="whatsapp-submit" class="btn btn-primary btn-block">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" width="20" height="20"><path d="M12.012 2c-5.506 0-9.988 4.47-9.988 9.957 0 1.764.465 3.488 1.347 5.016L2 22l5.19-1.353a9.96 9.96 0 0 0 4.822 1.233c5.506 0 9.988-4.47 9.988-9.957C22 6.47 17.518 2 12.012 2zm5.728 14.1c-.244.68-.96 1.258-1.597 1.393-.637.135-1.46.248-4.262-.907-3.58-1.478-5.894-5.11-6.073-5.347-.18-.238-1.455-1.921-1.455-3.663 0-1.742.915-2.6 1.236-2.936.32-.337.708-.423.94-.423.235 0 .47.004.673.013.212.01.498-.04.778.63.287.685.986 2.395 1.07 2.564.086.17.142.366.028.59-.113.227-.17.366-.34.56-.17.195-.357.437-.51.586-.17.165-.347.345-.15.68.197.337.876 1.436 1.877 2.325 1.293 1.147 2.383 1.503 2.723 1.673.34.17.537.14.738-.09.2-.23.864-1.002 1.096-1.344.23-.342.463-.284.778-.17.316.115 2.006.942 2.35.113.344-.17.574-.256.818-.596.244-.34.122-.652-.06-.992-.182-.34-.808-1.332-1.336-1.56-.528-.228-1.036-.34-1.502-.34h-.012c-.52 0-1.036.112-1.502.34z" fill="currentColor"/></svg>
+                                    Enviar Cotización por WhatsApp
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
