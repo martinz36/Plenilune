@@ -34,25 +34,15 @@ document.addEventListener('DOMContentLoaded', () => {
      });
  
      /* ==========================================================================
-        2. FAQ ACCORDION LOGIC
+        2. FAQ ACCORDION LOGIC (Fallback for static rendering)
         ========================================================================== */
      const faqItems = document.querySelectorAll('.faq-item');
- 
      faqItems.forEach(item => {
          const trigger = item.querySelector('.faq-trigger');
-         
          trigger.addEventListener('click', () => {
              const isOpen = item.classList.contains('open');
-             
-             // Close all items
-             faqItems.forEach(otherItem => {
-                 otherItem.classList.remove('open');
-             });
-             
-             // Toggle current item
-             if (!isOpen) {
-                 item.classList.add('open');
-             }
+             faqItems.forEach(otherItem => otherItem.classList.remove('open'));
+             if (!isOpen) item.classList.add('open');
          });
      });
  
@@ -317,6 +307,164 @@ document.addEventListener('DOMContentLoaded', () => {
              const floatLink = document.getElementById('whatsapp-float-link');
              if (floatLink) {
                  floatLink.setAttribute('href', `https://api.whatsapp.com/send?phone=${contactPhone}&text=${encodeURIComponent("¡Hola Plenilune Pastelería! \u{1F319} Me gustaría hacer una consulta sobre sus tortas de autor.")}`);
+             }
+ 
+             // Hydrate Dynamic Landing Page Sections Content (CMS)
+             if (config.landing) {
+                 const land = config.landing;
+ 
+                 // 1. Hero
+                 if (land.hero) {
+                     const tag = document.getElementById('hero-tag-display');
+                     const slogan = document.getElementById('hero-slogan-display');
+                     const title = document.getElementById('hero-title-display');
+                     const subtitle = document.getElementById('hero-subtitle-display');
+                     
+                     if (tag) tag.textContent = land.hero.tag;
+                     if (slogan) slogan.textContent = land.hero.slogan;
+                     if (title) title.textContent = land.hero.title;
+                     if (subtitle) subtitle.textContent = land.hero.subtitle;
+                 }
+ 
+                 // 2. Comparison
+                 if (land.comparison) {
+                     const tag = document.getElementById('comparison-tag-display');
+                     const title = document.getElementById('comparison-title-display');
+                     const desc = document.getElementById('comparison-desc-display');
+                     const indTitle = document.getElementById('comparison-ind-title-display');
+                     const plenTitle = document.getElementById('comparison-plen-title-display');
+                     
+                     if (tag) tag.textContent = land.comparison.tag;
+                     if (title) title.textContent = land.comparison.title;
+                     if (desc) desc.textContent = land.comparison.desc;
+                     if (indTitle) indTitle.textContent = land.comparison.industrialTitle;
+                     if (plenTitle) plenTitle.textContent = land.comparison.pleniluneTitle;
+ 
+                     // Bullets Industrial
+                     const indBulletsContainer = document.getElementById('comparison-ind-bullets-display');
+                     if (indBulletsContainer && land.comparison.industrialBullets) {
+                         indBulletsContainer.innerHTML = '';
+                         land.comparison.industrialBullets.forEach(bullet => {
+                             const li = document.createElement('li');
+                             li.innerHTML = `
+                                 <svg class="icon icon-cross" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                 <div>${bullet}</div>
+                             `;
+                             indBulletsContainer.appendChild(li);
+                         });
+                     }
+ 
+                     // Bullets Plenilune
+                     const plenBulletsContainer = document.getElementById('comparison-plen-bullets-display');
+                     if (plenBulletsContainer && land.comparison.pleniluneBullets) {
+                         plenBulletsContainer.innerHTML = '';
+                         land.comparison.pleniluneBullets.forEach(bullet => {
+                             const li = document.createElement('li');
+                             li.innerHTML = `
+                                 <svg class="icon icon-check" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                 <div>${bullet}</div>
+                             `;
+                             plenBulletsContainer.appendChild(li);
+                         });
+                     }
+                 }
+ 
+                 // 3. Process
+                 if (land.process) {
+                     const tag = document.getElementById('process-tag-display');
+                     const title = document.getElementById('process-title-display');
+                     const desc = document.getElementById('process-desc-display');
+                     const quote = document.getElementById('process-quote-display');
+                     const author = document.getElementById('process-quote-author-display');
+                     
+                     if (tag) tag.textContent = land.process.tag;
+                     if (title) title.textContent = land.process.title;
+                     if (desc) desc.textContent = land.process.desc;
+                     if (quote) quote.textContent = land.process.quote;
+                     if (author) author.textContent = `— ${land.process.quoteAuthor}`;
+ 
+                     // Dynamic Steps Timeline
+                     const stepsContainer = document.getElementById('process-steps-display');
+                     if (stepsContainer && land.process.steps) {
+                         stepsContainer.innerHTML = '';
+                         land.process.steps.forEach((step, idx) => {
+                             const numStr = String(idx + 1).padStart(2, '0');
+                             const stepDiv = document.createElement('div');
+                             stepDiv.className = 'process-step';
+                             stepDiv.innerHTML = `
+                                 <div class="process-number">${numStr}</div>
+                                 <div class="process-content">
+                                     <h3>${step.title}</h3>
+                                     <p>${step.desc}</p>
+                                 </div>
+                             `;
+                             stepsContainer.appendChild(stepDiv);
+                         });
+                     }
+                 }
+ 
+                 // 4. Gallery (Nuestras Creaciones Estrella)
+                 if (land.gallery) {
+                     const tag = document.getElementById('gallery-tag-display');
+                     const title = document.getElementById('gallery-title-display');
+                     const desc = document.getElementById('gallery-desc-display');
+                     
+                     if (tag) tag.textContent = land.gallery.tag;
+                     if (title) title.textContent = land.gallery.title;
+                     if (desc) desc.textContent = land.gallery.desc;
+                 }
+ 
+                 // 5. Calculator Header
+                 if (land.calculator) {
+                     const tag = document.getElementById('calc-tag-display');
+                     const title = document.getElementById('calc-title-display');
+                     const desc = document.getElementById('calc-desc-display');
+                     
+                     if (tag) tag.textContent = land.calculator.tag;
+                     if (title) title.textContent = land.calculator.title;
+                     if (desc) desc.innerHTML = land.calculator.desc;
+                 }
+ 
+                 // 6. FAQs Accordion
+                 if (land.faqs) {
+                     const tag = document.getElementById('faq-tag-display');
+                     const title = document.getElementById('faq-title-display');
+                     const desc = document.getElementById('faq-desc-display');
+                     
+                     if (tag) tag.textContent = land.faqTag || "Transparencia Total";
+                     if (title) title.textContent = land.faqTitle || "Preguntas Frecuentes";
+                     if (desc) desc.textContent = land.faqDesc || "Resolvemos tus dudas sobre nuestros precios, reservas y método de trabajo.";
+ 
+                     const faqContainer = document.getElementById('faq-accordion-display');
+                     if (faqContainer) {
+                         faqContainer.innerHTML = '';
+                         land.faqs.forEach(faq => {
+                             const item = document.createElement('div');
+                             item.className = 'faq-item';
+                             item.innerHTML = `
+                                 <button class="faq-trigger">
+                                     <span>${faq.question}</span>
+                                     <svg class="icon icon-chevron" viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+                                 </button>
+                                 <div class="faq-content">
+                                     <p>${faq.answer}</p>
+                                 </div>
+                             `;
+                             faqContainer.appendChild(item);
+                         });
+ 
+                         // Re-bind Accordion click listeners
+                         const newFaqItems = faqContainer.querySelectorAll('.faq-item');
+                         newFaqItems.forEach(item => {
+                             const trigger = item.querySelector('.faq-trigger');
+                             trigger.addEventListener('click', () => {
+                                 const isOpen = item.classList.contains('open');
+                                 newFaqItems.forEach(otherItem => otherItem.classList.remove('open'));
+                                 if (!isOpen) item.classList.add('open');
+                             });
+                         });
+                     }
+                 }
              }
  
              // Hydrate Catalog Items in gallery (Null-safe for backward compatibility)

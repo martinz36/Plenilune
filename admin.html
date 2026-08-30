@@ -439,6 +439,7 @@
                     <ul class="nav-list">
                         <li><button class="nav-btn active" data-target="general">Ajustes Web</button></li>
                         <li><button class="nav-btn" data-target="cloudinary">Credenciales API</button></li>
+                        <li><button class="nav-btn" data-target="sections">Textos Secciones</button></li>
                         <li><button class="nav-btn" data-target="ingredients">Ingredientes</button></li>
                         <li><button class="nav-btn" data-target="recipes">Recetas y Costos</button></li>
                         <li><button class="nav-btn" data-target="gallery">Galería Carrusel</button></li>
@@ -510,7 +511,190 @@
                     </form>
                 </section>
 
-                <!-- Panel 3: Ingredients Manager -->
+                <!-- Panel 3: Sections Content CMS -->
+                <section class="content-panel" id="panel-sections">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Contenido de Secciones (CMS)</h2>
+                        <p class="panel-desc">Modifica todos los textos, eslóganes, listados y preguntas frecuentes de tu landing page.</p>
+                    </div>
+
+                    <!-- Tabs inside CMS panel -->
+                    <div style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1.5px solid var(--color-border); padding-bottom: 12px; overflow-x: auto;">
+                        <button type="button" class="btn btn-action section-tab-btn active" data-sec-target="sec-hero">Hero</button>
+                        <button type="button" class="btn btn-action section-tab-btn" data-sec-target="sec-comparison">Diferencias</button>
+                        <button type="button" class="btn btn-action section-tab-btn" data-sec-target="sec-process">Proceso</button>
+                        <button type="button" class="btn btn-action section-tab-btn" data-sec-target="sec-gallery">Creaciones</button>
+                        <button type="button" class="btn btn-action section-tab-btn" data-sec-target="sec-calculator">Calculadora</button>
+                        <button type="button" class="btn btn-action section-tab-btn" data-sec-target="sec-faqs">Preguntas (FAQ)</button>
+                    </div>
+
+                    <form id="form-sections">
+                        <!-- Subpanel: Hero -->
+                        <div class="section-subpanel active" id="sec-hero">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; border-bottom: 1.5px solid var(--color-accent-celeste); padding-bottom: 6px;">Hero (Sección Principal)</h3>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-hero-tag">Etiqueta Superior (Tag)</label>
+                                <input class="form-input" type="text" id="cms-hero-tag">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-hero-slogan">Eslogan de la Empresa</label>
+                                <input class="form-input" type="text" id="cms-hero-slogan">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-hero-title">Título Principal</label>
+                                <input class="form-input" type="text" id="cms-hero-title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-hero-subtitle">Descripción / Subtítulo</label>
+                                <textarea class="form-input" id="cms-hero-subtitle"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Subpanel: Comparison -->
+                        <div class="section-subpanel" id="sec-comparison" style="display: none;">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; border-bottom: 1.5px solid var(--color-accent-celeste); padding-bottom: 6px;">Diferencias (Filosofía)</h3>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-comp-tag">Etiqueta de Sección</label>
+                                <input class="form-input" type="text" id="cms-comp-tag">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-comp-title">Título de Sección</label>
+                                <input class="form-input" type="text" id="cms-comp-title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-comp-desc">Descripción de Sección</label>
+                                <textarea class="form-input" id="cms-comp-desc"></textarea>
+                            </div>
+                            
+                            <h4 style="font-size: 0.95rem; font-weight: bold; margin: 24px 0 12px; border-bottom: 1px dashed var(--color-border); padding-bottom: 6px;">Tarjeta: Pastelería Industrial</h4>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-comp-ind-title">Título de Tarjeta</label>
+                                <input class="form-input" type="text" id="cms-comp-ind-title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-comp-ind-bullets">Bullets Industrial (Un punto por línea)</label>
+                                <textarea class="form-input" id="cms-comp-ind-bullets" style="height: 120px;"></textarea>
+                            </div>
+
+                            <h4 style="font-size: 0.95rem; font-weight: bold; margin: 24px 0 12px; border-bottom: 1px dashed var(--color-border); padding-bottom: 6px;">Tarjeta: El Compromiso Plenilune</h4>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-comp-plen-title">Título de Tarjeta</label>
+                                <input class="form-input" type="text" id="cms-comp-plen-title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-comp-plen-bullets">Bullets Plenilune (Un punto por línea)</label>
+                                <textarea class="form-input" id="cms-comp-plen-bullets" style="height: 120px;"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Subpanel: Process -->
+                        <div class="section-subpanel" id="sec-process" style="display: none;">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; border-bottom: 1.5px solid var(--color-accent-celeste); padding-bottom: 6px;">El Proceso de Autor</h3>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-proc-tag">Etiqueta de Sección</label>
+                                <input class="form-input" type="text" id="cms-proc-tag">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-proc-title">Título de Sección</label>
+                                <input class="form-input" type="text" id="cms-proc-title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-proc-desc">Descripción de Sección</label>
+                                <textarea class="form-input" id="cms-proc-desc"></textarea>
+                            </div>
+
+                            <h4 style="font-size: 0.95rem; font-weight: bold; margin: 24px 0 12px; border-bottom: 1px dashed var(--color-border); padding-bottom: 6px;">Pasos del Proceso</h4>
+                            <div id="cms-proc-steps-list" style="display: flex; flex-direction: column; gap: 16px;">
+                                <!-- Injected dynamically -->
+                            </div>
+
+                            <h4 style="font-size: 0.95rem; font-weight: bold; margin: 24px 0 12px; border-bottom: 1px dashed var(--color-border); padding-bottom: 6px;">Cita Destacada</h4>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-proc-quote">Texto de la Cita</label>
+                                <textarea class="form-input" id="cms-proc-quote" style="height: 80px;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-proc-quote-author">Autor de la Cita</label>
+                                <input class="form-input" type="text" id="cms-proc-quote-author">
+                            </div>
+                        </div>
+
+                        <!-- Subpanel: Gallery -->
+                        <div class="section-subpanel" id="sec-gallery" style="display: none;">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; border-bottom: 1.5px solid var(--color-accent-celeste); padding-bottom: 6px;">Creaciones Estrella</h3>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-gal-tag">Etiqueta de Sección</label>
+                                <input class="form-input" type="text" id="cms-gal-tag">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-gal-title">Título de Sección</label>
+                                <input class="form-input" type="text" id="cms-gal-title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-gal-desc">Descripción de Sección</label>
+                                <textarea class="form-input" id="cms-gal-desc"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Subpanel: Calculator -->
+                        <div class="section-subpanel" id="sec-calculator" style="display: none;">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; border-bottom: 1.5px solid var(--color-accent-celeste); padding-bottom: 6px;">Calculadora</h3>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-calc-tag">Etiqueta de Sección</label>
+                                <input class="form-input" type="text" id="cms-calc-tag">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-calc-title">Título de Sección</label>
+                                <input class="form-input" type="text" id="cms-calc-title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-calc-desc">Descripción de Sección</label>
+                                <textarea class="form-input" id="cms-calc-desc"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Subpanel: FAQs Accordion -->
+                        <div class="section-subpanel" id="sec-faqs" style="display: none;">
+                            <h3 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; border-bottom: 1.5px solid var(--color-accent-celeste); padding-bottom: 6px;">Preguntas Frecuentes (FAQ)</h3>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-faq-tag">Etiqueta de Sección</label>
+                                <input class="form-input" type="text" id="cms-faq-tag">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-faq-title">Título de Sección</label>
+                                <input class="form-input" type="text" id="cms-faq-title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cms-faq-desc">Descripción de Sección</label>
+                                <textarea class="form-input" id="cms-faq-desc"></textarea>
+                            </div>
+
+                            <h4 style="font-size: 0.95rem; font-weight: bold; margin: 28px 0 16px; border-bottom: 1.5px solid var(--color-border); padding-bottom: 6px;">Preguntas Registradas</h4>
+                            <div id="cms-faqs-list" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
+                                <!-- Injected dynamically -->
+                            </div>
+
+                            <div style="background-color: var(--color-bg-primary); padding: 24px; border-radius: var(--border-radius-lg); border: 1px solid var(--color-border);">
+                                <h4 style="font-size: 0.95rem; font-weight: bold; margin-bottom: 16px;">+ Agregar Nueva Pregunta</h4>
+                                <div class="form-group">
+                                    <label class="form-label" for="new-faq-q">Pregunta</label>
+                                    <input class="form-input" type="text" id="new-faq-q" placeholder="¿Cómo hago para...?">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="new-faq-a">Respuesta (Soporta HTML/Negritas)</label>
+                                    <textarea class="form-input" id="new-faq-a" placeholder="Nuestras tortas..." style="height: 100px;"></textarea>
+                                </div>
+                                <button type="button" id="btn-cms-add-faq" class="btn btn-primary btn-action">Agregar Pregunta</button>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary">Guardar Cambios de Secciones</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Panel 4: Ingredients Manager -->
                 <section class="content-panel" id="panel-ingredients">
                     <div class="panel-header">
                         <h2 class="panel-title">Inventario de Ingredientes</h2>
@@ -552,7 +736,7 @@
                     </div>
                 </section>
 
-                <!-- Panel 4: Recipe & Cost Calculator -->
+                <!-- Panel 5: Recipe & Cost Calculator -->
                 <section class="content-panel" id="panel-recipes">
                     <div class="panel-header">
                         <h2 class="panel-title">Calculadora de Costos por Receta</h2>
@@ -651,7 +835,7 @@
                     </div>
                 </section>
 
-                <!-- Panel 5: Gallery Management -->
+                <!-- Panel 6: Gallery Management -->
                 <section class="content-panel" id="panel-gallery">
                     <div class="panel-header">
                         <h2 class="panel-title">Gestión de Galería (Carrusel 4x2)</h2>
@@ -676,7 +860,7 @@
                     </div>
                 </section>
 
-                <!-- Panel 6: Catalog Manager -->
+                <!-- Panel 7: Catalog Manager -->
                 <section class="content-panel" id="panel-catalog">
                     <div class="panel-header">
                         <h2 class="panel-title">Catálogo de Productos Estrella</h2>
@@ -719,6 +903,22 @@
                 });
             });
 
+            // Subpanels inside CMS Section Tab
+            const secTabButtons = document.querySelectorAll('.section-tab-btn');
+            const secSubpanels = document.querySelectorAll('.section-subpanel');
+
+            secTabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-sec-target');
+                    
+                    secTabButtons.forEach(b => b.classList.remove('active'));
+                    secSubpanels.forEach(p => p.style.display = 'none');
+                    
+                    btn.classList.add('active');
+                    document.getElementById(target).style.display = 'block';
+                });
+            });
+
             // State management
             let state = null;
 
@@ -740,6 +940,7 @@
                     
                     hydrateGeneralSettings();
                     hydrateCloudinarySettings();
+                    hydrateCMSSectionsSettings();
                     hydrateIngredientsTable();
                     hydrateRecipeTab();
                     hydrateGalleryTab();
@@ -809,7 +1010,240 @@
                 saveConfig('Credenciales de Cloudinary actualizadas con éxito.');
             });
 
-            // 3. Ingredients Inventory Panel
+            // 3. CMS Sections Content Panel
+            const hydrateCMSSectionsSettings = () => {
+                if (!state.landing) {
+                    state.landing = {
+                        hero: { tag: "", slogan: "", title: "", subtitle: "" },
+                        comparison: { tag: "", title: "", desc: "", industrialTitle: "", industrialBullets: [], pleniluneTitle: "", pleniluneBullets: [] },
+                        process: { tag: "", title: "", desc: "", steps: [], quote: "", quoteAuthor: "" },
+                        gallery: { tag: "", title: "", desc: "" },
+                        calculator: { tag: "", title: "", desc: "" },
+                        faqs: []
+                    };
+                }
+
+                const land = state.landing;
+
+                // Hero
+                if (land.hero) {
+                    document.getElementById('cms-hero-tag').value = land.hero.tag || '';
+                    document.getElementById('cms-hero-slogan').value = land.hero.slogan || '';
+                    document.getElementById('cms-hero-title').value = land.hero.title || '';
+                    document.getElementById('cms-hero-subtitle').value = land.hero.subtitle || '';
+                }
+
+                // Comparison
+                if (land.comparison) {
+                    document.getElementById('cms-comp-tag').value = land.comparison.tag || '';
+                    document.getElementById('cms-comp-title').value = land.comparison.title || '';
+                    document.getElementById('cms-comp-desc').value = land.comparison.desc || '';
+                    document.getElementById('cms-comp-ind-title').value = land.comparison.industrialTitle || '';
+                    document.getElementById('cms-comp-ind-bullets').value = (land.comparison.industrialBullets || []).join('\n');
+                    document.getElementById('cms-comp-plen-title').value = land.comparison.pleniluneTitle || '';
+                    document.getElementById('cms-comp-plen-bullets').value = (land.comparison.pleniluneBullets || []).join('\n');
+                }
+
+                // Process General & Quote
+                if (land.process) {
+                    document.getElementById('cms-proc-tag').value = land.process.tag || '';
+                    document.getElementById('cms-proc-title').value = land.process.title || '';
+                    document.getElementById('cms-proc-desc').value = land.process.desc || '';
+                    document.getElementById('cms-proc-quote').value = land.process.quote || '';
+                    document.getElementById('cms-proc-quote-author').value = land.process.quoteAuthor || '';
+
+                    // Process Steps Timeline List
+                    const stepsListContainer = document.getElementById('cms-proc-steps-list');
+                    stepsListContainer.innerHTML = '';
+                    
+                    if (!land.process.steps || land.process.steps.length < 3) {
+                        land.process.steps = [
+                            { title: "1. Abastecimiento Noble", desc: "" },
+                            { title: "2. Batido y Reposo Paciente", desc: "" },
+                            { title: "3. Decoración de Autor", desc: "" }
+                        ];
+                    }
+
+                    land.process.steps.forEach((step, idx) => {
+                        const stepItem = document.createElement('div');
+                        stepItem.style.border = '1px solid var(--color-border)';
+                        stepItem.style.borderRadius = 'var(--border-radius-md)';
+                        stepItem.style.padding = '16px';
+                        stepItem.style.backgroundColor = 'var(--color-bg-primary)';
+                        stepItem.style.marginBottom = '8px';
+                        
+                        stepItem.innerHTML = `
+                            <div class="form-group" style="margin-bottom: 8px;">
+                                <label class="form-label" style="font-size: 0.75rem;">Título Paso ${idx + 1}</label>
+                                <input class="form-input cms-step-title-input" type="text" value="${step.title}" data-index="${idx}" style="padding: 8px 12px; font-size: 0.9rem;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">Descripción Paso ${idx + 1}</label>
+                                <textarea class="form-input cms-step-desc-input" data-index="${idx}" style="height: 60px; padding: 8px 12px; font-size: 0.9rem;">${step.desc}</textarea>
+                            </div>
+                        `;
+                        stepsListContainer.appendChild(stepItem);
+                    });
+
+                    // Inputs listeners for steps
+                    document.querySelectorAll('.cms-step-title-input').forEach(input => {
+                        input.addEventListener('change', (e) => {
+                            const idx = parseInt(e.target.getAttribute('data-index'));
+                            state.landing.process.steps[idx].title = e.target.value;
+                        });
+                    });
+                    document.querySelectorAll('.cms-step-desc-input').forEach(input => {
+                        input.addEventListener('change', (e) => {
+                            const idx = parseInt(e.target.getAttribute('data-index'));
+                            state.landing.process.steps[idx].desc = e.target.value;
+                        });
+                    });
+                }
+
+                // Gallery Header
+                if (land.gallery) {
+                    document.getElementById('cms-gal-tag').value = land.gallery.tag || '';
+                    document.getElementById('cms-gal-title').value = land.gallery.title || '';
+                    document.getElementById('cms-gal-desc').value = land.gallery.desc || '';
+                }
+
+                // Calculator Header
+                if (land.calculator) {
+                    document.getElementById('cms-calc-tag').value = land.calculator.tag || '';
+                    document.getElementById('cms-calc-title').value = land.calculator.title || '';
+                    document.getElementById('cms-calc-desc').value = land.calculator.desc || '';
+                }
+
+                // FAQs list
+                document.getElementById('cms-faq-tag').value = land.faqTag || 'Transparencia Total';
+                document.getElementById('cms-faq-title').value = land.faqTitle || 'Preguntas Frecuentes';
+                document.getElementById('cms-faq-desc').value = land.faqDesc || 'Resolvemos tus dudas sobre nuestros precios, reservas y método de trabajo.';
+                hydrateCMSFaqsList();
+            };
+
+            const hydrateCMSFaqsList = () => {
+                const container = document.getElementById('cms-faqs-list');
+                container.innerHTML = '';
+
+                if (!state.landing.faqs) state.landing.faqs = [];
+
+                state.landing.faqs.forEach((faq, index) => {
+                    const item = document.createElement('div');
+                    item.style.border = '1px solid var(--color-border)';
+                    item.style.borderRadius = 'var(--border-radius-md)';
+                    item.style.padding = '16px';
+                    item.style.backgroundColor = 'var(--color-bg-primary)';
+                    
+                    item.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <strong style="font-size: 0.8rem; text-transform: uppercase; color: var(--color-accent-primary);">Pregunta #${index + 1}</strong>
+                            <button type="button" class="btn btn-action btn-danger delete-cms-faq-btn" data-index="${index}" style="padding: 4px 10px; font-size: 0.75rem;">Eliminar</button>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 8px;">
+                            <label class="form-label" style="font-size: 0.75rem;">Pregunta</label>
+                            <input class="form-input cms-faq-q-input" type="text" value="${faq.question}" data-index="${index}" style="padding: 8px 12px; font-size: 0.9rem;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label" style="font-size: 0.75rem;">Respuesta (HTML admitido)</label>
+                            <textarea class="form-input cms-faq-a-input" data-index="${index}" style="height: 80px; padding: 8px 12px; font-size: 0.9rem;">${faq.answer}</textarea>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+
+                document.querySelectorAll('.cms-faq-q-input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        state.landing.faqs[index].question = e.target.value;
+                    });
+                });
+                document.querySelectorAll('.cms-faq-a-input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        state.landing.faqs[index].answer = e.target.value;
+                    });
+                });
+
+                document.querySelectorAll('.delete-cms-faq-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        if (confirm('¿Estás seguro de eliminar esta pregunta frecuente?')) {
+                            state.landing.faqs.splice(index, 1);
+                            hydrateCMSFaqsList();
+                        }
+                    });
+                });
+            };
+
+            document.getElementById('btn-cms-add-faq').addEventListener('click', () => {
+                const qInput = document.getElementById('new-faq-q');
+                const aInput = document.getElementById('new-faq-a');
+                
+                const question = qInput.value.trim();
+                const answer = aInput.value.trim();
+
+                if (!question || !answer) {
+                    alert('Por favor, completa la pregunta y la respuesta.');
+                    return;
+                }
+
+                if (!state.landing.faqs) state.landing.faqs = [];
+
+                state.landing.faqs.push({ question, answer });
+                
+                qInput.value = '';
+                aInput.value = '';
+
+                hydrateCMSFaqsList();
+                showToast('Pregunta frecuente agregada a la lista.');
+            });
+
+            document.getElementById('form-sections').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const land = state.landing;
+
+                // Hero
+                land.hero.tag = document.getElementById('cms-hero-tag').value.trim();
+                land.hero.slogan = document.getElementById('cms-hero-slogan').value.trim();
+                land.hero.title = document.getElementById('cms-hero-title').value.trim();
+                land.hero.subtitle = document.getElementById('cms-hero-subtitle').value.trim();
+
+                // Comparison
+                land.comparison.tag = document.getElementById('cms-comp-tag').value.trim();
+                land.comparison.title = document.getElementById('cms-comp-title').value.trim();
+                land.comparison.desc = document.getElementById('cms-comp-desc').value.trim();
+                land.comparison.industrialTitle = document.getElementById('cms-comp-ind-title').value.trim();
+                land.comparison.industrialBullets = document.getElementById('cms-comp-ind-bullets').value.split('\n').map(b => b.trim()).filter(b => b.length > 0);
+                land.comparison.pleniluneTitle = document.getElementById('cms-comp-plen-title').value.trim();
+                land.comparison.pleniluneBullets = document.getElementById('cms-comp-plen-bullets').value.split('\n').map(b => b.trim()).filter(b => b.length > 0);
+
+                // Process
+                land.process.tag = document.getElementById('cms-proc-tag').value.trim();
+                land.process.title = document.getElementById('cms-proc-title').value.trim();
+                land.process.desc = document.getElementById('cms-proc-desc').value.trim();
+                land.process.quote = document.getElementById('cms-proc-quote').value.trim();
+                land.process.quoteAuthor = document.getElementById('cms-proc-quote-author').value.trim();
+
+                // Gallery
+                land.gallery.tag = document.getElementById('cms-gal-tag').value.trim();
+                land.gallery.title = document.getElementById('cms-gal-title').value.trim();
+                land.gallery.desc = document.getElementById('cms-gal-desc').value.trim();
+
+                // Calculator
+                land.calculator.tag = document.getElementById('cms-calc-tag').value.trim();
+                land.calculator.title = document.getElementById('cms-calc-title').value.trim();
+                land.calculator.desc = document.getElementById('cms-calc-desc').value.trim();
+
+                // FAQs headers
+                land.faqTag = document.getElementById('cms-faq-tag').value.trim();
+                land.faqTitle = document.getElementById('cms-faq-title').value.trim();
+                land.faqDesc = document.getElementById('cms-faq-desc').value.trim();
+
+                saveConfig('Textos de las secciones actualizados con éxito.');
+            });
+
+            // 4. Ingredients Inventory Panel
             const hydrateIngredientsTable = () => {
                 const tbody = document.getElementById('ingredients-tbody');
                 tbody.innerHTML = '';
@@ -879,7 +1313,7 @@
                 saveConfig('Inventario de ingredientes actualizado.');
             });
 
-            // 4. Recipes & Cost Calculator Panel
+            // 5. Recipes & Cost Calculator Panel
             const sizeSelector = document.getElementById('recipe-size');
             const flavorSelector = document.getElementById('recipe-flavor');
             const laborHoursInput = document.getElementById('labor-hours');
@@ -993,7 +1427,7 @@
                 saveConfig(`Receta y precio actualizados.`);
             });
 
-            // 5. Gallery Management Panel
+            // 6. Gallery Management Panel
             const hydrateGalleryTab = () => {
                 const grid = document.getElementById('gallery-items-grid');
                 grid.innerHTML = '';
@@ -1071,7 +1505,7 @@
                 saveConfig('Galería de fotos guardada correctamente.');
             });
 
-            // 6. Catalog Manager Panel
+            // 7. Catalog Manager Panel
             const hydrateCatalogSettings = () => {
                 const container = document.getElementById('catalog-container');
                 container.innerHTML = '';
