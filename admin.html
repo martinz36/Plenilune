@@ -1014,12 +1014,80 @@
             const hydrateCMSSectionsSettings = () => {
                 if (!state.landing) {
                     state.landing = {
-                        hero: { tag: "", slogan: "", title: "", subtitle: "" },
-                        comparison: { tag: "", title: "", desc: "", industrialTitle: "", industrialBullets: [], pleniluneTitle: "", pleniluneBullets: [] },
-                        process: { tag: "", title: "", desc: "", steps: [], quote: "", quoteAuthor: "" },
-                        gallery: { tag: "", title: "", desc: "" },
-                        calculator: { tag: "", title: "", desc: "" },
-                        faqs: []
+                        hero: {
+                            tag: "Pastelería 100% Honesta y de Autor",
+                            slogan: "El estrés no existe en presencia de un pastel",
+                            title: "El tiempo, el detalle y el sabor real que merecen tus momentos especiales",
+                            subtitle: "Pastelería hecha a mano y desde cero. Sin premezclas ultraprocesadas, sin conservantes químicos ni procesos automatizados. Solo ingredientes nobles en su estado más puro y el tiempo que requiere la excelencia."
+                        },
+                        comparison: {
+                            tag: "Nuestra Filosofía",
+                            title: "La Diferencia de lo Real",
+                            desc: "Comparamos la pastelería masiva comercial con el compromiso artesanal de Plenilune. La diferencia no está en el molde, está en el alma del proceso.",
+                            industrialTitle: "Pastelería Industrial / Comercial",
+                            industrialBullets: [
+                                "Margarina hidrogenada, aceites vegetales trans y grasas baratas.",
+                                "Premezclas industriales llenas de mejoradores de masa artificiales.",
+                                "Uso masivo de conservantes químicos para extender la vida útil por meses.",
+                                "Bordes imperfectos apresurados y decorados mecanizados en serie."
+                            ],
+                            pleniluneTitle: "El Compromiso Plenilune",
+                            pleniluneBullets: [
+                                "Mantequilla de verdad al 82% de grasa de leche pura y crema de leche fresca.",
+                                "Harina de trigo seleccionada sin blanqueadores químicos y huevos frescos reales.",
+                                "Frutas frescas cortadas el mismo día y chocolate belga al 70%.",
+                                "Decoración esculpida individualmente con de 4 a 8 horas de dedicación a mano."
+                            ]
+                        },
+                        process: {
+                            tag: "El Proceso de Autor",
+                            title: "Cómo Nace una Obra de Arte",
+                            desc: "El tiempo es nuestro ingrediente invisible. Así creamos pasteles que no solo se comen, sino que se recuerdan.",
+                            steps: [
+                                {
+                                    title: "1. Abastecimiento Noble",
+                                    desc: "Seleccionamos ingredientes reales: mantequilla pura 82%, chocolate belga y frutas frescas locales. Cero sucedáneos."
+                                },
+                                {
+                                    title: "2. Batido y Reposo Paciente",
+                                    desc: "Respetamos los tiempos naturales del frío y levado. No apuramos procesos con aditivos químicos."
+                                },
+                                {
+                                    title: "3. Decoración de Autor",
+                                    desc: "Modelamos cada detalle a mano. Texturas elegantes, flores orgánicas y detalles en pan de oro de 24 quilates."
+                                }
+                            ],
+                            quote: "No apuramos el frío, no acortamos los batidos y no usamos químicos para acelerar. El tiempo es nuestro ingrediente más valioso, y el sabor real es su recompensa.",
+                            quoteAuthor: "Equipo Plenilune Pastelería"
+                        },
+                        gallery: {
+                            tag: "Colección de Autor",
+                            title: "Nuestras Creaciones Estrella",
+                            desc: "Un recorrido visual por las obras de repostería fina diseñadas en nuestro taller artesanal."
+                        },
+                        calculator: {
+                            tag: "Transparencia y Valor",
+                            title: "Calculadora de Dedicación y Valor",
+                            desc: "En la pastelería industrial, compras volumen y conservantes químicos. En Plenilune, compras tiempo de diseño, ingredientes nobles y arte comestible. Usa esta herramienta interactiva para estimar la dedicación y el valor de tu torta ideal."
+                        },
+                        faqs: [
+                            {
+                                question: "¿Por qué los precios son distintos a los de una panadería convencional?",
+                                answer: "Una panadería convencional utiliza aditivos químicos para inflar las masas, margarinas hidrogenadas para abaratar costos y premezclas industriales congeladas de larga duración. Su producción es en serie.<br><br>En Plenilune Pastelería, cada torta se hornea individualmente el mismo día. Usamos mantequilla real al 82% (no margarina), chocolate belga de alta pureza y frutas naturales seleccionadas. Además, dedicamos de 4 a 8 horas de trabajo artesanal minucioso al modelado y decoración de tu pieza. No pagas por volumen industrial, pagas por ingredientes honestos y arte personalizado."
+                            },
+                            {
+                                question: "¿Con cuánto tiempo de anticipación debo hacer mi pedido?",
+                                answer: "Dado que no manejamos inventario congelado y procesamos pocos pedidos a la semana para garantizar un cuidado absoluto, recomendamos agendar con al menos 5 a 7 días de anticipación para tortas clásicas, y 15 días para tortas escultóricas o eventos grandes."
+                            },
+                            {
+                                question: "¿Cómo garantizan que la torta llegue en perfectas condiciones?",
+                                answer: "Diseñamos empaques con bases rígidas reforzadas y cajas herméticas a la medida exacta de tu torta. Para el traslado, te brindamos instrucciones claras si decides retirarla tú mismo. También ofrecemos un servicio de despacho propio con chofer capacitado para transportar repostería delicada (con costo adicional según ubicación)."
+                            },
+                            {
+                                question: "¿Ofrecen opciones sin azúcar, sin gluten o veganas?",
+                                answer: "Elaboramos recetas adaptadas a requerimientos especiales bajo pedido. Sin embargo, dado que en nuestro taller manipulamos harina de trigo, lácteos y frutos secos, **no podemos garantizar la ausencia total de trazas** (no apto para celíacos severos o alergias alimentarias graves)."
+                            }
+                        ]
                     };
                 }
 
