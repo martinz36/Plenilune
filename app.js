@@ -231,22 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
          const whatsapp = clientWhatsappInput.value.trim();
  
          // Build clear, informative WhatsApp copywriting prepended with customer details
-         const messageText = `¡Hola Plenilune Pastelería! 🌙 Vengo desde su página web y me gustaría cotizar una torta artesanal personalizada:
+         const messageText = `¡Hola Plenilune Pastelería! \u{1F319} Vengo desde su página web y me gustaría cotizar una torta artesanal personalizada:
  
-👤 *Datos de Contacto:*
-• *Cliente:* ${name}
-• *Email:* ${email}
-• *WhatsApp:* ${whatsapp}
-
-✨ *Detalles seleccionados:*
-• *Porciones:* ${selectedSize.text}
-• *Sabor/Relleno:* ${selectedFlavor.text}
-• *Estilo de diseño:* ${selectedDesign.text}
+ \u{1F464} *Datos de Contacto:*
+ • *Cliente:* ${name}
+ • *Email:* ${email}
+ • *WhatsApp:* ${whatsapp}
  
-⏱️ *Dedicación estimada:* ${totalHours} horas de trabajo artesanal.
-💰 *Inversión aproximada:* ${formatCurrency(priceMin)} - ${formatCurrency(priceMax)}
- 
-¿Tienen disponibilidad en su taller para la fecha de mi evento? Me gustaría coordinar más detalles del diseño y la entrega. ¡Muchas gracias!`;
+ \u{2728} *Detalles seleccionados:*
+ • *Porciones:* ${selectedSize.text}
+ • *Sabor/Relleno:* ${selectedFlavor.text}
+ • *Estilo de diseño:* ${selectedDesign.text}
+  
+ \u{23F1}\u{FE0F} *Dedicación estimada:* ${totalHours} horas de trabajo artesanal.
+ \u{1F4B0} *Inversión aproximada:* ${formatCurrency(priceMin)} - ${formatCurrency(priceMax)}
+  
+ ¿Tienen disponibilidad en su taller para la fecha de mi evento? Me gustaría coordinar más detalles del diseño y la entrega. ¡Muchas gracias!`;
  
          const encodedMessage = encodeURIComponent(messageText);
          const whatsappUrl = `https://wa.me/${contactPhone}?text=${encodedMessage}`;
@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
              // Update floating WhatsApp button
              const floatLink = document.getElementById('whatsapp-float-link');
              if (floatLink) {
-                 floatLink.setAttribute('href', `https://wa.me/${contactPhone}?text=${encodeURIComponent("¡Hola Plenilune Pastelería! 🌙 Me gustaría hacer una consulta sobre sus tortas de autor.")}`);
+                 floatLink.setAttribute('href', `https://wa.me/${contactPhone}?text=${encodeURIComponent("¡Hola Plenilune Pastelería! \u{1F319} Me gustaría hacer una consulta sobre sus tortas de autor.")}`);
              }
  
              // Hydrate Catalog Items in gallery (Null-safe for backward compatibility)
