@@ -53,6 +53,113 @@ document.addEventListener('DOMContentLoaded', () => {
      let deliveryMarker = null;
      let deliveryCoords = { lat: -12.046374, lng: -77.042793 }; // Lima, Peru default
  
+     const addressInput = document.getElementById('client-address');
+     const suggestionsBox = document.getElementById('address-suggestions');
+ 
+     // Reverse Geocoding helper: Get Address name from Coordinates
+     const reverseGeocode = async (lat, lng) => {
+         try {
+             const res = await fetch(`/api/reverse?lat=${lat}&lng=${lng}`);
+             const data = await res.json();
+             
+             if (data && addressInput) {
+                 let cleanAddress = data.display_name;
+                 
+                 // If structured address details are present, format them cleanly
+                 if (data.address) {
+                     const addr = data.address;
+                     const road = addr.road || addr.pedestrian || addr.cycleway || addr.suburb || '';
+                     const houseNum = addr.house_number || '';
+                     const suburb = addr.suburb || addr.neighbourhood || '';
+                     const city = addr.city || addr.town || addr.municipality || '';
+ 
+                     if (road) {
+                         cleanAddress = `${road} ${houseNum}`.trim();
+                         if (suburb && suburb !== road) cleanAddress += `, ${suburb}`;
+                         if (city) cleanAddress += `, ${city}`;
+                     }
+                 }
+                 addressInput.value = cleanAddress;
+             }
+         } catch (err) {
+             console.error('Failed to reverse geocode:', err);
+         }
+     };
+ 
+     // Autocomplete suggestions debounce timer
+     let searchDebounceTimer = null;
+ 
+     if (addressInput) {
+         addressInput.addEventListener('input', (e) => {
+             clearTimeout(searchDebounceTimer);
+             const query = e.target.value.trim();
+             
+             if (query.length < 3) {
+                 if (suggestionsBox) suggestionsBox.style.display = 'none';
+                 return;
+             }
+ 
+             // Debounce API calls by 400ms to save server bandwidth
+             searchDebounceTimer = setTimeout(async () => {
+                 try {
+                     const res = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
+                     const results = await res.json();
+                     
+                     if (results && results.length > 0 && suggestionsBox) {
+                         suggestionsBox.innerHTML = '';
+                         suggestionsBox.style.display = 'block';
+ 
+                         results.forEach(item => {
+                             const div = document.createElement('div');
+                             div.style.padding = '10px 14px';
+                             div.style.cursor = 'pointer';
+                             div.style.fontSize = '0.85rem';
+                             div.style.borderBottom = '1px solid var(--color-border)';
+                             div.style.transition = 'background-color 0.2s';
+                             div.textContent = item.display_name;
+ 
+                             // Hover styling
+                             div.addEventListener('mouseenter', () => {
+                                 div.style.backgroundColor = 'var(--color-bg-secondary)';
+                             });
+                             div.addEventListener('mouseleave', () => {
+                                 div.style.backgroundColor = 'transparent';
+                             });
+ 
+                             // Select click event
+                             div.addEventListener('click', () => {
+                                 addressInput.value = item.display_name;
+                                 suggestionsBox.style.display = 'none';
+                                 
+                                 const lat = parseFloat(item.lat);
+                                 const lng = parseFloat(item.lon);
+                                 deliveryCoords = { lat, lng };
+                                 
+                                 if (deliveryMap) {
+                                     deliveryMap.setView([lat, lng], 16);
+                                     deliveryMarker.setLatLng([lat, lng]);
+                                 }
+                             });
+ 
+                             suggestionsBox.appendChild(div);
+                         });
+                     } else {
+                         if (suggestionsBox) suggestionsBox.style.display = 'none';
+                     }
+                 } catch (err) {
+                     console.error('Autocomplete search error:', err);
+                 }
+             }, 400);
+         });
+ 
+         // Hide suggestions on document click
+         document.addEventListener('click', (e) => {
+             if (suggestionsBox && !addressInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                 suggestionsBox.style.display = 'none';
+             }
+         });
+     }
+ 
      const initMap = () => {
          const mapDiv = document.getElementById('delivery-map');
          if (!mapDiv) return;
@@ -69,17 +176,19 @@ document.addEventListener('DOMContentLoaded', () => {
              draggable: true
          }).addTo(deliveryMap);
  
-         // Save coords on dragend
-         deliveryMarker.on('dragend', () => {
+         // Reverse geocode and update address input when user drags pin
+         deliveryMarker.on('dragend', async () => {
              const pos = deliveryMarker.getLatLng();
              deliveryCoords = { lat: pos.lat, lng: pos.lng };
+             await reverseGeocode(pos.lat, pos.lng);
          });
  
-         // Move marker on map click
-         deliveryMap.on('click', (e) => {
+         // Reverse geocode and move marker when user clicks on map
+         deliveryMap.on('click', async (e) => {
              const pos = e.latlng;
              deliveryCoords = { lat: pos.lat, lng: pos.lng };
              deliveryMarker.setLatLng(pos);
+             await reverseGeocode(pos.lat, pos.lng);
          });
      };
  
@@ -89,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
          gpsBtn.addEventListener('click', () => {
              if (navigator.geolocation) {
                  gpsBtn.textContent = 'Obteniendo...';
-                 navigator.geolocation.getCurrentPosition((pos) => {
+                 navigator.geolocation.getCurrentPosition(async (pos) => {
                      gpsBtn.textContent = '📍 GPS';
                      const lat = pos.coords.latitude;
                      const lng = pos.coords.longitude;
@@ -98,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                          deliveryMap.setView([lat, lng], 16);
                          deliveryMarker.setLatLng([lat, lng]);
                      }
+                     await reverseGeocode(lat, lng);
                  }, (err) => {
                      gpsBtn.textContent = '📍 GPS';
                      alert('No pudimos acceder a tu GPS. Por favor ubica tu dirección manualmente en el mapa.');
@@ -203,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
          const email = clientEmailInput.value.trim();
          const whatsapp = clientWhatsappInput.value.trim();
          const dateVal = dateInput ? dateInput.value : '';
-         const addressVal = document.getElementById('client-address').value.trim();
+         const addressVal = addressInput ? addressInput.value.trim() : '';
  
          if (!name) {
              alert('Por favor, ingresa tu Nombre y Apellido.');
@@ -232,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
  
          if (!addressVal) {
              alert('Por favor, ingresa tu dirección de entrega.');
-             document.getElementById('client-address').focus();
+             if (addressInput) addressInput.focus();
              return;
          }
  
@@ -264,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
          const email = clientEmailInput.value.trim();
          const whatsapp = clientWhatsappInput.value.trim();
          const dateVal = dateInput ? dateInput.value : '';
-         const addressVal = document.getElementById('client-address').value.trim();
+         const addressVal = addressInput ? addressInput.value.trim() : '';
          const mapsLink = `https://www.google.com/maps?q=${deliveryCoords.lat},${deliveryCoords.lng}`;
  
          let formattedDate = dateVal;
