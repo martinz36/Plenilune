@@ -124,6 +124,44 @@ export default function ControlTandas() {
       .catch(err => console.warn('Could not load tanda products:', err));
   }, []);
 
+  // Date Range Filter State for Dashboard
+  const [dashTimeframe, setDashTimeframe] = useState('all'); // 'all' | 'month' | 'prev_month' | 'week'
+
+  // Filtered tandas history based on selected timeframe
+  const filteredTandasHistory = useMemo(() => {
+    if (dashTimeframe === 'all' || !dashTimeframe) return tandasHistory;
+
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    return tandasHistory.filter(t => {
+      if (!t.date) return true;
+      const tDate = new Date(t.date);
+      if (isNaN(tDate.getTime())) return true;
+
+      if (dashTimeframe === 'week') {
+        const day = now.getDay();
+        const diffToMonday = now.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(now.getFullYear(), now.getMonth(), diffToMonday);
+        monday.setHours(0, 0, 0, 0);
+        return tDate >= monday;
+      }
+
+      if (dashTimeframe === 'month') {
+        return tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth;
+      }
+
+      if (dashTimeframe === 'prev_month') {
+        const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+        const prevMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+        return tDate.getFullYear() === prevMonthYear && tDate.getMonth() === prevMonth;
+      }
+
+      return true;
+    });
+  }, [tandasHistory, dashTimeframe]);
+
   // KPI calculations for Dashboard
   const kpiData = useMemo(() => {
     let totalProfit = 0;
@@ -136,7 +174,7 @@ export default function ControlTandas() {
 
     const productStats = {};
 
-    tandasHistory.forEach(t => {
+    filteredTandasHistory.forEach(t => {
       const inv = parseFloat(t.investment !== undefined ? t.investment : t.investmentCost) || 0;
       const rev = parseFloat(t.revenue !== undefined ? t.revenue : t.totalEarned) || 0;
       const profit = parseFloat(t.profit !== undefined ? t.profit : t.netProfit) || (rev - inv);
@@ -199,7 +237,7 @@ export default function ControlTandas() {
       salesEfficiency,
       productStats
     };
-  }, [tandasHistory, unitPrices]);
+  }, [filteredTandasHistory, unitPrices]);
 
   const DESTINO_COLORS = ['#10B981', '#F59E0B', '#F43F5E'];
 
@@ -208,7 +246,7 @@ export default function ControlTandas() {
     let giftCount = 0;
     let wasteCount = 0;
 
-    tandasHistory.forEach(t => {
+    filteredTandasHistory.forEach(t => {
       (t.items || []).forEach(it => {
         const baked = parseInt(it.baked) || 0;
         const leftover = parseInt(it.leftover) || 0;
@@ -229,15 +267,15 @@ export default function ControlTandas() {
       { name: 'Consumo / Regalo', value: giftCount },
       { name: 'Merma', value: wasteCount }
     ];
-  }, [tandasHistory]);
+  }, [filteredTandasHistory]);
 
   const historialBarData = useMemo(() => {
-    return tandasHistory.slice(0, 6).reverse().map(t => ({
+    return filteredTandasHistory.slice(0, 6).reverse().map(t => ({
       name: t.name ? (t.name.length > 10 ? t.name.substring(0, 10) + '...' : t.name) : t.date,
       Inversión: parseFloat(t.investment || 0),
       Recaudación: parseFloat(t.revenue || 0)
     }));
-  }, [tandasHistory]);
+  }, [filteredTandasHistory]);
 
   const topRentablesData = useMemo(() => {
     const stats = kpiData.productStats;
@@ -474,6 +512,29 @@ export default function ControlTandas() {
 
         {activeView === 'dashboard' && (
           <div className="space-y-5 animate-in fade-in duration-200">
+            
+            {/* Timeframe Filter Bar */}
+            <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 no-scrollbar">
+              {[
+                { id: 'all', label: '📅 Todo el Año' },
+                { id: 'month', label: '📅 Este Mes' },
+                { id: 'prev_month', label: '📅 Mes Anterior' },
+                { id: 'week', label: '📅 Esta Semana' }
+              ].map(filter => (
+                <button
+                  key={filter.id}
+                  type="button"
+                  onClick={() => setDashTimeframe(filter.id)}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all ${
+                    dashTimeframe === filter.id
+                      ? 'bg-amber-500 text-white shadow-md scale-105'
+                      : 'bg-white text-slate-700 border border-slate-200/80 hover:bg-slate-50'
+                  }`}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
             
             {tandasHistory.length === 0 ? (
               /* EMPTY STATE */

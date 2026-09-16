@@ -1473,6 +1473,14 @@
                         </div>
 
                         <div id="td-dashboard-content">
+                            <!-- Timeframe Filter Buttons Bar -->
+                            <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px;" id="tanda-timeframe-filter-container">
+                                <button type="button" class="btn-timeframe-filter active" data-range="all" style="padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; border: 1.5px solid var(--color-accent-gold); background: var(--color-accent-gold); color: white; cursor: pointer; white-space: nowrap;">📅 Todo el Año</button>
+                                <button type="button" class="btn-timeframe-filter" data-range="month" style="padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1.5px solid var(--color-border); background: white; color: var(--color-text-main); cursor: pointer; white-space: nowrap;">📅 Este Mes</button>
+                                <button type="button" class="btn-timeframe-filter" data-range="prev_month" style="padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1.5px solid var(--color-border); background: white; color: var(--color-text-main); cursor: pointer; white-space: nowrap;">📅 Mes Anterior</button>
+                                <button type="button" class="btn-timeframe-filter" data-range="week" style="padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1.5px solid var(--color-border); background: white; color: var(--color-text-main); cursor: pointer; white-space: nowrap;">📅 Esta Semana</button>
+                            </div>
+
                             <!-- 4 KPI Cards Grid (Pastel Gastronómico) -->
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px;">
                                 <!-- KPI 1: Ganancia Neta Total -->
@@ -3879,17 +3887,83 @@
             document.getElementById('btn-tanda-tab-dashboard').addEventListener('click', () => switchTandaSubtab('dashboard'));
             document.getElementById('btn-tanda-tab-history').addEventListener('click', () => switchTandaSubtab('history'));
 
+            // Filter Tandas by timeframe
+            const filterTandasByRange = (tandas, range) => {
+                if (range === 'all' || !range) return tandas;
+
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                const currentMonth = now.getMonth();
+
+                return tandas.filter(t => {
+                    if (!t.date) return true;
+                    const tDate = new Date(t.date);
+                    if (isNaN(tDate.getTime())) return true;
+
+                    if (range === 'week') {
+                        const day = now.getDay();
+                        const diffToMonday = now.getDate() - day + (day === 0 ? -6 : 1);
+                        const monday = new Date(now.getFullYear(), now.getMonth(), diffToMonday);
+                        monday.setHours(0, 0, 0, 0);
+                        return tDate >= monday;
+                    }
+
+                    if (range === 'month') {
+                        return tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth;
+                    }
+
+                    if (range === 'prev_month') {
+                        const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+                        const prevMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+                        return tDate.getFullYear() === prevMonthYear && tDate.getMonth() === prevMonth;
+                    }
+
+                    return true;
+                });
+            };
+
+            // Bind Timeframe Filter Buttons Listener
+            if (!tandaState.dashboardRange) tandaState.dashboardRange = 'all';
+
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('.btn-timeframe-filter');
+                if (btn) {
+                    const range = btn.getAttribute('data-range');
+                    tandaState.dashboardRange = range;
+
+                    document.querySelectorAll('.btn-timeframe-filter').forEach(b => {
+                        b.classList.remove('active');
+                        b.style.background = 'white';
+                        b.style.color = 'var(--color-text-main)';
+                        b.style.borderColor = 'var(--color-border)';
+                        b.style.fontWeight = '700';
+                    });
+
+                    btn.classList.add('active');
+                    btn.style.background = 'var(--color-accent-gold)';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = 'var(--color-accent-gold)';
+                    btn.style.fontWeight = '800';
+
+                    renderTandaDashboard();
+                }
+            });
+
             const renderTandaDashboard = () => {
-                const tandas = tandaState.tandas || [];
-                document.getElementById('tanda-tab-count').textContent = tandas.length;
+                const allTandas = tandaState.tandas || [];
+                document.getElementById('tanda-tab-count').textContent = allTandas.length;
+
+                const tandas = filterTandasByRange(allTandas, tandaState.dashboardRange || 'all');
 
                 const emptyState = document.getElementById('td-empty-state');
                 const content = document.getElementById('td-dashboard-content');
 
                 if (tandas.length === 0) {
-                    if (emptyState) emptyState.style.display = 'block';
-                    if (content) content.style.display = 'none';
-                    return;
+                    if (allTandas.length === 0) {
+                        if (emptyState) emptyState.style.display = 'block';
+                        if (content) content.style.display = 'none';
+                        return;
+                    }
                 }
 
                 if (emptyState) emptyState.style.display = 'none';
@@ -3963,21 +4037,39 @@
                 document.getElementById('td-kpi-sale-eff').textContent = `${efficiency}%`;
                 document.getElementById('td-kpi-baked-vs-sold').textContent = `${totalSold} vendidas / ${totalBaked} horneadas`;
 
-                // Draw the 4 Canvas Charts
+                // Draw High-DPI Crisp Canvas Charts
                 drawTandaDestinoCanvas(totalSold, productStats);
                 drawTandaHistoryBarsCanvas(tandas);
                 drawTandaTopProfitableCanvas(productStats);
                 drawTandaSobrantesCanvas(productStats);
             };
 
+            // Helper to prepare crisp canvas for High-DPI / Mobile screens
+            const prepareCrispCanvas = (canvasId, logicalH = 220) => {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const dpr = window.devicePixelRatio || 1;
+                const container = canvas.parentElement;
+                const cssW = Math.max(260, container.clientWidth - 40);
+
+                canvas.style.width = cssW + 'px';
+                canvas.style.height = logicalH + 'px';
+
+                canvas.width = Math.floor(cssW * dpr);
+                canvas.height = Math.floor(logicalH * dpr);
+
+                const ctx = canvas.getContext('2d');
+                ctx.resetTransform ? ctx.resetTransform() : ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.scale(dpr, dpr);
+                return { ctx, width: cssW, height: logicalH };
+            };
+
             // 1. Destino de Producción (Dona Canvas)
             const drawTandaDestinoCanvas = (totalSold, productStats) => {
-                const canvas = document.getElementById('canvas-td-destino');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                canvas.width = canvas.parentElement.clientWidth - 40 || 280;
-                canvas.height = 180;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const prep = prepareCrispCanvas('canvas-td-destino', 220);
+                if (!prep) return;
+                const { ctx, width, height } = prep;
+                ctx.clearRect(0, 0, width, height);
 
                 let totalGift = 0;
                 let totalWaste = 0;
@@ -3995,10 +4087,10 @@
                     { label: 'Merma', val: totalWaste, color: '#F43F5E' }
                 ];
 
-                const centerX = canvas.width / 3 + 10;
-                const centerY = canvas.height / 2;
-                const radius = 60;
-                const innerRadius = 35;
+                const centerX = width / 3.2;
+                const centerY = height / 2;
+                const radius = 68;
+                const innerRadius = 40;
 
                 let startAngle = 0;
                 data.forEach(item => {
@@ -4015,77 +4107,73 @@
                     startAngle += sliceAngle;
                 });
 
-                // Draw Legend on the right side
-                let legY = centerY - 30;
+                // Legend
+                let legY = centerY - 32;
                 data.forEach(item => {
                     ctx.fillStyle = item.color;
                     ctx.beginPath();
-                    ctx.arc(canvas.width - 120, legY, 5, 0, 2 * Math.PI);
+                    ctx.arc(width - 130, legY, 6, 0, 2 * Math.PI);
                     ctx.fill();
 
                     ctx.fillStyle = '#1E293B';
-                    ctx.font = 'bold 11px sans-serif';
+                    ctx.font = 'bold 12px sans-serif';
                     ctx.textAlign = 'left';
-                    ctx.fillText(`${item.label}: ${item.val}`, canvas.width - 110, legY + 4);
+                    ctx.fillText(`${item.label}: ${item.val}`, width - 118, legY + 4);
 
-                    legY += 22;
+                    legY += 26;
                 });
             };
 
             // 2. Historial de Tandas (Inversión vs Recaudación)
             const drawTandaHistoryBarsCanvas = (tandas) => {
-                const canvas = document.getElementById('canvas-td-history-bars');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                canvas.width = canvas.parentElement.clientWidth - 40 || 280;
-                canvas.height = 180;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const prep = prepareCrispCanvas('canvas-td-history-bars', 220);
+                if (!prep) return;
+                const { ctx, width, height } = prep;
+                ctx.clearRect(0, 0, width, height);
 
                 const recent = tandas.slice(0, 5).reverse();
                 if (recent.length === 0) return;
 
                 const maxVal = Math.max(...recent.map(t => Math.max(t.investment || 0, t.revenue || 0)), 50);
-                const chartW = canvas.width - 40;
-                const chartH = canvas.height - 40;
+                const chartW = width - 40;
+                const chartH = height - 45;
                 const groupW = chartW / recent.length;
-                const barW = Math.min(16, groupW / 2.5);
+                const barW = Math.min(20, groupW / 2.5);
 
                 recent.forEach((t, i) => {
                     const xGroup = 30 + i * groupW + (groupW - barW * 2 - 4) / 2;
-                    const invH = (t.investment / maxVal) * (chartH - 20);
-                    const revH = (t.revenue / maxVal) * (chartH - 20);
+                    const invH = (t.investment / maxVal) * (chartH - 25);
+                    const revH = (t.revenue / maxVal) * (chartH - 25);
 
-                    // Bar 1: Inversión (Pastel Red/Rose)
+                    // Bar 1: Inversión
                     ctx.fillStyle = '#F87171';
                     ctx.beginPath();
-                    if (ctx.roundRect) ctx.roundRect(xGroup, canvas.height - 25 - invH, barW, Math.max(4, invH), 4);
-                    else ctx.rect(xGroup, canvas.height - 25 - invH, barW, Math.max(4, invH));
+                    if (ctx.roundRect) ctx.roundRect(xGroup, height - 30 - invH, barW, Math.max(4, invH), 4);
+                    else ctx.rect(xGroup, height - 30 - invH, barW, Math.max(4, invH));
                     ctx.fill();
 
-                    // Bar 2: Recaudación (Pastel Green)
+                    // Bar 2: Recaudación
                     ctx.fillStyle = '#34D399';
                     ctx.beginPath();
-                    if (ctx.roundRect) ctx.roundRect(xGroup + barW + 4, canvas.height - 25 - revH, barW, Math.max(4, revH), 4);
-                    else ctx.rect(xGroup + barW + 4, canvas.height - 25 - revH, barW, Math.max(4, revH));
+                    if (ctx.roundRect) ctx.roundRect(xGroup + barW + 4, height - 30 - revH, barW, Math.max(4, revH), 4);
+                    else ctx.rect(xGroup + barW + 4, height - 30 - revH, barW, Math.max(4, revH));
                     ctx.fill();
 
                     // Label X
-                    const label = t.name ? (t.name.length > 7 ? t.name.substring(0, 7) + '..' : t.name) : `T${i+1}`;
-                    ctx.fillStyle = '#64748B';
-                    ctx.font = '9px sans-serif';
+                    const label = t.name ? (t.name.length > 8 ? t.name.substring(0, 8) + '..' : t.name) : `T${i+1}`;
+                    ctx.fillStyle = '#475569';
+                    ctx.font = 'bold 11px sans-serif';
                     ctx.textAlign = 'center';
-                    ctx.fillText(label, xGroup + barW + 2, canvas.height - 10);
+                    ctx.fillText(label, xGroup + barW + 2, height - 10);
                 });
             };
 
             // 3. Top Productos Más Rentables (Horizontal BarChart Canvas)
             const drawTandaTopProfitableCanvas = (productStats) => {
-                const canvas = document.getElementById('canvas-td-top-profitable');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                canvas.width = canvas.parentElement.clientWidth - 40 || 280;
-                canvas.height = 180;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const prep = prepareCrispCanvas('canvas-td-top-profitable', 220);
+                if (!prep) return;
+                const { ctx, width, height } = prep;
+                ctx.clearRect(0, 0, width, height);
 
                 const prods = Object.keys(productStats)
                     .map(p => ({ name: p, rev: productStats[p].revenue }))
@@ -4095,43 +4183,41 @@
                 if (prods.length === 0) return;
                 const maxRev = Math.max(...prods.map(p => p.rev), 10);
 
-                const barH = 22;
+                const barH = 26;
                 let startY = 15;
 
                 prods.forEach(p => {
-                    const barW = (p.rev / maxRev) * (canvas.width - 130);
+                    const barW = (p.rev / maxRev) * (width - 170);
                     
                     // Label
                     ctx.fillStyle = '#1E293B';
-                    ctx.font = 'bold 10px sans-serif';
+                    ctx.font = 'bold 11px sans-serif';
                     ctx.textAlign = 'left';
-                    const truncatedName = p.name.length > 10 ? p.name.substring(0, 10) + '..' : p.name;
-                    ctx.fillText(truncatedName, 10, startY + 14);
+                    const truncatedName = p.name.length > 14 ? p.name.substring(0, 14) + '..' : p.name;
+                    ctx.fillText(truncatedName, 10, startY + 17);
 
                     // Bar
                     ctx.fillStyle = '#A78BFA';
                     ctx.beginPath();
-                    if (ctx.roundRect) ctx.roundRect(85, startY, Math.max(6, barW), barH, 5);
-                    else ctx.rect(85, startY, Math.max(6, barW), barH);
+                    if (ctx.roundRect) ctx.roundRect(115, startY, Math.max(8, barW), barH, 6);
+                    else ctx.rect(115, startY, Math.max(8, barW), barH);
                     ctx.fill();
 
                     // Value text
                     ctx.fillStyle = '#6D28D9';
-                    ctx.font = 'bold 10px sans-serif';
-                    ctx.fillText(`S/ ${p.rev.toFixed(0)}`, 85 + Math.max(6, barW) + 6, startY + 14);
+                    ctx.font = 'bold 11px sans-serif';
+                    ctx.fillText(`S/ ${p.rev.toFixed(0)}`, 115 + Math.max(8, barW) + 8, startY + 17);
 
-                    startY += 38;
+                    startY += 45;
                 });
             };
 
             // 4. Alerta de Sobrantes (BarChart Canvas)
             const drawTandaSobrantesCanvas = (productStats) => {
-                const canvas = document.getElementById('canvas-td-sobrantes');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                canvas.width = canvas.parentElement.clientWidth - 40 || 280;
-                canvas.height = 180;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const prep = prepareCrispCanvas('canvas-td-sobrantes', 220);
+                if (!prep) return;
+                const { ctx, width, height } = prep;
+                ctx.clearRect(0, 0, width, height);
 
                 const prods = Object.keys(productStats)
                     .map(p => ({ name: p, leftover: productStats[p].leftover }))
@@ -4141,31 +4227,31 @@
                 if (prods.length === 0) return;
                 const maxLeftover = Math.max(...prods.map(p => p.leftover), 5);
 
-                const chartW = canvas.width - 40;
-                const chartH = canvas.height - 40;
-                const barW = Math.min(30, (chartW / prods.length) - 10);
+                const chartW = width - 40;
+                const chartH = height - 45;
+                const barW = Math.min(36, (chartW / prods.length) - 12);
 
                 prods.forEach((p, i) => {
-                    const x = 30 + i * (chartW / prods.length) + 5;
-                    const bH = (p.leftover / maxLeftover) * (chartH - 20);
+                    const x = 30 + i * (chartW / prods.length) + 6;
+                    const bH = (p.leftover / maxLeftover) * (chartH - 25);
 
                     ctx.fillStyle = '#FB7185';
                     ctx.beginPath();
-                    if (ctx.roundRect) ctx.roundRect(x, canvas.height - 25 - bH, barW, Math.max(4, bH), 5);
-                    else ctx.rect(x, canvas.height - 25 - bH, barW, Math.max(4, bH));
+                    if (ctx.roundRect) ctx.roundRect(x, height - 30 - bH, barW, Math.max(6, bH), 6);
+                    else ctx.rect(x, height - 30 - bH, barW, Math.max(6, bH));
                     ctx.fill();
 
                     // Value text
                     ctx.fillStyle = '#9F1239';
-                    ctx.font = 'bold 10px sans-serif';
+                    ctx.font = 'bold 11px sans-serif';
                     ctx.textAlign = 'center';
-                    ctx.fillText(`${p.leftover}`, x + barW / 2, canvas.height - 30 - bH);
+                    ctx.fillText(`${p.leftover}`, x + barW / 2, height - 35 - bH);
 
                     // Label X
-                    const label = p.name.length > 7 ? p.name.substring(0, 7) + '..' : p.name;
-                    ctx.fillStyle = '#64748B';
-                    ctx.font = '9px sans-serif';
-                    ctx.fillText(label, x + barW / 2, canvas.height - 10);
+                    const label = p.name.length > 8 ? p.name.substring(0, 8) + '..' : p.name;
+                    ctx.fillStyle = '#475569';
+                    ctx.font = 'bold 11px sans-serif';
+                    ctx.fillText(label, x + barW / 2, height - 10);
                 });
             };
 
