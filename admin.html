@@ -3199,17 +3199,23 @@
                 step: 1,
                 name: `Tanda ${new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}`,
                 availableProducts: [
-                    'Galleta de orea and creme',
-                    'Galleta de chin chin',
-                    'Brownies de chocolate',
-                    'Muffins de arandano'
+                    { name: 'Galleta de orea and creme', price: 5.00 },
+                    { name: 'Galleta de chin chin', price: 4.00 },
+                    { name: 'Brownies de chocolate', price: 6.50 },
+                    { name: 'Muffins de arandano', price: 6.00 }
                 ],
                 selectedProducts: ['Brownies de chocolate'],
+                unitPrices: {
+                    'Galleta de orea and creme': 5.00,
+                    'Galleta de chin chin': 4.00,
+                    'Brownies de chocolate': 6.50,
+                    'Muffins de arandano': 6.00
+                },
                 investment: 75.00,
                 bakedQty: { 'Brownies de chocolate': 18 },
                 leftoverQty: { 'Brownies de chocolate': 2 },
                 wasteTypes: { 'Brownies de chocolate': 'merma' },
-                revenue: 195.00,
+                revenue: 104.00,
                 tandas: [],
                 lastPostMortem: null
             };
@@ -3217,7 +3223,6 @@
             const hydrateTandasTab = async () => {
                 document.getElementById('tanda-name-input').value = tandaState.name;
                 document.getElementById('tanda-investment-input').value = tandaState.investment.toFixed(2);
-                document.getElementById('tanda-revenue-input').value = tandaState.revenue.toFixed(2);
 
                 // Fetch available products catalog
                 try {
@@ -3225,7 +3230,10 @@
                     if (resProds.ok) {
                         const prods = await resProds.json();
                         if (Array.isArray(prods) && prods.length > 0) {
-                            tandaState.availableProducts = prods;
+                            tandaState.availableProducts = prods.map(p => typeof p === 'string' ? { name: p, price: 5.00 } : p);
+                            tandaState.availableProducts.forEach(p => {
+                                tandaState.unitPrices[p.name] = typeof p.price === 'number' ? p.price : 5.00;
+                            });
                         }
                     }
                 } catch (err) {
@@ -3234,7 +3242,8 @@
 
                 // If no products selected or invalid, select first available product
                 if (!tandaState.selectedProducts || tandaState.selectedProducts.length === 0) {
-                    tandaState.selectedProducts = [tandaState.availableProducts[0]];
+                    const first = tandaState.availableProducts[0];
+                    tandaState.selectedProducts = [typeof first === 'string' ? first : first.name];
                 }
 
                 // Fetch history
@@ -3253,17 +3262,23 @@
                 const chipsContainer = document.getElementById('tanda-product-chips');
                 chipsContainer.innerHTML = '';
 
-                tandaState.availableProducts.forEach(prodName => {
+                tandaState.availableProducts.forEach(prodObj => {
+                    const prodName = typeof prodObj === 'string' ? prodObj : prodObj.name;
+                    const defaultPrice = typeof prodObj === 'object' && typeof prodObj.price === 'number' ? prodObj.price : 5.00;
+                    if (tandaState.unitPrices[prodName] === undefined) tandaState.unitPrices[prodName] = defaultPrice;
+
+                    const price = tandaState.unitPrices[prodName];
                     const isSelected = tandaState.selectedProducts.includes(prodName);
                     
-                    const row = document.createElement('div');
-                    row.style.cssText = 'display: flex; gap: 8px; align-items: center; width: 100%;';
+                    const container = document.createElement('div');
+                    container.style.cssText = `display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; border-radius: 12px; border: 1.5px solid ${isSelected ? 'var(--color-accent-gold)' : 'var(--color-border)'}; background: ${isSelected ? '#FFFBEB' : 'white'}; transition: var(--transition-smooth);`;
 
-                    const chip = document.createElement('button');
-                    chip.type = 'button';
-                    chip.className = 'btn btn-secondary';
-                    chip.style.cssText = `flex: 1; padding: 12px 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; text-align: left; border: 1.5px solid ${isSelected ? 'var(--color-accent-gold)' : 'var(--color-border)'}; background: ${isSelected ? '#FFFBEB' : 'white'}; color: ${isSelected ? '#78350F' : 'var(--color-text-main)'}; display: flex; justify-content: space-between; align-items: center; transition: var(--transition-smooth); cursor: pointer;`;
-                    chip.innerHTML = `<span>${prodName}</span><span style="width: 22px; height: 22px; border-radius: 50%; font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; ${isSelected ? 'background: var(--color-accent-gold); color: white;' : 'border: 1.5px solid var(--color-border);'}">${isSelected ? '✓' : ''}</span>`;
+                    const topRow = document.createElement('div');
+                    topRow.style.cssText = 'display: flex; justify-content: space-between; align-items: center; width: 100%;';
+
+                    const chip = document.createElement('div');
+                    chip.style.cssText = `flex: 1; font-weight: 700; font-size: 0.9rem; color: ${isSelected ? '#78350F' : 'var(--color-text-main)'}; display: flex; align-items: center; gap: 10px; cursor: pointer;`;
+                    chip.innerHTML = `<span style="width: 22px; height: 22px; border-radius: 50%; font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; ${isSelected ? 'background: var(--color-accent-gold); color: white;' : 'border: 1.5px solid var(--color-border);'}">${isSelected ? '✓' : ''}</span><span>${prodName}</span>`;
 
                     chip.addEventListener('click', () => {
                         if (tandaState.selectedProducts.includes(prodName)) {
@@ -3281,7 +3296,7 @@
                     const delBtn = document.createElement('button');
                     delBtn.type = 'button';
                     delBtn.title = `Eliminar ${prodName} del catálogo`;
-                    delBtn.style.cssText = `width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid #FEE2E2; background: #FEF2F2; color: #EF4444; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: var(--transition-smooth);`;
+                    delBtn.style.cssText = `width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid #FEE2E2; background: #FEF2F2; color: #EF4444; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: var(--transition-smooth);`;
                     delBtn.innerHTML = '🗑️';
 
                     delBtn.addEventListener('click', async (e) => {
@@ -3290,14 +3305,16 @@
                             return alert('Debes mantener al menos un producto en el catálogo.');
                         }
                         if (confirm(`¿Deseas eliminar "${prodName}" de la lista de productos?`)) {
-                            tandaState.availableProducts = tandaState.availableProducts.filter(p => p !== prodName);
+                            tandaState.availableProducts = tandaState.availableProducts.filter(p => (typeof p === 'string' ? p : p.name) !== prodName);
                             tandaState.selectedProducts = tandaState.selectedProducts.filter(p => p !== prodName);
+                            delete tandaState.unitPrices[prodName];
+
                             if (tandaState.selectedProducts.length === 0 && tandaState.availableProducts.length > 0) {
-                                tandaState.selectedProducts = [tandaState.availableProducts[0]];
+                                const first = tandaState.availableProducts[0];
+                                tandaState.selectedProducts = [typeof first === 'string' ? first : first.name];
                             }
                             renderTandaProductChips();
 
-                            // Sync delete with backend
                             try {
                                 await fetch('/api/tanda-products/delete', {
                                     method: 'POST',
@@ -3310,9 +3327,42 @@
                         }
                     });
 
-                    row.appendChild(chip);
-                    row.appendChild(delBtn);
-                    chipsContainer.appendChild(row);
+                    topRow.appendChild(chip);
+                    topRow.appendChild(delBtn);
+                    container.appendChild(topRow);
+
+                    // Unit price input row if selected
+                    if (isSelected) {
+                        const priceRow = document.createElement('div');
+                        priceRow.style.cssText = 'display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding-top: 8px; border-top: 1px dashed #FCD34D;';
+                        priceRow.innerHTML = `
+                            <span style="font-size: 0.78rem; font-weight: 700; color: #92400E;">Precio de venta unitario al público:</span>
+                            <div style="display: flex; align-items: center; gap: 4px;">
+                                <span style="font-weight: 900; font-size: 0.85rem; color: #78350F;">S/</span>
+                                <input type="number" step="0.50" min="0" value="${price.toFixed(2)}" class="inp-prod-price" style="width: 85px; height: 36px; padding: 4px 8px; border-radius: 8px; border: 1.5px solid #FCD34D; font-weight: 800; font-size: 0.95rem; text-align: right; background: white; color: #78350F;" />
+                            </div>
+                        `;
+
+                        priceRow.querySelector('.inp-prod-price').addEventListener('change', async (e) => {
+                            const newPrice = parseFloat(e.target.value) || 0;
+                            tandaState.unitPrices[prodName] = newPrice;
+                            
+                            // Save price update to backend
+                            try {
+                                await fetch('/api/tanda-products', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name: prodName, price: newPrice })
+                                });
+                            } catch (err) {
+                                console.error('Error updating price:', err);
+                            }
+                        });
+
+                        container.appendChild(priceRow);
+                    }
+
+                    chipsContainer.appendChild(container);
                 });
             };
 
@@ -3322,24 +3372,26 @@
                 const val = input.value.trim();
                 if (!val) return;
 
-                if (!tandaState.availableProducts.includes(val)) {
-                    tandaState.availableProducts.push(val);
+                const defaultPrice = 5.00;
+                const existing = tandaState.availableProducts.find(p => (typeof p === 'string' ? p : p.name).toLowerCase() === val.toLowerCase());
+                if (!existing) {
+                    tandaState.availableProducts.push({ name: val, price: defaultPrice });
                 }
                 if (!tandaState.selectedProducts.includes(val)) {
                     tandaState.selectedProducts.push(val);
                     tandaState.bakedQty[val] = 10;
                     tandaState.leftoverQty[val] = 0;
+                    tandaState.unitPrices[val] = defaultPrice;
                 }
 
                 input.value = '';
                 renderTandaProductChips();
 
-                // Persist new product to backend
                 try {
                     await fetch('/api/tanda-products', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: val })
+                        body: JSON.stringify({ name: val, price: defaultPrice })
                     });
                 } catch (err) {
                     console.error('Error adding product:', err);

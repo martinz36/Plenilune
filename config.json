@@ -397,9 +397,21 @@
   "dailyClosures": [],
   "tandas": [],
   "tandaProducts": [
-    "Galleta de orea and creme",
-    "Galleta de chin chin",
-    "Brownies de chocolate",
-    "Muffins de arandano"
+    {
+      "name": "Galleta de orea and creme",
+      "price": 5
+    },
+    {
+      "name": "Galleta de chin chin",
+      "price": 4
+    },
+    {
+      "name": "Brownies de chocolate",
+      "price": 6.5
+    },
+    {
+      "name": "Muffins de arandano",
+      "price": 6
+    }
   ]
 }

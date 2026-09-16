@@ -56,6 +56,14 @@ export default function ControlTandas() {
   // Dynamic Catalog State
   const [catalog, setCatalog] = useState(INITIAL_PRODUCT_CATALOG);
 
+  // Unit Prices State per Product
+  const [unitPrices, setUnitPrices] = useState({
+    'Galleta de orea and creme': 5.00,
+    'Galleta de chin chin': 4.00,
+    'Brownies de chocolate': 6.50,
+    'Muffins de arandano': 6.00
+  });
+
   // Step 1: Compras & Inversión State
   const [tandaName, setTandaName] = useState(`Tanda ${new Date().toLocaleDateString('es-PE', { weekday: 'short', day: '2-digit', month: 'short' })}`);
   const [selectedProducts, setSelectedProducts] = useState(['Brownies de chocolate']);
@@ -76,7 +84,7 @@ export default function ControlTandas() {
     'Brownies de chocolate': 'merma'
   });
 
-  const [totalRevenue, setTotalRevenue] = useState(195.00);
+  const [totalRevenue, setTotalRevenue] = useState(104.00);
 
   // Histórico de Tandas
   const [tandasHistory, setTandasHistory] = useState(INITIAL_TANDAS_HISTORY);
@@ -89,6 +97,15 @@ export default function ControlTandas() {
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           setCatalog(data);
+          const priceMap = {};
+          data.forEach(p => {
+            if (typeof p === 'object') {
+              priceMap[p.name] = p.price;
+            } else {
+              priceMap[p] = 5.00;
+            }
+          });
+          setUnitPrices(prev => ({ ...priceMap, ...prev }));
         }
       })
       .catch(err => console.warn('Could not load tanda products:', err));
@@ -364,34 +381,64 @@ export default function ControlTandas() {
                     Seleccionar Productos a Preparar
                   </label>
                   <div className="grid grid-cols-1 gap-2">
-                    {catalog.map((prodName) => {
+                    {catalog.map((prodItem) => {
+                      const prodName = typeof prodItem === 'string' ? prodItem : prodItem.name;
                       const isSelected = selectedProducts.includes(prodName);
+                      const price = unitPrices[prodName] || (typeof prodItem === 'object' && prodItem.price) || 5.00;
+
                       return (
-                        <div key={prodName} className="flex items-center space-x-2">
-                          <button
-                            type="button"
-                            onClick={() => toggleProductSelection(prodName)}
-                            className={`flex-1 p-3.5 rounded-2xl text-left text-xs font-bold border transition-all flex items-center justify-between ${
-                              isSelected
-                                ? 'bg-amber-50 border-amber-500 text-amber-950 shadow-sm ring-1 ring-amber-400'
-                                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                            }`}
-                          >
-                            <span>{prodName}</span>
-                            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
-                              isSelected ? 'bg-amber-500 text-white font-black' : 'border border-slate-300'
-                            }`}>
-                              {isSelected ? '✓' : ''}
-                            </span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteProduct(prodName)}
-                            title={`Eliminar ${prodName}`}
-                            className="w-11 h-11 rounded-2xl border border-rose-200 bg-rose-50 text-rose-600 flex items-center justify-center hover:bg-rose-100 transition-colors flex-shrink-0"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                        <div key={prodName} className={`p-3.5 rounded-2xl border transition-all flex flex-col gap-2 ${
+                          isSelected
+                            ? 'bg-amber-50 border-amber-500 shadow-sm ring-1 ring-amber-400'
+                            : 'bg-white border-slate-200'
+                        }`}>
+                          <div className="flex items-center space-x-2">
+                            <button
+                              type="button"
+                              onClick={() => toggleProductSelection(prodName)}
+                              className="flex-1 text-left text-xs font-bold text-slate-800 flex items-center justify-between"
+                            >
+                              <span>{prodName}</span>
+                              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
+                                isSelected ? 'bg-amber-500 text-white font-black' : 'border border-slate-300'
+                              }`}>
+                                {isSelected ? '✓' : ''}
+                              </span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteProduct(prodName)}
+                              title={`Eliminar ${prodName}`}
+                              className="w-9 h-9 rounded-xl border border-rose-200 bg-rose-50 text-rose-600 flex items-center justify-center hover:bg-rose-100 transition-colors flex-shrink-0"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+
+                          {isSelected && (
+                            <div className="pt-2 border-t border-amber-200/60 flex items-center justify-between text-xs">
+                              <span className="font-bold text-amber-900">Precio de venta unitario al público:</span>
+                              <div className="flex items-center space-x-1">
+                                <span className="font-extrabold text-amber-900">S/</span>
+                                <input
+                                  type="number"
+                                  step="0.50"
+                                  min="0"
+                                  value={price}
+                                  onChange={(e) => {
+                                    const newP = parseFloat(e.target.value) || 0;
+                                    setUnitPrices(prev => ({ ...prev, [prodName]: newP }));
+                                    fetch('/api/tanda-products', {
+                                      method: 'POST',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ name: prodName, price: newP })
+                                    }).catch(err => console.error(err));
+                                  }}
+                                  className="w-20 h-9 px-2 rounded-xl border border-amber-300 font-extrabold text-right text-slate-900 bg-white outline-none focus:ring-2 focus:ring-amber-500"
+                                />
+                              </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })}

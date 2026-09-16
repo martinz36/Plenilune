@@ -195,24 +195,32 @@ app.get('/api/tanda-products', (req, res) => {
         try {
             const config = JSON.parse(data);
             const defaultProds = [
-                'Galleta de orea and creme',
-                'Galleta de chin chin',
-                'Brownies de chocolate',
-                'Muffins de arandano'
+                { name: 'Galleta de orea and creme', price: 5.00 },
+                { name: 'Galleta de chin chin', price: 4.00 },
+                { name: 'Brownies de chocolate', price: 6.50 },
+                { name: 'Muffins de arandano', price: 6.00 }
             ];
-            res.json(config.tandaProducts || defaultProds);
+            const prods = config.tandaProducts || defaultProds;
+            const normalized = prods.map(p => {
+                if (typeof p === 'string') return { name: p, price: 5.00 };
+                return { name: p.name, price: typeof p.price === 'number' ? p.price : 5.00 };
+            });
+            res.json(normalized);
         } catch (e) {
             res.status(500).json({ error: 'Invalid data format' });
         }
     });
 });
 
-// API: Add Tanda Product
+// API: Add or Update Tanda Product
 app.post('/api/tanda-products', (req, res) => {
-    const { name } = req.body;
+    const { name, price } = req.body;
     if (!name || typeof name !== 'string' || !name.trim()) {
         return res.status(400).json({ error: 'Invalid product name' });
     }
+
+    const trimmedName = name.trim();
+    const parsedPrice = typeof price === 'number' ? price : (parseFloat(price) || 5.00);
 
     fs.readFile(CONFIG_FILE, 'utf8', (err, data) => {
         if (err) return res.status(500).json({ error: 'Failed to read data' });
@@ -220,15 +228,20 @@ app.post('/api/tanda-products', (req, res) => {
             const config = JSON.parse(data);
             if (!config.tandaProducts) {
                 config.tandaProducts = [
-                    'Galleta de orea and creme',
-                    'Galleta de chin chin',
-                    'Brownies de chocolate',
-                    'Muffins de arandano'
+                    { name: 'Galleta de orea and creme', price: 5.00 },
+                    { name: 'Galleta de chin chin', price: 4.00 },
+                    { name: 'Brownies de chocolate', price: 6.50 },
+                    { name: 'Muffins de arandano', price: 6.00 }
                 ];
             }
-            const trimmedName = name.trim();
-            if (!config.tandaProducts.includes(trimmedName)) {
-                config.tandaProducts.push(trimmedName);
+            
+            config.tandaProducts = config.tandaProducts.map(p => typeof p === 'string' ? { name: p, price: 5.00 } : p);
+
+            const existingIdx = config.tandaProducts.findIndex(p => p.name.toLowerCase() === trimmedName.toLowerCase());
+            if (existingIdx >= 0) {
+                config.tandaProducts[existingIdx].price = parsedPrice;
+            } else {
+                config.tandaProducts.push({ name: trimmedName, price: parsedPrice });
             }
 
             fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8', (writeErr) => {
@@ -253,7 +266,10 @@ app.post('/api/tanda-products/delete', (req, res) => {
         try {
             const config = JSON.parse(data);
             if (config.tandaProducts) {
-                config.tandaProducts = config.tandaProducts.filter(p => p.trim() !== name.trim());
+                config.tandaProducts = config.tandaProducts.filter(p => {
+                    const pName = typeof p === 'string' ? p : p.name;
+                    return pName.trim().toLowerCase() !== name.trim().toLowerCase();
+                });
             }
 
             fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8', (writeErr) => {
