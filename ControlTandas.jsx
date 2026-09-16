@@ -285,31 +285,116 @@ export default function ControlTandas() {
 
       <div className="max-w-md mx-auto px-4 pt-4">
 
-        {/* Navigation Switcher */}
-        <div className="grid grid-cols-2 gap-1.5 bg-slate-200/80 p-1.5 rounded-2xl mb-5 shadow-inner">
+        {/* Sub-tabs Header Switcher */}
+        <div className="bg-slate-200/70 p-1.5 rounded-2xl grid grid-cols-3 gap-1 mb-6">
           <button
             onClick={() => setActiveView('wizard')}
-            className={`py-3 text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 transition-all ${
+            className={`py-3 text-[11px] font-bold rounded-xl flex items-center justify-center space-x-1 transition-all ${
               activeView === 'wizard'
                 ? 'bg-white text-slate-900 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Sparkles className="w-4 h-4 text-amber-600" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
             <span>Tanda Activa</span>
           </button>
           <button
+            onClick={() => setActiveView('dashboard')}
+            className={`py-3 text-[11px] font-bold rounded-xl flex items-center justify-center space-x-1 transition-all ${
+              activeView === 'dashboard'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <TrendingUp className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Dashboard</span>
+          </button>
+          <button
             onClick={() => setActiveView('historial')}
-            className={`py-3 text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 transition-all ${
+            className={`py-3 text-[11px] font-bold rounded-xl flex items-center justify-center space-x-1 transition-all ${
               activeView === 'historial'
                 ? 'bg-white text-slate-900 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <History className="w-4 h-4 text-sky-600" />
-            <span>Histórico ({tandasHistory.length})</span>
+            <History className="w-3.5 h-3.5 text-sky-600" />
+            <span>Histórico</span>
           </button>
         </div>
+
+        {activeView === 'dashboard' && (
+          <div className="space-y-5 animate-in fade-in duration-200">
+            {/* KPI Cards Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <span className="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
+                  Ganancia Neta Total
+                </span>
+                <span className="text-xl font-black text-emerald-600 block">
+                  S/ {tandasHistory.reduce((acc, t) => acc + (t.profit !== undefined ? t.profit : (t.revenue - t.investment)), 0).toFixed(2)}
+                </span>
+                <span className="text-[10px] text-slate-400">Recaudado - Inversión</span>
+              </div>
+
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <span className="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
+                  ROI Promedio
+                </span>
+                <span className="text-xl font-black text-indigo-600 block">
+                  {(tandasHistory.length > 0 ? tandasHistory.reduce((acc, t) => acc + parseFloat(t.margin || t.roi || 0), 0) / tandasHistory.length : 0).toFixed(1)}%
+                </span>
+                <span className="text-[10px] text-slate-400">Rentabilidad por tanda</span>
+              </div>
+
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <span className="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
+                  Inversión Total
+                </span>
+                <span className="text-base font-extrabold text-slate-800 block">
+                  S/ {tandasHistory.reduce((acc, t) => acc + parseFloat(t.investment || t.investmentCost || 0), 0).toFixed(2)}
+                </span>
+                <span className="text-[10px] text-slate-400">Gastado en insumos</span>
+              </div>
+
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <span className="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
+                  Recaudación Total
+                </span>
+                <span className="text-base font-extrabold text-slate-800 block">
+                  S/ {tandasHistory.reduce((acc, t) => acc + parseFloat(t.revenue || t.totalEarned || 0), 0).toFixed(2)}
+                </span>
+                <span className="text-[10px] text-slate-400">Total cobrado</span>
+              </div>
+            </div>
+
+            {/* Profit History Breakdown Visual */}
+            <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+                Evolución de Rentabilidad por Tanda
+              </h3>
+              <div className="space-y-2">
+                {tandasHistory.map((t, idx) => {
+                  const prof = t.profit !== undefined ? t.profit : (t.revenue - t.investment);
+                  const isProf = prof >= 0;
+                  return (
+                    <div key={t.id || idx} className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 text-xs">
+                      <div>
+                        <span className="font-bold text-slate-800 block">{t.name}</span>
+                        <span className="text-[10px] text-slate-400">{t.date}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className={`font-black text-sm block ${isProf ? 'text-emerald-600' : 'text-rose-600'}`}>
+                          {isProf ? '+' : ''}S/ {prof.toFixed(2)}
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-bold">ROI {t.margin || t.roi}%</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {activeView === 'wizard' ? (
           <div>

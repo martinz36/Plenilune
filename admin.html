@@ -1290,12 +1290,15 @@
                     </div>
 
                     <!-- Sub-tabs Switcher -->
-                    <div style="display: flex; gap: 8px; background: var(--color-bg-secondary); padding: 6px; border-radius: var(--border-radius-lg); margin-bottom: 24px;">
-                        <button type="button" class="btn btn-secondary active-subtab" id="btn-tanda-tab-new" style="flex: 1; padding: 12px; font-weight: 700; font-size: 0.95rem; border-radius: var(--border-radius-md); border: none; cursor: pointer; transition: var(--transition-smooth); background: white; color: var(--color-text-main); box-shadow: var(--shadow-soft);">
-                            🚀 Tanda Activa / Nueva
+                    <div style="display: flex; gap: 6px; background: var(--color-bg-secondary); padding: 6px; border-radius: var(--border-radius-lg); margin-bottom: 24px; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-secondary active-tanda-subtab" id="btn-tanda-tab-new" style="flex: 1; min-width: 130px; padding: 12px 10px; font-weight: 800; font-size: 0.85rem; border-radius: var(--border-radius-md); border: none; cursor: pointer; transition: var(--transition-smooth); background: white; color: var(--color-text-main); box-shadow: var(--shadow-soft);">
+                            🚀 Tanda Activa
                         </button>
-                        <button type="button" class="btn btn-secondary" id="btn-tanda-tab-history" style="flex: 1; padding: 12px; font-weight: 700; font-size: 0.95rem; border-radius: var(--border-radius-md); border: none; cursor: pointer; transition: var(--transition-smooth); background: transparent; color: var(--color-text-muted);">
-                            📦 Histórico ({tandas.length})
+                        <button type="button" class="btn btn-secondary" id="btn-tanda-tab-dashboard" style="flex: 1; min-width: 130px; padding: 12px 10px; font-weight: 800; font-size: 0.85rem; border-radius: var(--border-radius-md); border: none; cursor: pointer; transition: var(--transition-smooth); background: transparent; color: var(--color-text-muted);">
+                            📊 Dashboard & Métricas
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="btn-tanda-tab-history" style="flex: 1; min-width: 130px; padding: 12px 10px; font-weight: 800; font-size: 0.85rem; border-radius: var(--border-radius-md); border: none; cursor: pointer; transition: var(--transition-smooth); background: transparent; color: var(--color-text-muted);">
+                            📦 Histórico (<span id="tanda-tab-count">0</span>)
                         </button>
                     </div>
 
@@ -1459,7 +1462,51 @@
 
                     </div>
 
-                    <!-- VIEW 2: HISTÓRICO DE TANDAS (CARDS FEED) -->
+                    <!-- VIEW 2: DASHBOARD COMPLETO DE INDICADORES DE TANDAS -->
+                    <div id="tanda-view-dashboard" style="display: none;">
+                        <!-- KPI Cards Grid -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                            <div style="background: white; padding: 20px; border-radius: var(--border-radius-lg); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                                <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 4px;">💰 Ganancia Neta Total</div>
+                                <div style="font-size: 1.7rem; font-weight: 900; color: #10B981;" id="td-kpi-total-profit">S/ 0.00</div>
+                                <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 4px;">Recaudado - Inversión</div>
+                            </div>
+
+                            <div style="background: white; padding: 20px; border-radius: var(--border-radius-lg); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                                <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 4px;">📈 Retorno Promedio (ROI %)</div>
+                                <div style="font-size: 1.7rem; font-weight: 900; color: #6366F1;" id="td-kpi-avg-roi">0.0%</div>
+                                <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 4px;">Rentabilidad por tanda</div>
+                            </div>
+
+                            <div style="background: white; padding: 20px; border-radius: var(--border-radius-lg); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                                <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 4px;">🧁 Eficiencia de Venta</div>
+                                <div style="font-size: 1.7rem; font-weight: 900; color: #F59E0B;" id="td-kpi-sale-eff">0%</div>
+                                <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 4px;" id="td-kpi-baked-vs-sold">0 vendidas / 0 horneadas</div>
+                            </div>
+
+                            <div style="background: white; padding: 20px; border-radius: var(--border-radius-lg); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                                <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 4px;">🛒 Inversión vs Recaudación</div>
+                                <div style="font-size: 1.1rem; font-weight: 800; color: var(--color-text-main);" id="td-kpi-inv-vs-rev">S/ 0.00 / S/ 0.00</div>
+                                <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 4px;">Gasto Insumos / Total Cobrado</div>
+                            </div>
+                        </div>
+
+                        <!-- Chart Section -->
+                        <div style="background: white; padding: 20px; border-radius: var(--border-radius-lg); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft); margin-bottom: 24px;">
+                            <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 16px;">📊 Evolución de Ganancia Neta por Tanda (S/)</h3>
+                            <canvas id="canvas-td-profit-chart" height="180" style="width: 100%; display: block;"></canvas>
+                        </div>
+
+                        <!-- Product Performance Ranking -->
+                        <div style="background: white; padding: 20px; border-radius: var(--border-radius-lg); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                            <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 16px;">🏆 Rendimiento por Producto en Tandas</h3>
+                            <div id="td-product-ranking-list" style="display: flex; flex-direction: column; gap: 10px;">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VIEW 3: HISTÓRICO DE TANDAS (CARDS FEED) -->
                     <div id="tanda-view-history" style="display: none;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                             <h3 style="font-size: 1rem; font-weight: 800; color: var(--color-text-main);">Tandas Anteriores Finalizadas</h3>
@@ -3745,25 +3792,215 @@
                 updateTandaWizardUI();
             });
 
-            // Sub-tabs switcher (Tanda Activa vs Histórico)
-            document.getElementById('btn-tanda-tab-new').addEventListener('click', () => {
-                document.getElementById('btn-tanda-tab-new').style.background = 'white';
-                document.getElementById('btn-tanda-tab-new').style.color = 'var(--color-text-main)';
-                document.getElementById('btn-tanda-tab-history').style.background = 'transparent';
-                document.getElementById('btn-tanda-tab-history').style.color = 'var(--color-text-muted)';
-                document.getElementById('tanda-view-wizard').style.display = 'block';
-                document.getElementById('tanda-view-history').style.display = 'none';
-            });
+            // Sub-tabs switcher (Tanda Activa vs Dashboard vs Histórico)
+            const switchTandaSubtab = (targetTab) => {
+                const btnNew = document.getElementById('btn-tanda-tab-new');
+                const btnDash = document.getElementById('btn-tanda-tab-dashboard');
+                const btnHist = document.getElementById('btn-tanda-tab-history');
 
-            document.getElementById('btn-tanda-tab-history').addEventListener('click', () => {
-                document.getElementById('btn-tanda-tab-history').style.background = 'white';
-                document.getElementById('btn-tanda-tab-history').style.color = 'var(--color-text-main)';
-                document.getElementById('btn-tanda-tab-new').style.background = 'transparent';
-                document.getElementById('btn-tanda-tab-new').style.color = 'var(--color-text-muted)';
-                document.getElementById('tanda-view-wizard').style.display = 'none';
-                document.getElementById('tanda-view-history').style.display = 'block';
-                renderTandaHistoryFeed();
-            });
+                const viewWizard = document.getElementById('tanda-view-wizard');
+                const viewDash = document.getElementById('tanda-view-dashboard');
+                const viewHist = document.getElementById('tanda-view-history');
+
+                [btnNew, btnDash, btnHist].forEach(b => {
+                    b.style.background = 'transparent';
+                    b.style.color = 'var(--color-text-muted)';
+                    b.style.boxShadow = 'none';
+                });
+
+                if (targetTab === 'wizard') {
+                    btnNew.style.background = 'white';
+                    btnNew.style.color = 'var(--color-text-main)';
+                    btnNew.style.boxShadow = 'var(--shadow-soft)';
+                    viewWizard.style.display = 'block';
+                    viewDash.style.display = 'none';
+                    viewHist.style.display = 'none';
+                } else if (targetTab === 'dashboard') {
+                    btnDash.style.background = 'white';
+                    btnDash.style.color = 'var(--color-text-main)';
+                    btnDash.style.boxShadow = 'var(--shadow-soft)';
+                    viewWizard.style.display = 'none';
+                    viewDash.style.display = 'block';
+                    viewHist.style.display = 'none';
+                    renderTandaDashboard();
+                } else if (targetTab === 'history') {
+                    btnHist.style.background = 'white';
+                    btnHist.style.color = 'var(--color-text-main)';
+                    btnHist.style.boxShadow = 'var(--shadow-soft)';
+                    viewWizard.style.display = 'none';
+                    viewDash.style.display = 'none';
+                    viewHist.style.display = 'block';
+                    renderTandaHistoryFeed();
+                }
+            };
+
+            document.getElementById('btn-tanda-tab-new').addEventListener('click', () => switchTandaSubtab('wizard'));
+            document.getElementById('btn-tanda-tab-dashboard').addEventListener('click', () => switchTandaSubtab('dashboard'));
+            document.getElementById('btn-tanda-tab-history').addEventListener('click', () => switchTandaSubtab('history'));
+
+            const renderTandaDashboard = () => {
+                const tandas = tandaState.tandas || [];
+                document.getElementById('tanda-tab-count').textContent = tandas.length;
+
+                if (tandas.length === 0) {
+                    document.getElementById('td-kpi-total-profit').textContent = 'S/ 0.00';
+                    document.getElementById('td-kpi-avg-roi').textContent = '0.0%';
+                    document.getElementById('td-kpi-sale-eff').textContent = '0%';
+                    document.getElementById('td-kpi-baked-vs-sold').textContent = '0 vendidas de 0 horneadas';
+                    document.getElementById('td-kpi-inv-vs-rev').textContent = 'S/ 0.00 / S/ 0.00';
+                    document.getElementById('td-product-ranking-list').innerHTML = '<p style="text-align: center; color: var(--color-text-muted); font-size: 0.85rem; padding: 20px;">Aún no hay tandas finalizadas registradas para generar el dashboard de métricas.</p>';
+                    return;
+                }
+
+                let totalInv = 0;
+                let totalRev = 0;
+                let totalProfit = 0;
+                let totalRoiSum = 0;
+                let totalBaked = 0;
+                let totalSold = 0;
+
+                const productStats = {};
+
+                tandas.forEach(t => {
+                    const inv = parseFloat(t.investmentCost !== undefined ? t.investmentCost : t.investment) || 0;
+                    const rev = parseFloat(t.totalEarned !== undefined ? t.totalEarned : t.revenue) || 0;
+                    const profit = parseFloat(t.netProfit !== undefined ? t.netProfit : t.profit) || (rev - inv);
+                    const roi = parseFloat(t.roi !== undefined ? t.roi : t.margin) || (inv > 0 ? (profit / inv) * 100 : 0);
+
+                    totalInv += inv;
+                    totalRev += rev;
+                    totalProfit += profit;
+                    totalRoiSum += roi;
+
+                    // Products breakdown
+                    if (t.bakedQuantities || t.items) {
+                        if (Array.isArray(t.items)) {
+                            t.items.forEach(i => {
+                                const pName = i.name;
+                                const bk = parseInt(i.baked) || 0;
+                                const lo = parseInt(i.leftover) || 0;
+                                const s = Math.max(0, bk - lo);
+                                totalBaked += bk;
+                                totalSold += s;
+
+                                if (!productStats[pName]) productStats[pName] = { baked: 0, sold: 0, leftover: 0 };
+                                productStats[pName].baked += bk;
+                                productStats[pName].sold += s;
+                                productStats[pName].leftover += lo;
+                            });
+                        } else if (t.bakedQuantities) {
+                            Object.keys(t.bakedQuantities).forEach(pName => {
+                                const bk = parseInt(t.bakedQuantities[pName]) || 0;
+                                const lo = parseInt(t.leftoverQuantities ? t.leftoverQuantities[pName] : 0) || 0;
+                                const s = Math.max(0, bk - lo);
+                                totalBaked += bk;
+                                totalSold += s;
+
+                                if (!productStats[pName]) productStats[pName] = { baked: 0, sold: 0, leftover: 0 };
+                                productStats[pName].baked += bk;
+                                productStats[pName].sold += s;
+                                productStats[pName].leftover += lo;
+                            });
+                        }
+                    }
+                });
+
+                const avgRoi = tandas.length > 0 ? (totalRoiSum / tandas.length).toFixed(1) : '0.0';
+                const efficiency = totalBaked > 0 ? Math.round((totalSold / totalBaked) * 100) : 0;
+
+                // KPI Elements
+                document.getElementById('td-kpi-total-profit').textContent = totalProfit >= 0 ? `+S/ ${totalProfit.toFixed(2)}` : `-S/ ${Math.abs(totalProfit).toFixed(2)}`;
+                document.getElementById('td-kpi-total-profit').style.color = totalProfit >= 0 ? '#10B981' : '#EF4444';
+                document.getElementById('td-kpi-avg-roi').textContent = `${avgRoi}%`;
+                document.getElementById('td-kpi-sale-eff').textContent = `${efficiency}%`;
+                document.getElementById('td-kpi-baked-vs-sold').textContent = `${totalSold} vendidas de ${totalBaked} horneadas`;
+                document.getElementById('td-kpi-inv-vs-rev').textContent = `S/ ${totalInv.toFixed(2)} / S/ ${totalRev.toFixed(2)}`;
+
+                // Product Ranking list
+                const rankContainer = document.getElementById('td-product-ranking-list');
+                rankContainer.innerHTML = '';
+
+                const sortedProds = Object.keys(productStats).sort((a, b) => productStats[b].sold - productStats[a].sold);
+                if (sortedProds.length === 0) {
+                    rankContainer.innerHTML = '<p style="color: var(--color-text-muted); font-size: 0.85rem;">Aún no hay desglose por producto disponible.</p>';
+                } else {
+                    sortedProds.forEach((pName, idx) => {
+                        const st = productStats[pName];
+                        const prodEff = st.baked > 0 ? Math.round((st.sold / st.baked) * 100) : 0;
+                        const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '🧁';
+
+                        const row = document.createElement('div');
+                        row.style.cssText = 'background: var(--color-bg-secondary); padding: 14px 16px; border-radius: 12px; border: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; gap: 12px;';
+                        row.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.3rem;">${medal}</span>
+                                <div>
+                                    <span style="font-weight: 800; font-size: 0.9rem; color: var(--color-text-main); display: block;">${pName}</span>
+                                    <span style="font-size: 0.75rem; color: var(--color-text-muted);">${st.sold} vendidas (${st.leftover} sobrantes)</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="font-weight: 900; font-size: 0.95rem; color: #10B981;">${prodEff}% Eficiencia</span>
+                                <div style="width: 90px; height: 6px; background: #E2E8F0; border-radius: 4px; margin-top: 4px; overflow: hidden;">
+                                    <div style="width: ${prodEff}%; height: 100%; background: #10B981;"></div>
+                                </div>
+                            </div>
+                        `;
+                        rankContainer.appendChild(row);
+                    });
+                }
+
+                // Canvas Chart 1: Profit per Tanda
+                drawTandaProfitCanvas(tandas);
+            };
+
+            const drawTandaProfitCanvas = (tandas) => {
+                const canvas = document.getElementById('canvas-td-profit-chart');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                canvas.width = canvas.parentElement.clientWidth - 40 || 300;
+                canvas.height = 180;
+
+                const W = canvas.width;
+                const H = canvas.height;
+                ctx.clearRect(0, 0, W, H);
+
+                if (tandas.length === 0) return;
+
+                const recentTandas = tandas.slice(0, 7).reverse();
+                const barWidth = Math.min(40, (W - 60) / recentTandas.length);
+                const maxProfit = Math.max(...recentTandas.map(t => Math.abs(t.netProfit !== undefined ? t.netProfit : (t.profit || 0))), 50);
+
+                recentTandas.forEach((t, i) => {
+                    const profit = t.netProfit !== undefined ? t.netProfit : (t.profit || 0);
+                    const label = t.name ? (t.name.length > 8 ? t.name.substring(0, 8) + '...' : t.name) : `Tanda ${i+1}`;
+                    const barH = (Math.abs(profit) / maxProfit) * (H - 65);
+
+                    const x = 30 + i * ((W - 50) / recentTandas.length) + 10;
+                    const y = profit >= 0 ? (H - 35 - barH) : (H - 35);
+
+                    // Draw bar
+                    ctx.fillStyle = profit >= 0 ? '#10B981' : '#EF4444';
+                    ctx.beginPath();
+                    if (ctx.roundRect) {
+                        ctx.roundRect(x, y, barWidth, Math.max(4, barH), 6);
+                    } else {
+                        ctx.rect(x, y, barWidth, Math.max(4, barH));
+                    }
+                    ctx.fill();
+
+                    // Draw value
+                    ctx.fillStyle = '#1E293B';
+                    ctx.font = 'bold 10px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`S/ ${profit.toFixed(0)}`, x + barWidth / 2, y - 5);
+
+                    // Draw X Label
+                    ctx.fillStyle = '#64748B';
+                    ctx.font = '9px sans-serif';
+                    ctx.fillText(label, x + barWidth / 2, H - 12);
+                });
+            };
 
             const renderTandaHistoryFeed = () => {
                 const tandas = tandaState.tandas || [];
