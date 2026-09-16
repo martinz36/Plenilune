@@ -3398,6 +3398,178 @@
                 }
             });
 
+            // Step 2 & Step 3 Dedicated Stepper Renderers
+            const renderStep2BakedSteppers = () => {
+                const list = document.getElementById('tanda-baked-steppers-list');
+                list.innerHTML = '';
+
+                const updateBakedTotalDisplay = () => {
+                    let total = 0;
+                    tandaState.selectedProducts.forEach(p => {
+                        total += (parseInt(tandaState.bakedQty[p]) || 0);
+                    });
+                    document.getElementById('tanda-total-baked-display').textContent = `${total} unds`;
+                };
+
+                tandaState.selectedProducts.forEach(prodName => {
+                    if (tandaState.bakedQty[prodName] === undefined) tandaState.bakedQty[prodName] = 12;
+                    const qty = tandaState.bakedQty[prodName];
+
+                    const item = document.createElement('div');
+                    item.style.cssText = 'background: var(--color-bg-secondary); padding: 14px; border-radius: 12px; border: 1px solid var(--color-border);';
+                    item.innerHTML = `
+                        <span style="font-size: 0.85rem; font-weight: 800; color: var(--color-text-main); display: block; margin-bottom: 8px;">${prodName}</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button type="button" class="btn btn-secondary btn-bk-minus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800;">-</button>
+                            <input type="number" min="1" value="${qty}" class="form-input inp-bk-qty" style="flex: 1; height: 48px; text-align: center; font-size: 1.4rem; font-weight: 900; background: white;">
+                            <button type="button" class="btn btn-primary btn-bk-plus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800; background: var(--color-bg-dark); color: white;">+</button>
+                        </div>
+                    `;
+
+                    const inp = item.querySelector('.inp-bk-qty');
+                    const btnMinus = item.querySelector('.btn-bk-minus');
+                    const btnPlus = item.querySelector('.btn-bk-plus');
+
+                    btnMinus.addEventListener('click', () => {
+                        const curr = parseInt(inp.value) || 1;
+                        const nextVal = Math.max(1, curr - 1);
+                        inp.value = nextVal;
+                        tandaState.bakedQty[prodName] = nextVal;
+                        updateBakedTotalDisplay();
+                    });
+
+                    btnPlus.addEventListener('click', () => {
+                        const curr = parseInt(inp.value) || 0;
+                        const nextVal = curr + 1;
+                        inp.value = nextVal;
+                        tandaState.bakedQty[prodName] = nextVal;
+                        updateBakedTotalDisplay();
+                    });
+
+                    inp.addEventListener('input', (e) => {
+                        const valStr = e.target.value;
+                        if (valStr === '') {
+                            tandaState.bakedQty[prodName] = 0;
+                        } else {
+                            tandaState.bakedQty[prodName] = Math.max(0, parseInt(valStr) || 0);
+                        }
+                        updateBakedTotalDisplay();
+                    });
+
+                    inp.addEventListener('blur', (e) => {
+                        const valStr = e.target.value;
+                        if (valStr === '' || parseInt(valStr) < 1) {
+                            inp.value = 1;
+                            tandaState.bakedQty[prodName] = 1;
+                        } else {
+                            const parsed = parseInt(valStr);
+                            inp.value = parsed;
+                            tandaState.bakedQty[prodName] = parsed;
+                        }
+                        updateBakedTotalDisplay();
+                    });
+
+                    list.appendChild(item);
+                });
+
+                updateBakedTotalDisplay();
+            };
+
+            const renderStep3LeftoverSteppers = () => {
+                const list = document.getElementById('tanda-leftover-steppers-list');
+                list.innerHTML = '';
+
+                const updateAutoRevenueDisplay = () => {
+                    let totalRev = 0;
+                    tandaState.selectedProducts.forEach(p => {
+                        const b = parseInt(tandaState.bakedQty[p]) || 0;
+                        const l = parseInt(tandaState.leftoverQty[p]) || 0;
+                        const s = Math.max(0, b - l);
+                        const pr = tandaState.unitPrices[p] || 5.00;
+                        totalRev += (s * pr);
+                    });
+                    document.getElementById('tanda-revenue-input').value = totalRev.toFixed(2);
+                };
+
+                tandaState.selectedProducts.forEach(prodName => {
+                    const baked = parseInt(tandaState.bakedQty[prodName]) || 0;
+                    if (tandaState.leftoverQty[prodName] === undefined) tandaState.leftoverQty[prodName] = 0;
+                    const leftover = tandaState.leftoverQty[prodName];
+                    const sold = Math.max(0, baked - leftover);
+
+                    const item = document.createElement('div');
+                    item.style.cssText = 'background: var(--color-bg-secondary); padding: 14px; border-radius: 12px; border: 1px solid var(--color-border);';
+                    item.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                            <span style="font-size: 0.85rem; font-weight: 800; color: var(--color-text-main);">${prodName}</span>
+                            <span class="txt-sold-info" style="font-size: 0.8rem; font-weight: 800; color: #10B981;">${sold} vendidas de ${baked}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button type="button" class="btn btn-secondary btn-lo-minus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800;">-</button>
+                            <input type="number" min="0" max="${baked}" value="${leftover}" class="form-input inp-lo-qty" style="flex: 1; height: 48px; text-align: center; font-size: 1.4rem; font-weight: 900; background: white;">
+                            <button type="button" class="btn btn-primary btn-lo-plus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800; background: #10B981; border: none; color: white;">+</button>
+                        </div>
+                    `;
+
+                    const inp = item.querySelector('.inp-lo-qty');
+                    const btnMinus = item.querySelector('.btn-lo-minus');
+                    const btnPlus = item.querySelector('.btn-lo-plus');
+                    const txtSold = item.querySelector('.txt-sold-info');
+
+                    const updateItemSold = (currLeftover) => {
+                        const s = Math.max(0, baked - currLeftover);
+                        txtSold.textContent = `${s} vendidas de ${baked}`;
+                    };
+
+                    btnMinus.addEventListener('click', () => {
+                        const curr = parseInt(inp.value) || 0;
+                        const nextVal = Math.max(0, curr - 1);
+                        inp.value = nextVal;
+                        tandaState.leftoverQty[prodName] = nextVal;
+                        updateItemSold(nextVal);
+                        updateAutoRevenueDisplay();
+                    });
+
+                    btnPlus.addEventListener('click', () => {
+                        const curr = parseInt(inp.value) || 0;
+                        const nextVal = Math.min(baked, curr + 1);
+                        inp.value = nextVal;
+                        tandaState.leftoverQty[prodName] = nextVal;
+                        updateItemSold(nextVal);
+                        updateAutoRevenueDisplay();
+                    });
+
+                    inp.addEventListener('input', (e) => {
+                        const valStr = e.target.value;
+                        if (valStr === '') {
+                            tandaState.leftoverQty[prodName] = 0;
+                            updateItemSold(0);
+                        } else {
+                            const val = Math.max(0, Math.min(baked, parseInt(valStr) || 0));
+                            tandaState.leftoverQty[prodName] = val;
+                            updateItemSold(val);
+                        }
+                        updateAutoRevenueDisplay();
+                    });
+
+                    inp.addEventListener('blur', (e) => {
+                        const valStr = e.target.value;
+                        let finalVal = 0;
+                        if (valStr !== '') {
+                            finalVal = Math.max(0, Math.min(baked, parseInt(valStr) || 0));
+                        }
+                        inp.value = finalVal;
+                        tandaState.leftoverQty[prodName] = finalVal;
+                        updateItemSold(finalVal);
+                        updateAutoRevenueDisplay();
+                    });
+
+                    list.appendChild(item);
+                });
+
+                updateAutoRevenueDisplay();
+            };
+
             // Wizard Step Transition UI Handler
             const updateTandaWizardUI = () => {
                 const step = tandaState.step;
@@ -3439,87 +3611,6 @@
                     progressBar.style.display = 'flex';
                     postMortemPanel.style.display = 'none';
                 }
-
-                // Render Step 2 Steppers (Baked)
-                if (step === 2) {
-                    const list = document.getElementById('tanda-baked-steppers-list');
-                    list.innerHTML = '';
-                    let totalBaked = 0;
-
-                    tandaState.selectedProducts.forEach(prodName => {
-                        const qty = tandaState.bakedQty[prodName] || 12;
-                        totalBaked += qty;
-
-                        const item = document.createElement('div');
-                        item.style.cssText = 'background: var(--color-bg-secondary); padding: 14px; border-radius: 12px; border: 1px solid var(--color-border);';
-                        item.innerHTML = `
-                            <span style="font-size: 0.85rem; font-weight: 800; color: var(--color-text-main); display: block; margin-bottom: 8px;">${prodName}</span>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <button type="button" class="btn btn-secondary btn-bk-minus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800;">-</button>
-                                <input type="number" min="1" value="${qty}" class="form-input inp-bk-qty" style="flex: 1; height: 48px; text-align: center; font-size: 1.4rem; font-weight: 900; background: white;">
-                                <button type="button" class="btn btn-primary btn-bk-plus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800; background: var(--color-bg-dark); color: white;">+</button>
-                            </div>
-                        `;
-
-                        item.querySelector('.btn-bk-minus').addEventListener('click', () => {
-                            tandaState.bakedQty[prodName] = Math.max(1, (tandaState.bakedQty[prodName] || 12) - 1);
-                            updateTandaWizardUI();
-                        });
-                        item.querySelector('.btn-bk-plus').addEventListener('click', () => {
-                            tandaState.bakedQty[prodName] = (tandaState.bakedQty[prodName] || 12) + 1;
-                            updateTandaWizardUI();
-                        });
-                        item.querySelector('.inp-bk-qty').addEventListener('input', (e) => {
-                            tandaState.bakedQty[prodName] = Math.max(1, parseInt(e.target.value) || 1);
-                            updateTandaWizardUI();
-                        });
-
-                        list.appendChild(item);
-                    });
-
-                    document.getElementById('tanda-total-baked-display').textContent = `${totalBaked} unds`;
-                }
-
-                // Render Step 3 Steppers (Leftovers & Sales calculation)
-                if (step === 3) {
-                    const list = document.getElementById('tanda-leftover-steppers-list');
-                    list.innerHTML = '';
-
-                    tandaState.selectedProducts.forEach(prodName => {
-                        const baked = tandaState.bakedQty[prodName] || 0;
-                        const leftover = tandaState.leftoverQty[prodName] || 0;
-                        const sold = Math.max(0, baked - leftover);
-
-                        const item = document.createElement('div');
-                        item.style.cssText = 'background: var(--color-bg-secondary); padding: 14px; border-radius: 12px; border: 1px solid var(--color-border);';
-                        item.innerHTML = `
-                            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-                                <span style="font-size: 0.85rem; font-weight: 800; color: var(--color-text-main);">${prodName}</span>
-                                <span style="font-size: 0.8rem; font-weight: 800; color: #10B981;">${sold} vendidas de ${baked}</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <button type="button" class="btn btn-secondary btn-lo-minus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800;">-</button>
-                                <input type="number" min="0" max="${baked}" value="${leftover}" class="form-input inp-lo-qty" style="flex: 1; height: 48px; text-align: center; font-size: 1.4rem; font-weight: 900; background: white;">
-                                <button type="button" class="btn btn-primary btn-lo-plus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800; background: #10B981; border: none; color: white;">+</button>
-                            </div>
-                        `;
-
-                        item.querySelector('.btn-lo-minus').addEventListener('click', () => {
-                            tandaState.leftoverQty[prodName] = Math.max(0, (tandaState.leftoverQty[prodName] || 0) - 1);
-                            updateTandaWizardUI();
-                        });
-                        item.querySelector('.btn-lo-plus').addEventListener('click', () => {
-                            tandaState.leftoverQty[prodName] = Math.min(baked, (tandaState.leftoverQty[prodName] || 0) + 1);
-                            updateTandaWizardUI();
-                        });
-                        item.querySelector('.inp-lo-qty').addEventListener('input', (e) => {
-                            tandaState.leftoverQty[prodName] = Math.min(baked, Math.max(0, parseInt(e.target.value) || 0));
-                            updateTandaWizardUI();
-                        });
-
-                        list.appendChild(item);
-                    });
-                }
             };
 
             // Step Button Handlers
@@ -3527,6 +3618,7 @@
                 tandaState.name = document.getElementById('tanda-name-input').value.trim() || 'Tanda de Producción';
                 tandaState.investment = parseFloat(document.getElementById('tanda-investment-input').value) || 0;
                 tandaState.step = 2;
+                renderStep2BakedSteppers();
                 updateTandaWizardUI();
             });
 
@@ -3537,6 +3629,7 @@
 
             document.getElementById('btn-tanda-goto-step3').addEventListener('click', () => {
                 tandaState.step = 3;
+                renderStep3LeftoverSteppers();
                 updateTandaWizardUI();
             });
 

@@ -524,10 +524,15 @@ export default function ControlTandas() {
                         <input
                           type="number"
                           min="1"
-                          value={bakedQuantities[prodName] || 0}
+                          value={bakedQuantities[prodName] !== undefined ? bakedQuantities[prodName] : 12}
                           onChange={(e) => {
-                            const val = parseInt(e.target.value) || 0;
-                            setBakedQuantities(prev => ({ ...prev, [prodName]: val }));
+                            const raw = e.target.value;
+                            setBakedQuantities(prev => ({ ...prev, [prodName]: raw === '' ? '' : Math.max(0, parseInt(raw) || 0) }));
+                          }}
+                          onBlur={(e) => {
+                            if (e.target.value === '' || parseInt(e.target.value) < 1) {
+                              setBakedQuantities(prev => ({ ...prev, [prodName]: 1 }));
+                            }
                           }}
                           className="flex-1 h-12 rounded-xl border border-slate-300 text-center font-black text-xl text-slate-900 outline-none"
                         />
@@ -594,9 +599,9 @@ export default function ControlTandas() {
                   </label>
                   
                   {selectedProducts.map((prodName) => {
-                    const baked = bakedQuantities[prodName] || 0;
-                    const leftover = leftoverQuantities[prodName] || 0;
-                    const sold = Math.max(0, baked - leftover);
+                    const baked = parseInt(bakedQuantities[prodName]) || 0;
+                    const leftover = leftoverQuantities[prodName] !== undefined ? leftoverQuantities[prodName] : 0;
+                    const sold = Math.max(0, baked - (parseInt(leftover) || 0));
 
                     return (
                       <div key={prodName} className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
@@ -620,8 +625,16 @@ export default function ControlTandas() {
                             max={baked}
                             value={leftover}
                             onChange={(e) => {
-                              const val = Math.min(baked, Math.max(0, parseInt(e.target.value) || 0));
-                              setLeftoverQuantities(prev => ({ ...prev, [prodName]: val }));
+                              const raw = e.target.value;
+                              setLeftoverQuantities(prev => ({
+                                ...prev,
+                                [prodName]: raw === '' ? '' : Math.min(baked, Math.max(0, parseInt(raw) || 0))
+                              }));
+                            }}
+                            onBlur={(e) => {
+                              if (e.target.value === '') {
+                                setLeftoverQuantities(prev => ({ ...prev, [prodName]: 0 }));
+                              }
                             }}
                             className="flex-1 h-11 rounded-xl border border-slate-300 text-center font-bold text-lg text-slate-900 outline-none"
                           />
