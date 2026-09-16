@@ -445,6 +445,7 @@
                         <li><button class="nav-btn" data-target="recipes">Recetas y Costos</button></li>
                         <li><button class="nav-btn" data-target="gallery">Galería Carrusel</button></li>
                         <li><button class="nav-btn" data-target="catalog">Catálogo de Tortas</button></li>
+                        <li><button class="nav-btn" data-target="cierre-diario" style="background: linear-gradient(135deg, #1E2D3D 0%, #4A7A96 100%); color: #ffffff; font-weight: 700; margin-top: 8px;">☀️ Cierre Diario</button></li>
                     </ul>
                 </nav>
             </aside>
@@ -1013,6 +1014,262 @@
                             <button type="submit" class="btn btn-primary">Guardar Catálogo</button>
                         </div>
                     </form>
+                </section>
+
+                <!-- Panel 8: Cierre Diario (Mobile-First) -->
+                <section class="content-panel" id="panel-cierre-diario">
+                    <div class="panel-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div>
+                                <h2 class="panel-title" style="display: flex; align-items: center; gap: 8px;">
+                                    <span>☀️</span> Cierre Diario & Ventas Callejeras
+                                </h2>
+                                <p class="panel-desc">Registra la producción de la mañana, conteo nocturno de sobrantes, mermas y cuadre de caja.</p>
+                            </div>
+                            <span class="badge" style="background: var(--color-accent-celeste-light); color: var(--color-accent-primary); font-weight: 700; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem;" id="cd-today-date">
+                                📅 HOY
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Sub-tabs Switcher -->
+                    <div style="display: flex; gap: 8px; background: var(--color-bg-secondary); padding: 6px; border-radius: var(--border-radius-lg); margin-bottom: 24px;">
+                        <button type="button" class="btn btn-secondary active-subtab" id="btn-cd-tab-new" style="flex: 1; padding: 12px; font-weight: 700; font-size: 0.95rem; border-radius: var(--border-radius-md); border: none; cursor: pointer; transition: var(--transition-smooth); background: white; color: var(--color-text-main); box-shadow: var(--shadow-soft);">
+                            ➕ Nuevo Cierre
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="btn-cd-tab-history" style="flex: 1; padding: 12px; font-weight: 700; font-size: 0.95rem; border-radius: var(--border-radius-md); border: none; cursor: pointer; transition: var(--transition-smooth); background: transparent; color: var(--color-text-muted);">
+                            📊 Historial & Mermas
+                        </button>
+                    </div>
+
+                    <!-- VIEW 1: NUEVO CIERRE (WIZARD 3 PASOS) -->
+                    <div id="cd-view-new">
+                        
+                        <!-- Step Progress Indicator -->
+                        <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 28px; position: relative;">
+                            <div style="position: absolute; top: 20px; left: 15%; right: 15%; height: 3px; background: var(--color-border); z-index: 0;"></div>
+                            
+                            <div class="cd-step-indicator active" id="cd-step-ind-1" style="z-index: 1; text-align: center; cursor: pointer;">
+                                <div class="cd-step-circle" id="cd-circle-1" style="width: 44px; height: 44px; border-radius: 50%; background: var(--color-accent-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin: 0 auto 6px auto; box-shadow: var(--shadow-soft);">1</div>
+                                <span style="font-size: 0.75rem; font-weight: 700; color: var(--color-accent-primary);" id="cd-text-1">Mañana</span>
+                            </div>
+                            
+                            <div class="cd-step-indicator" id="cd-step-ind-2" style="z-index: 1; text-align: center; cursor: pointer;">
+                                <div class="cd-step-circle" id="cd-circle-2" style="width: 44px; height: 44px; border-radius: 50%; background: var(--color-bg-secondary); color: var(--color-text-muted); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin: 0 auto 6px auto; border: 2px solid var(--color-border);">2</div>
+                                <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted);" id="cd-text-2">Noche</span>
+                            </div>
+                            
+                            <div class="cd-step-indicator" id="cd-step-ind-3" style="z-index: 1; text-align: center; cursor: pointer;">
+                                <div class="cd-step-circle" id="cd-circle-3" style="width: 44px; height: 44px; border-radius: 50%; background: var(--color-bg-secondary); color: var(--color-text-muted); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin: 0 auto 6px auto; border: 2px solid var(--color-border);">3</div>
+                                <span style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted);" id="cd-text-3">Arqueo</span>
+                            </div>
+                        </div>
+
+                        <!-- PASO 1: PRODUCCIÓN DEL DÍA -->
+                        <div id="cd-step-1" class="cd-step-panel" style="background: white; border-radius: var(--border-radius-lg); padding: 24px; border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 4px;">☀️ Paso 1: Producción del Día (Mañana)</h3>
+                                <p style="font-size: 0.85rem; color: var(--color-text-muted);">¿Qué producto preparaste hoy para vender?</p>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <label class="form-label" style="font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--color-text-muted);">Seleccionar Producto</label>
+                                <div id="cd-product-presets" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                                    <!-- Injected dynamically by JS -->
+                                </div>
+
+                                <div style="margin-top: 12px;">
+                                    <label class="form-label" style="font-size: 0.8rem; color: var(--color-text-muted);">O escribe un producto personalizado:</label>
+                                    <input type="text" id="cd-custom-product" class="form-input" placeholder="Ej. Tarta de Manzana Artesanal" style="height: 48px; border-radius: var(--border-radius-md);">
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <label class="form-label" style="font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--color-text-muted);">Precio de Venta Unitario (S/)</label>
+                                <div style="position: relative;">
+                                    <span style="position: absolute; left: 16px; top: 12px; font-weight: 800; color: var(--color-text-muted); font-size: 1.1rem;">S/</span>
+                                    <input type="number" step="0.50" min="0" id="cd-unit-price" class="form-input" value="15.00" style="padding-left: 48px; height: 52px; font-size: 1.2rem; font-weight: 800; border-radius: var(--border-radius-md);">
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 24px;">
+                                <label class="form-label" style="font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--color-text-muted);">Cantidad de Unidades Producidas Hoy</label>
+                                <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px;">
+                                    <button type="button" id="btn-cd-prod-minus" style="width: 56px; height: 56px; border-radius: var(--border-radius-md); border: 1.5px solid var(--color-border); background: var(--color-bg-secondary); font-size: 1.8rem; font-weight: 800; cursor: pointer; touch-action: manipulation;">-</button>
+                                    <input type="number" id="cd-prod-qty" min="1" value="15" style="flex: 1; height: 56px; text-align: center; font-size: 1.8rem; font-weight: 900; border-radius: var(--border-radius-md); border: 2px solid var(--color-border); background: white;">
+                                    <button type="button" id="btn-cd-prod-plus" style="width: 56px; height: 56px; border-radius: var(--border-radius-md); border: none; background: var(--color-bg-dark); color: white; font-size: 1.8rem; font-weight: 800; cursor: pointer; touch-action: manipulation; box-shadow: var(--shadow-soft);">+</button>
+                                </div>
+                            </div>
+
+                            <button type="button" id="btn-cd-goto-step2" class="btn btn-primary" style="width: 100%; height: 54px; font-size: 1.05rem; font-weight: 800; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                Continuar a Conteo Nocturno &rarr;
+                            </button>
+                        </div>
+
+                        <!-- PASO 2: CONTEO NOCTURNO (SOBRANTES & MERMAS) -->
+                        <div id="cd-step-2" class="cd-step-panel" style="display: none; background: white; border-radius: var(--border-radius-lg); padding: 24px; border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 4px;">🌙 Paso 2: Conteo de Cierre (Noche)</h3>
+                                <p style="font-size: 0.85rem; color: var(--color-text-muted);">Producto: <strong id="cd-step2-prod-name" style="color: var(--color-text-main);">Croissant Crujiente</strong></p>
+                            </div>
+
+                            <div style="background: var(--color-bg-secondary); padding: 16px; border-radius: var(--border-radius-md); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span style="font-size: 0.75rem; color: var(--color-text-muted); font-weight: 600;">Producidos en la mañana:</span>
+                                    <div style="font-size: 1.2rem; font-weight: 800;" id="cd-step2-prod-summary">15 unds</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="font-size: 0.75rem; color: var(--color-text-muted); font-weight: 600;">Precio Unitario:</span>
+                                    <div style="font-size: 1.2rem; font-weight: 800;" id="cd-step2-price-summary">S/ 15.00</div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 24px;">
+                                <label class="form-label" style="font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--color-text-muted);">¿Cuántas unidades te sobraron hoy?</label>
+                                <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px;">
+                                    <button type="button" id="btn-cd-left-minus" style="width: 56px; height: 56px; border-radius: var(--border-radius-md); border: 1.5px solid var(--color-border); background: var(--color-bg-secondary); font-size: 1.8rem; font-weight: 800; cursor: pointer; touch-action: manipulation;">-</button>
+                                    <input type="number" id="cd-left-qty" min="0" value="0" style="flex: 1; height: 56px; text-align: center; font-size: 1.8rem; font-weight: 900; border-radius: var(--border-radius-md); border: 2px solid var(--color-border); background: white;">
+                                    <button type="button" id="btn-cd-left-plus" style="width: 56px; height: 56px; border-radius: var(--border-radius-md); border: none; background: var(--color-accent-primary); color: white; font-size: 1.8rem; font-weight: 800; cursor: pointer; touch-action: manipulation; box-shadow: var(--shadow-soft);">+</button>
+                                </div>
+                            </div>
+
+                            <div style="background: #ECFDF5; border: 1.5px solid #10B981; padding: 18px; border-radius: var(--border-radius-md); margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <span style="font-size: 0.75rem; font-weight: 800; color: #065F46; text-transform: uppercase;">Unidades Vendidas</span>
+                                    <div style="font-size: 2rem; font-weight: 900; color: #064E3B;" id="cd-sold-qty-display">15 <span style="font-size: 1rem; font-weight: 600;">unds</span></div>
+                                </div>
+                                <div style="font-size: 2.2rem;">🛍️</div>
+                            </div>
+
+                            <div id="cd-waste-block" style="display: none; background: #FFFBEB; border: 1.5px solid #F59E0B; padding: 16px; border-radius: var(--border-radius-md); margin-bottom: 24px;">
+                                <label style="font-size: 0.8rem; font-weight: 800; color: #92400E; display: block; margin-bottom: 10px;">
+                                    ¿Dónde fueron las <span id="cd-waste-qty-text">0</span> unidades sobrantes?
+                                </label>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <button type="button" class="btn btn-secondary cd-waste-btn active" data-type="merma" style="padding: 10px; font-size: 0.8rem; font-weight: 700; border-radius: 8px; border: 1.5px solid #F59E0B; text-align: left; background: #F59E0B; color: white;">🗑️ Merma / Pérdida</button>
+                                    <button type="button" class="btn btn-secondary cd-waste-btn" data-type="personal" style="padding: 10px; font-size: 0.8rem; font-weight: 700; border-radius: 8px; border: 1.5px solid #FCD34D; text-align: left; background: white; color: #78350F;">😋 Consumo Personal</button>
+                                    <button type="button" class="btn btn-secondary cd-waste-btn" data-type="regalo" style="padding: 10px; font-size: 0.8rem; font-weight: 700; border-radius: 8px; border: 1.5px solid #FCD34D; text-align: left; background: white; color: #78350F;">🎁 Regalo / Muestra</button>
+                                    <button type="button" class="btn btn-secondary cd-waste-btn" data-type="stock" style="padding: 10px; font-size: 0.8rem; font-weight: 700; border-radius: 8px; border: 1.5px solid #FCD34D; text-align: left; background: white; color: #78350F;">📦 Stock Mañana</button>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 12px;">
+                                <button type="button" id="btn-cd-back-step1" class="btn btn-secondary" style="flex: 1; height: 54px; font-size: 1rem; font-weight: 700; border-radius: var(--border-radius-md);">
+                                    &larr; Atrás
+                                </button>
+                                <button type="button" id="btn-cd-goto-step3" class="btn btn-primary" style="flex: 2; height: 54px; font-size: 1.05rem; font-weight: 800; border-radius: var(--border-radius-md);">
+                                    Ir al Arqueo de Caja &rarr;
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- PASO 3: ARQUEO DE CAJA Y GUARDADO -->
+                        <div id="cd-step-3" class="cd-step-panel" style="display: none; background: white; border-radius: var(--border-radius-lg); padding: 24px; border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 4px;">💰 Paso 3: Arqueo & Cuadre de Caja</h3>
+                                <p style="font-size: 0.85rem; color: var(--color-text-muted);">Compara las ventas esperadas con el dinero en efectivo y Yape</p>
+                            </div>
+
+                            <!-- Big Expected Income Card -->
+                            <div style="background: var(--color-bg-dark); color: white; padding: 20px; border-radius: var(--border-radius-md); text-align: center; margin-bottom: 20px; box-shadow: var(--shadow-medium);">
+                                <span style="font-size: 0.75rem; font-weight: 700; color: var(--color-accent-celeste); text-transform: uppercase; letter-spacing: 0.5px;" id="cd-expected-formula-text">
+                                    Ingreso Esperado (15 vend. x S/ 15.00)
+                                </span>
+                                <div style="font-size: 2.6rem; font-weight: 900; color: var(--color-accent-gold); margin-top: 4px;" id="cd-expected-income-display">
+                                    S/ 225.00
+                                </div>
+                            </div>
+
+                            <!-- Real Money Input -->
+                            <div style="margin-bottom: 20px;">
+                                <label class="form-label" style="font-weight: 800; font-size: 0.85rem; text-transform: uppercase; color: var(--color-text-main);">Dinero Real en Caja (Efectivo + Yape/Plin) *</label>
+                                <div style="position: relative; margin-top: 6px;">
+                                    <span style="position: absolute; left: 16px; top: 14px; font-weight: 900; color: var(--color-text-muted); font-size: 1.3rem;">S/</span>
+                                    <input type="number" step="0.10" min="0" id="cd-real-cash" class="form-input" placeholder="0.00" style="padding-left: 52px; height: 60px; font-size: 1.6rem; font-weight: 900; border-radius: var(--border-radius-md); border: 2.5px solid var(--color-accent-primary);">
+                                </div>
+                            </div>
+
+                            <!-- Visual Status Feedback Cards -->
+                            <div id="cd-status-box" style="margin-bottom: 20px; display: none;">
+                                <!-- Dynamically populated by JS (OK / Deficit / Surplus) -->
+                            </div>
+
+                            <!-- Notes -->
+                            <div style="margin-bottom: 24px;">
+                                <label class="form-label" style="font-weight: 700; font-size: 0.8rem; color: var(--color-text-muted);">Notas / Observaciones (Opcional)</label>
+                                <textarea id="cd-notes" class="form-input" rows="2" placeholder="Ej. Pagué el taxi de regreso S/ 10.00 o descuento a cliente" style="border-radius: var(--border-radius-md); font-size: 0.9rem; margin-top: 6px;"></textarea>
+                            </div>
+
+                            <div style="display: flex; gap: 12px;">
+                                <button type="button" id="btn-cd-back-step2" class="btn btn-secondary" style="flex: 1; height: 54px; font-size: 1rem; font-weight: 700; border-radius: var(--border-radius-md);">
+                                    &larr; Atrás
+                                </button>
+                                <button type="button" id="btn-cd-save" class="btn btn-primary" style="flex: 2; height: 54px; font-size: 1.05rem; font-weight: 900; border-radius: var(--border-radius-md); background: #10B981; border: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+                                    🔒 Registrar Cierre
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- VIEW 2: HISTORIAL Y DASHBOARD DE MERMAS -->
+                    <div id="cd-view-history" style="display: none;">
+                        
+                        <!-- Top Summary Cards -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                            <div style="background: white; padding: 16px; border-radius: var(--border-radius-md); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                                <span style="font-size: 0.75rem; font-weight: 700; color: #10B981; text-transform: uppercase;">💰 Ingreso Acumulado</span>
+                                <div style="font-size: 1.5rem; font-weight: 900; color: var(--color-text-main); margin-top: 4px;" id="cd-hist-total-earnings">S/ 0.00</div>
+                                <span style="font-size: 0.7rem; color: var(--color-text-muted);">Registros almacenados</span>
+                            </div>
+
+                            <div style="background: white; padding: 16px; border-radius: var(--border-radius-md); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                                <span style="font-size: 0.75rem; font-weight: 700; color: var(--color-accent-primary); text-transform: uppercase;">🛍️ Total Vendidos</span>
+                                <div style="font-size: 1.5rem; font-weight: 900; color: var(--color-text-main); margin-top: 4px;" id="cd-hist-total-sold">0 unds</div>
+                                <span style="font-size: 0.7rem; color: var(--color-text-muted);">Unidades salientes</span>
+                            </div>
+                        </div>
+
+                        <!-- Canvas Charts Grid -->
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 24px;">
+                            
+                            <!-- Chart 1: Bar Chart Daily Income -->
+                            <div style="background: white; padding: 20px; border-radius: var(--border-radius-lg); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                                <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                                    📈 Ganancias por Cierre (S/)
+                                </h3>
+                                <div style="position: relative; height: 180px;">
+                                    <canvas id="cd-chart-bar" style="width: 100%; height: 180px;"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Chart 2: Donut Chart Waste Distribution -->
+                            <div style="background: white; padding: 20px; border-radius: var(--border-radius-lg); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                                <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                                    🍰 Distribución: Vendidos vs. Mermas
+                                </h3>
+                                <div style="display: flex; align-items: center; gap: 16px;">
+                                    <div style="width: 140px; height: 140px; flex-shrink: 0; position: relative;">
+                                        <canvas id="cd-chart-pie" width="140" height="140"></canvas>
+                                    </div>
+                                    <div id="cd-chart-legend" style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; font-weight: 600;">
+                                        <!-- Legend items injected dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- History List Feed -->
+                        <div style="margin-bottom: 24px;">
+                            <h3 style="font-size: 1rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 12px;">Histórico de Cierres Diarios</h3>
+                            <div id="cd-history-feed" style="display: flex; flex-direction: column; gap: 12px;">
+                                <!-- Dynamic records -->
+                            </div>
+                        </div>
+
+                    </div>
+
                 </section>
 
             </main>
@@ -2228,13 +2485,529 @@
                 });
             };
 
+            // 9. Cierre Diario Module JS Control
+            let cdState = {
+                step: 1,
+                selectedProduct: 'Croissant Crujiente de Mantequilla',
+                customProduct: '',
+                unitPrice: 15.00,
+                producedQty: 15,
+                leftoverQty: 0,
+                wasteType: 'merma',
+                realCash: '',
+                notes: '',
+                closures: []
+            };
+
+            const hydrateCierreDiarioTab = async () => {
+                // Set today date
+                const today = new Date();
+                document.getElementById('cd-today-date').textContent = `📅 ${today.getDate()} ${today.toLocaleString('es-ES', { month: 'short' })} ${today.getFullYear()}`;
+
+                // Populate product presets from catalog & defaults
+                const presetsContainer = document.getElementById('cd-product-presets');
+                const defaultPresets = [
+                    { name: 'Croissant Crujiente de Mantequilla', price: 8.50 },
+                    { name: 'Torta Cereza Retro (Porción)', price: 15.00 },
+                    { name: 'Torta Royal Lavanda (Porción)', price: 16.00 },
+                    { name: 'Cheesecake Cítrico y Frutal', price: 14.00 }
+                ];
+
+                let availableProducts = defaultPresets;
+                if (state.catalog && state.catalog.length > 0) {
+                    const catalogProducts = state.catalog.map(c => ({ name: c.title, price: 15.00 }));
+                    availableProducts = [...catalogProducts, ...defaultPresets.filter(dp => !catalogProducts.some(cp => cp.name === dp.name))];
+                }
+
+                presetsContainer.innerHTML = '';
+                availableProducts.forEach((prod, idx) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `btn btn-secondary cd-preset-btn ${idx === 0 ? 'active' : ''}`;
+                    btn.style.cssText = `padding: 12px 16px; border-radius: 12px; font-weight: 700; text-align: left; border: 1.5px solid ${idx === 0 ? 'var(--color-accent-primary)' : 'var(--color-border)'}; background: ${idx === 0 ? 'var(--color-accent-celeste-light)' : 'white'}; color: var(--color-text-main); display: flex; justify-content: space-between; align-items: center; transition: var(--transition-smooth);`;
+                    btn.innerHTML = `<span>${prod.name}</span><span style="font-size: 0.8rem; background: var(--color-bg-secondary); padding: 4px 8px; border-radius: 6px;">S/ ${prod.price.toFixed(2)}</span>`;
+                    
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.cd-preset-btn').forEach(b => {
+                            b.style.background = 'white';
+                            b.style.borderColor = 'var(--color-border)';
+                        });
+                        btn.style.background = 'var(--color-accent-celeste-light)';
+                        btn.style.borderColor = 'var(--color-accent-primary)';
+                        
+                        cdState.selectedProduct = prod.name;
+                        cdState.customProduct = '';
+                        document.getElementById('cd-custom-product').value = '';
+                        cdState.unitPrice = prod.price;
+                        document.getElementById('cd-unit-price').value = prod.price.toFixed(2);
+                    });
+                    
+                    presetsContainer.appendChild(btn);
+                });
+
+                // Fetch Daily Closures API History
+                try {
+                    const res = await fetch('/api/daily-closures');
+                    cdState.closures = await res.json();
+                } catch (err) {
+                    console.warn('Using local closure state:', err);
+                }
+
+                renderHistoryDashboard();
+            };
+
+            // Step Wizard Navigation UI Handler
+            const updateWizardStepUI = () => {
+                const step = cdState.step;
+                
+                // Indicators
+                for (let i = 1; i <= 3; i++) {
+                    const circle = document.getElementById(`cd-circle-${i}`);
+                    const text = document.getElementById(`cd-text-${i}`);
+                    const panel = document.getElementById(`cd-step-${i}`);
+
+                    if (i === step) {
+                        circle.style.background = 'var(--color-accent-primary)';
+                        circle.style.color = 'white';
+                        circle.style.border = 'none';
+                        text.style.color = 'var(--color-accent-primary)';
+                        text.style.fontWeight = '700';
+                        panel.style.display = 'block';
+                    } else if (i < step) {
+                        circle.style.background = '#10B981';
+                        circle.style.color = 'white';
+                        circle.style.border = 'none';
+                        text.style.color = '#10B981';
+                        text.style.fontWeight = '600';
+                        panel.style.display = 'none';
+                    } else {
+                        circle.style.background = 'var(--color-bg-secondary)';
+                        circle.style.color = 'var(--color-text-muted)';
+                        circle.style.border = '2px solid var(--color-border)';
+                        text.style.color = 'var(--color-text-muted)';
+                        text.style.fontWeight = '600';
+                        panel.style.display = 'none';
+                    }
+                }
+
+                // Step 2 Calculations
+                const prodName = cdState.customProduct.trim() !== '' ? cdState.customProduct : cdState.selectedProduct;
+                document.getElementById('cd-step2-prod-name').textContent = prodName;
+                document.getElementById('cd-step2-prod-summary').textContent = `${cdState.producedQty} unds`;
+                document.getElementById('cd-step2-price-summary').textContent = `S/ ${cdState.unitPrice.toFixed(2)}`;
+
+                const soldQty = Math.max(0, cdState.producedQty - cdState.leftoverQty);
+                document.getElementById('cd-sold-qty-display').innerHTML = `${soldQty} <span style="font-size: 1rem; font-weight: 600;">unds</span>`;
+
+                const wasteBlock = document.getElementById('cd-waste-block');
+                if (cdState.leftoverQty > 0) {
+                    wasteBlock.style.display = 'block';
+                    document.getElementById('cd-waste-qty-text').textContent = cdState.leftoverQty;
+                } else {
+                    wasteBlock.style.display = 'none';
+                }
+
+                // Step 3 Calculations
+                const expectedIncome = soldQty * cdState.unitPrice;
+                document.getElementById('cd-expected-formula-text').textContent = `Ingreso Esperado (${soldQty} vend. x S/ ${cdState.unitPrice.toFixed(2)})`;
+                document.getElementById('cd-expected-income-display').textContent = `S/ ${expectedIncome.toFixed(2)}`;
+
+                updateCashReconciliation();
+            };
+
+            const updateCashReconciliation = () => {
+                const soldQty = Math.max(0, cdState.producedQty - cdState.leftoverQty);
+                const expectedIncome = soldQty * cdState.unitPrice;
+                const realCashInput = document.getElementById('cd-real-cash').value;
+                const statusBox = document.getElementById('cd-status-box');
+
+                if (realCashInput === '' || isNaN(parseFloat(realCashInput))) {
+                    statusBox.style.display = 'none';
+                    return;
+                }
+
+                const realCash = parseFloat(realCashInput);
+                const diff = realCash - expectedIncome;
+                statusBox.style.display = 'block';
+
+                if (Math.abs(diff) < 0.01) {
+                    statusBox.innerHTML = `
+                        <div style="background: #10B981; color: white; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-soft);">
+                            <div style="font-size: 1.8rem;">✅</div>
+                            <div>
+                                <div style="font-weight: 900; font-size: 1rem;">¡Caja Cuadrada Perfectamente! 🎉</div>
+                                <div style="font-size: 0.8rem; opacity: 0.9;">El dinero registrado coincide exactamente con el cálculo de ventas.</div>
+                            </div>
+                        </div>
+                    `;
+                } else if (diff < -0.01) {
+                    statusBox.innerHTML = `
+                        <div style="background: #FEF2F2; border: 2px solid #EF4444; color: #991B1B; padding: 16px; border-radius: 12px;">
+                            <div style="font-weight: 900; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+                                <span>🚨 Faltante en Caja:</span>
+                                <span style="color: #DC2626;">-S/ ${Math.abs(diff).toFixed(2)}</span>
+                            </div>
+                            <div style="font-size: 0.8rem; margin-top: 4px; color: #7F1D1D;">El dinero en caja es menor al esperado. Agrega una nota abajo detallando el motivo.</div>
+                        </div>
+                    `;
+                } else {
+                    statusBox.innerHTML = `
+                        <div style="background: #FFFBEB; border: 2px solid #F59E0B; color: #78350F; padding: 16px; border-radius: 12px;">
+                            <div style="font-weight: 900; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+                                <span>💡 Sobrante en Caja:</span>
+                                <span style="color: #D97706;">+S/ ${diff.toFixed(2)}</span>
+                            </div>
+                            <div style="font-size: 0.8rem; margin-top: 4px; color: #92400E;">Hay dinero adicional en caja al estimado por ventas.</div>
+                        </div>
+                    `;
+                }
+            };
+
+            // Event Listeners for Cierre Diario
+            document.getElementById('btn-cd-tab-new').addEventListener('click', () => {
+                document.getElementById('btn-cd-tab-new').style.background = 'white';
+                document.getElementById('btn-cd-tab-new').style.color = 'var(--color-text-main)';
+                document.getElementById('btn-cd-tab-history').style.background = 'transparent';
+                document.getElementById('btn-cd-tab-history').style.color = 'var(--color-text-muted)';
+                document.getElementById('cd-view-new').style.display = 'block';
+                document.getElementById('cd-view-history').style.display = 'none';
+            });
+
+            document.getElementById('btn-cd-tab-history').addEventListener('click', () => {
+                document.getElementById('btn-cd-tab-history').style.background = 'white';
+                document.getElementById('btn-cd-tab-history').style.color = 'var(--color-text-main)';
+                document.getElementById('btn-cd-tab-new').style.background = 'transparent';
+                document.getElementById('btn-cd-tab-new').style.color = 'var(--color-text-muted)';
+                document.getElementById('cd-view-new').style.display = 'none';
+                document.getElementById('cd-view-history').style.display = 'block';
+                renderHistoryDashboard();
+            });
+
+            // Steppers
+            document.getElementById('btn-cd-prod-minus').addEventListener('click', () => {
+                cdState.producedQty = Math.max(1, cdState.producedQty - 1);
+                document.getElementById('cd-prod-qty').value = cdState.producedQty;
+            });
+            document.getElementById('btn-cd-prod-plus').addEventListener('click', () => {
+                cdState.producedQty++;
+                document.getElementById('cd-prod-qty').value = cdState.producedQty;
+            });
+            document.getElementById('cd-prod-qty').addEventListener('input', (e) => {
+                cdState.producedQty = Math.max(1, parseInt(e.target.value) || 1);
+            });
+
+            document.getElementById('btn-cd-left-minus').addEventListener('click', () => {
+                cdState.leftoverQty = Math.max(0, cdState.leftoverQty - 1);
+                document.getElementById('cd-left-qty').value = cdState.leftoverQty;
+                updateWizardStepUI();
+            });
+            document.getElementById('btn-cd-left-plus').addEventListener('click', () => {
+                cdState.leftoverQty = Math.min(cdState.producedQty, cdState.leftoverQty + 1);
+                document.getElementById('cd-left-qty').value = cdState.leftoverQty;
+                updateWizardStepUI();
+            });
+            document.getElementById('cd-left-qty').addEventListener('input', (e) => {
+                cdState.leftoverQty = Math.min(cdState.producedQty, Math.max(0, parseInt(e.target.value) || 0));
+                updateWizardStepUI();
+            });
+
+            document.getElementById('cd-unit-price').addEventListener('input', (e) => {
+                cdState.unitPrice = parseFloat(e.target.value) || 0;
+            });
+            document.getElementById('cd-custom-product').addEventListener('input', (e) => {
+                cdState.customProduct = e.target.value;
+            });
+            document.getElementById('cd-real-cash').addEventListener('input', updateCashReconciliation);
+
+            // Waste destination selection
+            document.querySelectorAll('.cd-waste-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.cd-waste-btn').forEach(b => {
+                        b.style.background = 'white';
+                        b.style.color = '#78350F';
+                    });
+                    btn.style.background = '#F59E0B';
+                    btn.style.color = 'white';
+                    cdState.wasteType = btn.getAttribute('data-type');
+                });
+            });
+
+            // Wizard Step Buttons
+            document.getElementById('btn-cd-goto-step2').addEventListener('click', () => {
+                cdState.step = 2;
+                updateWizardStepUI();
+            });
+            document.getElementById('btn-cd-back-step1').addEventListener('click', () => {
+                cdState.step = 1;
+                updateWizardStepUI();
+            });
+            document.getElementById('btn-cd-goto-step3').addEventListener('click', () => {
+                cdState.step = 3;
+                updateWizardStepUI();
+            });
+            document.getElementById('btn-cd-back-step2').addEventListener('click', () => {
+                cdState.step = 2;
+                updateWizardStepUI();
+            });
+
+            // Save Cierre Button
+            document.getElementById('btn-cd-save').addEventListener('click', async () => {
+                const realCashVal = parseFloat(document.getElementById('cd-real-cash').value);
+                if (isNaN(realCashVal) || realCashVal < 0) {
+                    alert('Por favor, ingresa el dinero real en caja.');
+                    document.getElementById('cd-real-cash').focus();
+                    return;
+                }
+
+                const prodName = cdState.customProduct.trim() !== '' ? cdState.customProduct : cdState.selectedProduct;
+                const soldQty = Math.max(0, cdState.producedQty - cdState.leftoverQty);
+                const expectedIncome = soldQty * cdState.unitPrice;
+                const diff = realCashVal - expectedIncome;
+
+                const record = {
+                    date: new Date().toISOString().split('T')[0],
+                    product: prodName,
+                    produced: cdState.producedQty,
+                    leftover: cdState.leftoverQty,
+                    sold: soldQty,
+                    price: cdState.unitPrice,
+                    expected: expectedIncome,
+                    real: realCashVal,
+                    diff: diff,
+                    status: Math.abs(diff) < 0.01 ? 'ok' : diff < 0 ? 'faltante' : 'sobrante',
+                    wasteType: cdState.wasteType,
+                    notes: document.getElementById('cd-notes').value.trim()
+                };
+
+                try {
+                    const res = await fetch('/api/daily-closures', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(record)
+                    });
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        cdState.closures = data.closures;
+                        showToast('¡Cierre diario registrado con éxito! 🎉');
+                        
+                        // Reset Form
+                        cdState.step = 1;
+                        cdState.producedQty = 15;
+                        cdState.leftoverQty = 0;
+                        document.getElementById('cd-prod-qty').value = 15;
+                        document.getElementById('cd-left-qty').value = 0;
+                        document.getElementById('cd-real-cash').value = '';
+                        document.getElementById('cd-notes').value = '';
+                        updateWizardStepUI();
+
+                        // Switch to History
+                        document.getElementById('btn-cd-tab-history').click();
+                    } else {
+                        alert('Error al guardar el cierre: ' + (data.error || 'Servidor'));
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Error de conexión al guardar el cierre.');
+                }
+            });
+
+            // Render History & Canvas Charts Helper
+            const renderHistoryDashboard = () => {
+                const closures = cdState.closures || [];
+                
+                // Totals
+                const totalEarnings = closures.reduce((acc, c) => acc + (c.real || 0), 0);
+                const totalSold = closures.reduce((acc, c) => acc + (c.sold || 0), 0);
+
+                document.getElementById('cd-hist-total-earnings').textContent = `S/ ${totalEarnings.toFixed(2)}`;
+                document.getElementById('cd-hist-total-sold').textContent = `${totalSold} unds`;
+
+                // Feed List
+                const feedContainer = document.getElementById('cd-history-feed');
+                feedContainer.innerHTML = '';
+
+                if (closures.length === 0) {
+                    feedContainer.innerHTML = `<div style="text-align: center; padding: 30px; color: var(--color-text-muted); background: white; border-radius: 16px; border: 1.5px dashed var(--color-border);">Aún no hay registros de cierres guardados.</div>`;
+                } else {
+                    closures.forEach(r => {
+                        const item = document.createElement('div');
+                        item.style.cssText = 'background: white; padding: 16px; border-radius: 16px; border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);';
+                        
+                        const statusBadge = r.status === 'ok' 
+                            ? `<span style="background: #D1FAE5; color: #065F46; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 20px;">✅ Cuadrado</span>`
+                            : r.status === 'faltante'
+                              ? `<span style="background: #FEE2E2; color: #991B1B; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 20px;">🚨 Faltante -S/ ${Math.abs(r.diff).toFixed(2)}</span>`
+                              : `<span style="background: #FEF3C7; color: #92400E; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 20px;">💡 Sobrante +S/ ${r.diff.toFixed(2)}</span>`;
+
+                        item.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted);">📅 ${r.date}</span>
+                                ${statusBadge}
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <div>
+                                    <h4 style="font-size: 0.95rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 2px;">${r.product}</h4>
+                                    <p style="font-size: 0.8rem; color: var(--color-text-muted);">${r.produced} prod. / ${r.sold} vend. / ${r.leftover} sobrantes</p>
+                                </div>
+                                <div style="font-size: 1.2rem; font-weight: 900; color: var(--color-text-main);">S/ ${(r.real || 0).toFixed(2)}</div>
+                            </div>
+                            ${r.notes ? `<div style="margin-top: 8px; font-size: 0.75rem; font-style: italic; color: var(--color-text-muted); background: var(--color-bg-secondary); padding: 6px 10px; border-radius: 8px;">"${r.notes}"</div>` : ''}
+                        `;
+                        feedContainer.appendChild(item);
+                    });
+                }
+
+                // Render Canvas Bar Chart
+                drawBarChart(closures);
+                drawPieChart(closures);
+            };
+
+            // Canvas 2D Bar Chart Renderer
+            const drawBarChart = (closures) => {
+                const canvas = document.getElementById('cd-chart-bar');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                
+                // Fix canvas DPR sizing
+                const width = canvas.parentElement.clientWidth || 300;
+                const height = 180;
+                canvas.width = width * 2;
+                canvas.height = height * 2;
+                ctx.scale(2, 2);
+
+                ctx.clearRect(0, 0, width, height);
+
+                const data = closures.slice(0, 7).reverse();
+                if (data.length === 0) {
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.font = '12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Sin datos registrados', width / 2, height / 2);
+                    return;
+                }
+
+                const maxVal = Math.max(...data.map(d => d.real || 1), 100);
+                const padding = 30;
+                const chartW = width - padding * 2;
+                const chartH = height - padding * 2;
+                const barWidth = Math.min(36, (chartW / data.length) - 12);
+
+                data.forEach((d, i) => {
+                    const x = padding + i * (chartW / data.length) + (chartW / data.length - barWidth) / 2;
+                    const h = ((d.real || 0) / maxVal) * chartH;
+                    const y = height - padding - h;
+
+                    // Bar gradient
+                    const grad = ctx.createLinearGradient(0, y, 0, height - padding);
+                    grad.addColorStop(0, '#10B981');
+                    grad.addColorStop(1, '#047857');
+
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, barWidth, h, [6, 6, 0, 0]);
+                    ctx.fill();
+
+                    // Value label on top
+                    ctx.fillStyle = '#1e293b';
+                    ctx.font = 'bold 10px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`S/${Math.round(d.real || 0)}`, x + barWidth / 2, y - 5);
+
+                    // Date label at bottom
+                    ctx.fillStyle = '#64748b';
+                    ctx.font = '10px sans-serif';
+                    ctx.fillText(d.date ? d.date.slice(5) : '', x + barWidth / 2, height - 10);
+                });
+            };
+
+            // Canvas 2D Donut Chart Renderer
+            const drawPieChart = (closures) => {
+                const canvas = document.getElementById('cd-chart-pie');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = 280;
+                canvas.height = 280;
+                ctx.scale(2, 2);
+
+                ctx.clearRect(0, 0, 140, 140);
+
+                let totalSold = 0;
+                let totalMerma = 0;
+                let totalRegalo = 0;
+                let totalPersonal = 0;
+
+                closures.forEach(c => {
+                    totalSold += c.sold || 0;
+                    if (c.leftover > 0) {
+                        if (c.wasteType === 'merma') totalMerma += c.leftover;
+                        else if (c.wasteType === 'regalo') totalRegalo += c.leftover;
+                        else totalPersonal += c.leftover;
+                    }
+                });
+
+                const slices = [
+                    { label: 'Vendidos', value: totalSold, color: '#10B981' },
+                    { label: 'Consumo Personal', value: totalPersonal, color: '#3B82F6' },
+                    { label: 'Regalo / Muestra', value: totalRegalo, color: '#F59E0B' },
+                    { label: 'Merma / Pérdida', value: totalMerma, color: '#EF4444' }
+                ].filter(s => s.value > 0);
+
+                const totalVal = slices.reduce((acc, s) => acc + s.value, 0);
+
+                const legendContainer = document.getElementById('cd-chart-legend');
+                legendContainer.innerHTML = '';
+
+                if (totalVal === 0) {
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.font = '12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Sin ventas aún', 70, 75);
+                    return;
+                }
+
+                let startAngle = 0;
+                const centerX = 70;
+                const centerY = 70;
+                const outerRadius = 55;
+                const innerRadius = 35;
+
+                slices.forEach(s => {
+                    const sliceAngle = (s.value / totalVal) * 2 * Math.PI;
+                    
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, outerRadius, startAngle, startAngle + sliceAngle);
+                    ctx.arc(centerX, centerY, innerRadius, startAngle + sliceAngle, startAngle, true);
+                    ctx.closePath();
+                    ctx.fillStyle = s.color;
+                    ctx.fill();
+
+                    startAngle += sliceAngle;
+
+                    // Legend item
+                    const leg = document.createElement('div');
+                    leg.style.cssText = 'display: flex; align-items: center; gap: 6px; font-size: 0.75rem;';
+                    leg.innerHTML = `<span style="width: 10px; height: 10px; border-radius: 50%; background: ${s.color}; display: inline-block;"></span><span>${s.label}: <strong>${s.value}</strong></span>`;
+                    legendContainer.appendChild(leg);
+                });
+            };
+
             document.getElementById('form-catalog').addEventListener('submit', (e) => {
                 e.preventDefault();
                 saveConfig('Catálogo de tortas actualizado.');
             });
 
             // Initial load
-            fetchConfig();
+            fetchConfig().then(() => {
+                hydrateCierreDiarioTab();
+
+                // Auto-open Cierre Diario if URL contains /cierre-diario or #cierre-diario
+                if (window.location.pathname.includes('cierre-diario') || window.location.hash === '#cierre-diario') {
+                    const cdBtn = document.querySelector('[data-target="cierre-diario"]');
+                    if (cdBtn) cdBtn.click();
+                }
+            });
         });
     </script>
 </body>

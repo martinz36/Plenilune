@@ -100,8 +100,50 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 });
 
 // Admin panel route
-app.get('/admin', (req, res) => {
+app.get(['/admin', '/admin/cierre-diario', '/admin/cierre'], (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+// API: Get Daily Closures History
+app.get('/api/daily-closures', (req, res) => {
+    fs.readFile(CONFIG_FILE, 'utf8', (err, data) => {
+        if (err) return res.status(500).json({ error: 'Failed to read data' });
+        try {
+            const config = JSON.parse(data);
+            res.json(config.dailyClosures || []);
+        } catch (e) {
+            res.status(500).json({ error: 'Invalid data format' });
+        }
+    });
+});
+
+// API: Save Daily Closure Record
+app.post('/api/daily-closures', (req, res) => {
+    const record = req.body;
+    if (!record || !record.product) {
+        return res.status(400).json({ error: 'Invalid record data' });
+    }
+
+    fs.readFile(CONFIG_FILE, 'utf8', (err, data) => {
+        if (err) return res.status(500).json({ error: 'Failed to read data' });
+        try {
+            const config = JSON.parse(data);
+            if (!config.dailyClosures) config.dailyClosures = [];
+            
+            config.dailyClosures.unshift({
+                id: Date.now().toString(),
+                created_at: new Date().toISOString(),
+                ...record
+            });
+
+            fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8', (writeErr) => {
+                if (writeErr) return res.status(500).json({ error: 'Failed to save record' });
+                res.json({ success: true, closures: config.dailyClosures });
+            });
+        } catch (e) {
+            res.status(500).json({ error: 'Invalid data format' });
+        }
+    });
 });
 
 // Serve static assets and main files
