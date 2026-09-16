@@ -100,7 +100,7 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 });
 
 // Admin panel route
-app.get(['/admin', '/admin/cierre-diario', '/admin/cierre'], (req, res) => {
+app.get(['/admin', '/admin/cierre-diario', '/admin/cierre', '/admin/tandas', '/admin/tanda'], (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
@@ -139,6 +139,48 @@ app.post('/api/daily-closures', (req, res) => {
             fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8', (writeErr) => {
                 if (writeErr) return res.status(500).json({ error: 'Failed to save record' });
                 res.json({ success: true, closures: config.dailyClosures });
+            });
+        } catch (e) {
+            res.status(500).json({ error: 'Invalid data format' });
+        }
+    });
+});
+
+// API: Get Tandas History
+app.get('/api/tandas', (req, res) => {
+    fs.readFile(CONFIG_FILE, 'utf8', (err, data) => {
+        if (err) return res.status(500).json({ error: 'Failed to read data' });
+        try {
+            const config = JSON.parse(data);
+            res.json(config.tandas || []);
+        } catch (e) {
+            res.status(500).json({ error: 'Invalid data format' });
+        }
+    });
+});
+
+// API: Save Tanda Record
+app.post('/api/tandas', (req, res) => {
+    const record = req.body;
+    if (!record || !record.name) {
+        return res.status(400).json({ error: 'Invalid tanda record data' });
+    }
+
+    fs.readFile(CONFIG_FILE, 'utf8', (err, data) => {
+        if (err) return res.status(500).json({ error: 'Failed to read data' });
+        try {
+            const config = JSON.parse(data);
+            if (!config.tandas) config.tandas = [];
+            
+            config.tandas.unshift({
+                id: `tanda-${Date.now()}`,
+                created_at: new Date().toISOString(),
+                ...record
+            });
+
+            fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8', (writeErr) => {
+                if (writeErr) return res.status(500).json({ error: 'Failed to save record' });
+                res.json({ success: true, tandas: config.tandas });
             });
         } catch (e) {
             res.status(500).json({ error: 'Invalid data format' });

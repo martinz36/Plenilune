@@ -446,6 +446,7 @@
                         <li><button class="nav-btn" data-target="gallery">Galería Carrusel</button></li>
                         <li><button class="nav-btn" data-target="catalog">Catálogo de Tortas</button></li>
                         <li><button class="nav-btn" data-target="cierre-diario" style="background: linear-gradient(135deg, #1E2D3D 0%, #4A7A96 100%); color: #ffffff; font-weight: 700; margin-top: 8px;">☀️ Cierre Diario</button></li>
+                        <li><button class="nav-btn" data-target="tandas" style="background: linear-gradient(135deg, #0F172A 0%, #D2B06B 100%); color: #ffffff; font-weight: 700; margin-top: 6px;">🧁 Control de Tandas</button></li>
                     </ul>
                 </nav>
             </aside>
@@ -1268,6 +1269,206 @@
                             </div>
                         </div>
 
+                    </div>
+
+                </section>
+
+                <!-- Panel 9: Control de Tandas (Mobile-First iOS Style) -->
+                <section class="content-panel" id="panel-tandas">
+                    <div class="panel-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div>
+                                <h2 class="panel-title" style="display: flex; align-items: center; gap: 8px;">
+                                    <span>🧁</span> Control de Tandas de Producción
+                                </h2>
+                                <p class="panel-desc">Gestiona el ciclo completo por lote: Compras de Insumos → Rendimiento del Horno → Ventas → Post-Mortem.</p>
+                            </div>
+                            <span class="badge" style="background: #FEF3C7; color: #92400E; font-weight: 700; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem;">
+                                📦 Por Lote
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Sub-tabs Switcher -->
+                    <div style="display: flex; gap: 8px; background: var(--color-bg-secondary); padding: 6px; border-radius: var(--border-radius-lg); margin-bottom: 24px;">
+                        <button type="button" class="btn btn-secondary active-subtab" id="btn-tanda-tab-new" style="flex: 1; padding: 12px; font-weight: 700; font-size: 0.95rem; border-radius: var(--border-radius-md); border: none; cursor: pointer; transition: var(--transition-smooth); background: white; color: var(--color-text-main); box-shadow: var(--shadow-soft);">
+                            🚀 Tanda Activa / Nueva
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="btn-tanda-tab-history" style="flex: 1; padding: 12px; font-weight: 700; font-size: 0.95rem; border-radius: var(--border-radius-md); border: none; cursor: pointer; transition: var(--transition-smooth); background: transparent; color: var(--color-text-muted);">
+                            📦 Histórico ({tandas.length})
+                        </button>
+                    </div>
+
+                    <!-- VIEW 1: WIZARD CICLO DE VIDA DE LA TANDA -->
+                    <div id="tanda-view-wizard">
+                        
+                        <!-- Step Lifecycle Bar -->
+                        <div id="tanda-step-progress-bar" style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 28px; background: white; padding: 14px; border-radius: var(--border-radius-lg); border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                            <div class="tanda-step-ind active" id="tanda-ind-1" style="text-align: center; cursor: pointer; flex: 1;">
+                                <div id="tanda-circle-1" style="width: 38px; height: 38px; border-radius: 50%; background: var(--color-accent-gold); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 4px auto;">🛒</div>
+                                <span id="tanda-text-1" style="font-size: 0.75rem; font-weight: 700; color: var(--color-accent-gold);">1. Compras</span>
+                            </div>
+                            <div class="tanda-step-ind" id="tanda-ind-2" style="text-align: center; cursor: pointer; flex: 1;">
+                                <div id="tanda-circle-2" style="width: 38px; height: 38px; border-radius: 50%; background: var(--color-bg-secondary); color: var(--color-text-muted); display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 4px auto; border: 1.5px solid var(--color-border);">🔥</div>
+                                <span id="tanda-text-2" style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted);">2. Horno</span>
+                            </div>
+                            <div class="tanda-step-ind" id="tanda-ind-3" style="text-align: center; cursor: pointer; flex: 1;">
+                                <div id="tanda-circle-3" style="width: 38px; height: 38px; border-radius: 50%; background: var(--color-bg-secondary); color: var(--color-text-muted); display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 4px auto; border: 1.5px solid var(--color-border);">💰</div>
+                                <span id="tanda-text-3" style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted);">3. Cierre</span>
+                            </div>
+                        </div>
+
+                        <!-- PASO 1: COMPRAS E INVERSIÓN -->
+                        <div id="tanda-step-1" class="tanda-step-panel" style="background: white; border-radius: var(--border-radius-lg); padding: 24px; border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 4px;">🛒 Paso 1: Creación & Compras (Inversión)</h3>
+                                <p style="font-size: 0.85rem; color: var(--color-text-muted);">¿Qué vas a preparar en esta tanda y cuánto gastaste en insumos?</p>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <label class="form-label" style="font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--color-text-muted);">Nombre o Identificador de la Tanda</label>
+                                <input type="text" id="tanda-name-input" class="form-input" placeholder="Ej. Tanda Fin de Semana" style="height: 48px; border-radius: var(--border-radius-md); font-weight: 700;">
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <label class="form-label" style="font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--color-text-muted);">Seleccionar Productos a Preparar</label>
+                                <div id="tanda-product-chips" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                                    <!-- Dynamic selection list -->
+                                </div>
+
+                                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                    <input type="text" id="tanda-custom-prod-input" class="form-input" placeholder="Otro producto (ej. Alfajores)" style="flex: 1; height: 44px; border-radius: var(--border-radius-md); font-size: 0.85rem;">
+                                    <button type="button" id="btn-tanda-add-custom-prod" class="btn btn-secondary" style="height: 44px; font-weight: 700; font-size: 0.85rem; border-radius: var(--border-radius-md); background: var(--color-bg-dark); color: white;">+ Agregar</button>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 24px;">
+                                <label class="form-label" style="font-weight: 800; font-size: 0.85rem; text-transform: uppercase; color: var(--color-text-main);">Costo Total de Compras / Inversión (S/)</label>
+                                <div style="position: relative; margin-top: 6px;">
+                                    <span style="position: absolute; left: 16px; top: 12px; font-weight: 900; color: var(--color-text-muted); font-size: 1.2rem;">S/</span>
+                                    <input type="number" step="0.50" min="0" id="tanda-investment-input" class="form-input" value="75.00" style="padding-left: 48px; height: 54px; font-size: 1.5rem; font-weight: 900; border-radius: var(--border-radius-md); border: 2px solid var(--color-accent-gold);">
+                                </div>
+                                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 4px;">Ingresa la suma total gastada en harina, mantequilla, chocolates, empaques, etc.</p>
+                            </div>
+
+                            <button type="button" id="btn-tanda-goto-step2" class="btn btn-primary" style="width: 100%; height: 54px; font-size: 1.05rem; font-weight: 800; border-radius: var(--border-radius-md); background: var(--color-accent-gold); border: none; color: var(--color-text-main); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                Pasar a Rendimiento del Horno &rarr;
+                            </button>
+                        </div>
+
+                        <!-- PASO 2: RENDIMIENTO (HORNEADO) -->
+                        <div id="tanda-step-2" class="tanda-step-panel" style="display: none; background: white; border-radius: var(--border-radius-lg); padding: 24px; border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 4px;">🔥 Paso 2: Rendimiento del Horno</h3>
+                                <p style="font-size: 0.85rem; color: var(--color-text-muted);">¿Cuántas unidades salieron listas del horno?</p>
+                            </div>
+
+                            <div id="tanda-baked-steppers-list" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
+                                <!-- Dynamic steppers per selected product -->
+                            </div>
+
+                            <div style="background: #FEF2F2; border: 1.5px solid #FCA5A5; padding: 16px; border-radius: var(--border-radius-md); margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span style="font-size: 0.75rem; font-weight: 800; color: #991B1B; text-transform: uppercase;">Total Horneado en Tanda</span>
+                                    <div style="font-size: 1.8rem; font-weight: 900; color: #7F1D1D;" id="tanda-total-baked-display">0 unds</div>
+                                </div>
+                                <div style="font-size: 2.2rem;">🔥</div>
+                            </div>
+
+                            <div style="display: flex; gap: 12px;">
+                                <button type="button" id="btn-tanda-back-step1" class="btn btn-secondary" style="flex: 1; height: 54px; font-size: 1rem; font-weight: 700; border-radius: var(--border-radius-md);">
+                                    &larr; Atrás
+                                </button>
+                                <button type="button" id="btn-tanda-goto-step3" class="btn btn-primary" style="flex: 2; height: 54px; font-size: 1.05rem; font-weight: 800; border-radius: var(--border-radius-md); background: #EF4444; border: none;">
+                                    Pasar a Ventas & Cierre &rarr;
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- PASO 3: CIERRE DE TANDA Y RECAUDACIÓN -->
+                        <div id="tanda-step-3" class="tanda-step-panel" style="display: none; background: white; border-radius: var(--border-radius-lg); padding: 24px; border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft);">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--color-text-main); margin-bottom: 4px;">💰 Paso 3: Cierre & Recaudación</h3>
+                                <p style="font-size: 0.85rem; color: var(--color-text-muted);">Registra sobrantes por producto y el dinero total cobrado</p>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <label class="form-label" style="font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--color-text-muted);">¿Cuántas unidades SOBRARON de cada producto?</label>
+                                <div id="tanda-leftover-steppers-list" style="display: flex; flex-direction: column; gap: 16px; margin-top: 8px;">
+                                    <!-- Dynamic leftover steppers per product -->
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 24px;">
+                                <label class="form-label" style="font-weight: 900; font-size: 0.85rem; text-transform: uppercase; color: var(--color-text-main);">Dinero Total Recaudado (Efectivo + Yape) *</label>
+                                <div style="position: relative; margin-top: 6px;">
+                                    <span style="position: absolute; left: 16px; top: 14px; font-weight: 900; color: var(--color-text-muted); font-size: 1.4rem;">S/</span>
+                                    <input type="number" step="0.50" min="0" id="tanda-revenue-input" class="form-input" value="195.00" style="padding-left: 52px; height: 60px; font-size: 1.8rem; font-weight: 900; border-radius: var(--border-radius-md); border: 2.5px solid #10B981;">
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 12px;">
+                                <button type="button" id="btn-tanda-back-step2" class="btn btn-secondary" style="flex: 1; height: 54px; font-size: 1rem; font-weight: 700; border-radius: var(--border-radius-md);">
+                                    &larr; Atrás
+                                </button>
+                                <button type="button" id="btn-tanda-finish" class="btn btn-primary" style="flex: 2; height: 54px; font-size: 1.05rem; font-weight: 900; border-radius: var(--border-radius-md); background: #10B981; border: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+                                    🏆 Finalizar & Ver Post-Mortem
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- PASO 4: EL POST-MORTEM (TARJETA DE RESUMEN DE LA TANDA) -->
+                        <div id="tanda-step-4" class="tanda-step-panel" style="display: none; background: white; border-radius: var(--border-radius-lg); padding: 24px; border: 1.5px solid var(--color-border); box-shadow: var(--shadow-medium);">
+                            <div style="text-align: center; border-bottom: 1.5px solid var(--color-border); padding-bottom: 16px; margin-bottom: 20px;">
+                                <div style="width: 56px; height: 56px; border-radius: 50%; background: #ECFDF5; border: 2px solid #34D399; color: #059669; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto;">🏆</div>
+                                <h2 style="font-size: 1.3rem; font-weight: 900; color: var(--color-text-main);" id="tanda-pm-title">Tanda Fin de Semana</h2>
+                                <p style="font-size: 0.8rem; color: var(--color-text-muted);" id="tanda-pm-date">Cierre realizado el 15 Sep 2026</p>
+                            </div>
+
+                            <!-- Net Profit Card -->
+                            <div id="tanda-pm-profit-card" style="padding: 20px; border-radius: var(--border-radius-md); text-align: center; margin-bottom: 20px; background: #ECFDF5; border: 1.5px solid #10B981;">
+                                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #065F46; letter-spacing: 0.5px;">Ganancia Neta de la Tanda</span>
+                                <div style="font-size: 2.8rem; font-weight: 900; color: #047857; margin-top: 4px;" id="tanda-pm-profit-display">+S/ 120.00</div>
+                                <span style="display: inline-block; margin-top: 6px; padding: 4px 12px; background: white; border-radius: 20px; font-size: 0.75rem; font-weight: 800; color: #065F46;" id="tanda-pm-roi-display">Margen ROI: +160.0%</span>
+                            </div>
+
+                            <!-- Financial Breakdown Grid -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                                <div style="background: var(--color-bg-secondary); padding: 14px; border-radius: var(--border-radius-md);">
+                                    <span style="font-size: 0.7rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Inversión Inicial</span>
+                                    <div style="font-size: 1.2rem; font-weight: 900; color: var(--color-text-main);" id="tanda-pm-investment">S/ 75.00</div>
+                                </div>
+                                <div style="background: var(--color-bg-secondary); padding: 14px; border-radius: var(--border-radius-md);">
+                                    <span style="font-size: 0.7rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Ingreso Recaudado</span>
+                                    <div style="font-size: 1.2rem; font-weight: 900; color: var(--color-text-main);" id="tanda-pm-revenue">S/ 195.00</div>
+                                </div>
+                            </div>
+
+                            <!-- Products Breakdown -->
+                            <div style="margin-bottom: 24px;">
+                                <h4 style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 10px;">Desglose de Rendimiento</h4>
+                                <div id="tanda-pm-items-list" style="display: flex; flex-direction: column; gap: 8px;">
+                                    <!-- Dynamic items list -->
+                                </div>
+                            </div>
+
+                            <button type="button" id="btn-tanda-reset-new" class="btn btn-primary" style="width: 100%; height: 54px; font-size: 1.05rem; font-weight: 900; border-radius: var(--border-radius-md); background: var(--color-bg-dark); border: none;">
+                                🚀 Iniciar Nueva Tanda de Producción
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- VIEW 2: HISTÓRICO DE TANDAS (CARDS FEED) -->
+                    <div id="tanda-view-history" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="font-size: 1rem; font-weight: 800; color: var(--color-text-main);">Tandas Anteriores Finalizadas</h3>
+                            <span style="font-size: 0.8rem; color: var(--color-text-muted);" id="tanda-hist-count">0 tandas</span>
+                        </div>
+
+                        <div id="tanda-history-feed" style="display: flex; flex-direction: column; gap: 16px;">
+                            <!-- Injected dynamically -->
+                        </div>
                     </div>
 
                 </section>
@@ -2993,6 +3194,415 @@
                 });
             };
 
+            // 10. Control de Tandas Module JS Control
+            let tandaState = {
+                step: 1,
+                name: `Tanda ${new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}`,
+                selectedProducts: ['Brownies de Chocolate Belga', 'Galletas Artesanales Oreo'],
+                investment: 75.00,
+                bakedQty: { 'Brownies de Chocolate Belga': 18, 'Galletas Artesanales Oreo': 15 },
+                leftoverQty: { 'Brownies de Chocolate Belga': 2, 'Galletas Artesanales Oreo': 0 },
+                wasteTypes: { 'Brownies de Chocolate Belga': 'merma', 'Galletas Artesanales Oreo': 'none' },
+                revenue: 195.00,
+                tandas: [],
+                lastPostMortem: null
+            };
+
+            const hydrateTandasTab = async () => {
+                document.getElementById('tanda-name-input').value = tandaState.name;
+                document.getElementById('tanda-investment-input').value = tandaState.investment.toFixed(2);
+                document.getElementById('tanda-revenue-input').value = tandaState.revenue.toFixed(2);
+
+                // Fetch history
+                try {
+                    const res = await fetch('/api/tandas');
+                    tandaState.tandas = await res.json();
+                } catch (err) {
+                    console.warn('Using local tandas state:', err);
+                }
+
+                renderTandaProductChips();
+                renderTandaHistoryFeed();
+            };
+
+            const renderTandaProductChips = () => {
+                const chipsContainer = document.getElementById('tanda-product-chips');
+                const defaultCatalog = [
+                    'Brownies de Chocolate Belga',
+                    'Galletas Artesanales Oreo',
+                    'Muffins de Arándano Silvestre',
+                    'Croissant Crujiente',
+                    'Torta Cereza Retro (Porciones)',
+                    'Cheesecake Cítrico y Frutal'
+                ];
+
+                let allProds = defaultCatalog;
+                if (state.catalog && state.catalog.length > 0) {
+                    const catalogProds = state.catalog.map(c => c.title);
+                    allProds = [...catalogProds, ...defaultCatalog.filter(dp => !catalogProds.includes(dp))];
+                }
+
+                chipsContainer.innerHTML = '';
+                allProds.forEach(prodName => {
+                    const isSelected = tandaState.selectedProducts.includes(prodName);
+                    const chip = document.createElement('button');
+                    chip.type = 'button';
+                    chip.className = 'btn btn-secondary';
+                    chip.style.cssText = `padding: 12px 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; text-align: left; border: 1.5px solid ${isSelected ? 'var(--color-accent-gold)' : 'var(--color-border)'}; background: ${isSelected ? '#FFFBEB' : 'white'}; color: ${isSelected ? '#78350F' : 'var(--color-text-main)'}; display: flex; justify-content: space-between; align-items: center; transition: var(--transition-smooth);`;
+                    chip.innerHTML = `<span>${prodName}</span><span style="width: 22px; height: 22px; border-radius: 50%; font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; ${isSelected ? 'background: var(--color-accent-gold); color: white;' : 'border: 1.5px solid var(--color-border);'}">${isSelected ? '✓' : ''}</span>`;
+
+                    chip.addEventListener('click', () => {
+                        if (tandaState.selectedProducts.includes(prodName)) {
+                            if (tandaState.selectedProducts.length === 1) return alert('Debes seleccionar al menos un producto para la tanda.');
+                            tandaState.selectedProducts = tandaState.selectedProducts.filter(p => p !== prodName);
+                        } else {
+                            tandaState.selectedProducts.push(prodName);
+                            if (!tandaState.bakedQty[prodName]) tandaState.bakedQty[prodName] = 12;
+                            if (!tandaState.leftoverQty[prodName]) tandaState.leftoverQty[prodName] = 0;
+                        }
+                        renderTandaProductChips();
+                    });
+
+                    chipsContainer.appendChild(chip);
+                });
+            };
+
+            // Custom Product Add Button
+            document.getElementById('btn-tanda-add-custom-prod').addEventListener('click', () => {
+                const input = document.getElementById('tanda-custom-prod-input');
+                const val = input.value.trim();
+                if (!val) return;
+                if (!tandaState.selectedProducts.includes(val)) {
+                    tandaState.selectedProducts.push(val);
+                    tandaState.bakedQty[val] = 10;
+                    tandaState.leftoverQty[val] = 0;
+                    renderTandaProductChips();
+                }
+                input.value = '';
+            });
+
+            // Wizard Step Transition UI Handler
+            const updateTandaWizardUI = () => {
+                const step = tandaState.step;
+                
+                // ProgressBar indicators
+                for (let i = 1; i <= 3; i++) {
+                    const circle = document.getElementById(`tanda-circle-${i}`);
+                    const text = document.getElementById(`tanda-text-${i}`);
+                    const panel = document.getElementById(`tanda-step-${i}`);
+
+                    if (i === step) {
+                        circle.style.background = i === 1 ? 'var(--color-accent-gold)' : i === 2 ? '#EF4444' : '#10B981';
+                        circle.style.color = 'white';
+                        circle.style.border = 'none';
+                        text.style.color = 'var(--color-text-main)';
+                        text.style.fontWeight = '700';
+                        if (panel) panel.style.display = 'block';
+                    } else if (i < step) {
+                        circle.style.background = '#10B981';
+                        circle.style.color = 'white';
+                        circle.style.border = 'none';
+                        text.style.color = '#10B981';
+                        if (panel) panel.style.display = 'none';
+                    } else {
+                        circle.style.background = 'var(--color-bg-secondary)';
+                        circle.style.color = 'var(--color-text-muted)';
+                        circle.style.border = '1.5px solid var(--color-border)';
+                        text.style.color = 'var(--color-text-muted)';
+                        if (panel) panel.style.display = 'none';
+                    }
+                }
+
+                const postMortemPanel = document.getElementById('tanda-step-4');
+                const progressBar = document.getElementById('tanda-step-progress-bar');
+                if (step === 4) {
+                    progressBar.style.display = 'none';
+                    postMortemPanel.style.display = 'block';
+                } else {
+                    progressBar.style.display = 'flex';
+                    postMortemPanel.style.display = 'none';
+                }
+
+                // Render Step 2 Steppers (Baked)
+                if (step === 2) {
+                    const list = document.getElementById('tanda-baked-steppers-list');
+                    list.innerHTML = '';
+                    let totalBaked = 0;
+
+                    tandaState.selectedProducts.forEach(prodName => {
+                        const qty = tandaState.bakedQty[prodName] || 12;
+                        totalBaked += qty;
+
+                        const item = document.createElement('div');
+                        item.style.cssText = 'background: var(--color-bg-secondary); padding: 14px; border-radius: 12px; border: 1px solid var(--color-border);';
+                        item.innerHTML = `
+                            <span style="font-size: 0.85rem; font-weight: 800; color: var(--color-text-main); display: block; margin-bottom: 8px;">${prodName}</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <button type="button" class="btn btn-secondary btn-bk-minus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800;">-</button>
+                                <input type="number" min="1" value="${qty}" class="form-input inp-bk-qty" style="flex: 1; height: 48px; text-align: center; font-size: 1.4rem; font-weight: 900; background: white;">
+                                <button type="button" class="btn btn-primary btn-bk-plus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800; background: var(--color-bg-dark); color: white;">+</button>
+                            </div>
+                        `;
+
+                        item.querySelector('.btn-bk-minus').addEventListener('click', () => {
+                            tandaState.bakedQty[prodName] = Math.max(1, (tandaState.bakedQty[prodName] || 12) - 1);
+                            updateTandaWizardUI();
+                        });
+                        item.querySelector('.btn-bk-plus').addEventListener('click', () => {
+                            tandaState.bakedQty[prodName] = (tandaState.bakedQty[prodName] || 12) + 1;
+                            updateTandaWizardUI();
+                        });
+                        item.querySelector('.inp-bk-qty').addEventListener('input', (e) => {
+                            tandaState.bakedQty[prodName] = Math.max(1, parseInt(e.target.value) || 1);
+                            updateTandaWizardUI();
+                        });
+
+                        list.appendChild(item);
+                    });
+
+                    document.getElementById('tanda-total-baked-display').textContent = `${totalBaked} unds`;
+                }
+
+                // Render Step 3 Steppers (Leftovers & Sales calculation)
+                if (step === 3) {
+                    const list = document.getElementById('tanda-leftover-steppers-list');
+                    list.innerHTML = '';
+
+                    tandaState.selectedProducts.forEach(prodName => {
+                        const baked = tandaState.bakedQty[prodName] || 0;
+                        const leftover = tandaState.leftoverQty[prodName] || 0;
+                        const sold = Math.max(0, baked - leftover);
+
+                        const item = document.createElement('div');
+                        item.style.cssText = 'background: var(--color-bg-secondary); padding: 14px; border-radius: 12px; border: 1px solid var(--color-border);';
+                        item.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                                <span style="font-size: 0.85rem; font-weight: 800; color: var(--color-text-main);">${prodName}</span>
+                                <span style="font-size: 0.8rem; font-weight: 800; color: #10B981;">${sold} vendidas de ${baked}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <button type="button" class="btn btn-secondary btn-lo-minus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800;">-</button>
+                                <input type="number" min="0" max="${baked}" value="${leftover}" class="form-input inp-lo-qty" style="flex: 1; height: 48px; text-align: center; font-size: 1.4rem; font-weight: 900; background: white;">
+                                <button type="button" class="btn btn-primary btn-lo-plus" style="width: 48px; height: 48px; border-radius: 10px; font-size: 1.5rem; font-weight: 800; background: #10B981; border: none; color: white;">+</button>
+                            </div>
+                        `;
+
+                        item.querySelector('.btn-lo-minus').addEventListener('click', () => {
+                            tandaState.leftoverQty[prodName] = Math.max(0, (tandaState.leftoverQty[prodName] || 0) - 1);
+                            updateTandaWizardUI();
+                        });
+                        item.querySelector('.btn-lo-plus').addEventListener('click', () => {
+                            tandaState.leftoverQty[prodName] = Math.min(baked, (tandaState.leftoverQty[prodName] || 0) + 1);
+                            updateTandaWizardUI();
+                        });
+                        item.querySelector('.inp-lo-qty').addEventListener('input', (e) => {
+                            tandaState.leftoverQty[prodName] = Math.min(baked, Math.max(0, parseInt(e.target.value) || 0));
+                            updateTandaWizardUI();
+                        });
+
+                        list.appendChild(item);
+                    });
+                }
+            };
+
+            // Step Button Handlers
+            document.getElementById('btn-tanda-goto-step2').addEventListener('click', () => {
+                tandaState.name = document.getElementById('tanda-name-input').value.trim() || 'Tanda de Producción';
+                tandaState.investment = parseFloat(document.getElementById('tanda-investment-input').value) || 0;
+                tandaState.step = 2;
+                updateTandaWizardUI();
+            });
+
+            document.getElementById('btn-tanda-back-step1').addEventListener('click', () => {
+                tandaState.step = 1;
+                updateTandaWizardUI();
+            });
+
+            document.getElementById('btn-tanda-goto-step3').addEventListener('click', () => {
+                tandaState.step = 3;
+                updateTandaWizardUI();
+            });
+
+            document.getElementById('btn-tanda-back-step2').addEventListener('click', () => {
+                tandaState.step = 2;
+                updateTandaWizardUI();
+            });
+
+            // Finish Tanda & Render Post-Mortem
+            document.getElementById('btn-tanda-finish').addEventListener('click', async () => {
+                const revenueInput = parseFloat(document.getElementById('tanda-revenue-input').value);
+                if (isNaN(revenueInput) || revenueInput < 0) {
+                    alert('Por favor ingresa el dinero total recaudado.');
+                    document.getElementById('tanda-revenue-input').focus();
+                    return;
+                }
+
+                tandaState.revenue = revenueInput;
+                const items = tandaState.selectedProducts.map(name => {
+                    const baked = tandaState.bakedQty[name] || 0;
+                    const leftover = tandaState.leftoverQty[name] || 0;
+                    const sold = Math.max(0, baked - leftover);
+                    return { name, baked, leftover, sold, wasteType: tandaState.wasteTypes[name] || 'merma' };
+                });
+
+                const netProfit = tandaState.revenue - tandaState.investment;
+                const roiMargin = tandaState.investment > 0 ? (netProfit / tandaState.investment) * 100 : 0;
+
+                const record = {
+                    name: tandaState.name,
+                    date: new Date().toISOString().split('T')[0],
+                    investment: tandaState.investment,
+                    revenue: tandaState.revenue,
+                    profit: netProfit,
+                    margin: roiMargin,
+                    items: items
+                };
+
+                try {
+                    const res = await fetch('/api/tandas', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(record)
+                    });
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        tandaState.tandas = data.tandas;
+                        showToast('¡Tanda guardada con éxito! 🏆');
+
+                        // Hydrate Post-Mortem Card
+                        document.getElementById('tanda-pm-title').textContent = record.name;
+                        document.getElementById('tanda-pm-date').textContent = `Cierre realizado el ${record.date}`;
+                        
+                        const profitCard = document.getElementById('tanda-pm-profit-card');
+                        const profitDisp = document.getElementById('tanda-pm-profit-display');
+                        const roiDisp = document.getElementById('tanda-pm-roi-display');
+
+                        if (netProfit >= 0) {
+                            profitCard.style.background = '#ECFDF5';
+                            profitCard.style.borderColor = '#10B981';
+                            profitDisp.style.color = '#047857';
+                            profitDisp.textContent = `+S/ ${netProfit.toFixed(2)}`;
+                            roiDisp.textContent = `Margen ROI: +${roiMargin.toFixed(1)}%`;
+                        } else {
+                            profitCard.style.background = '#FEF2F2';
+                            profitCard.style.borderColor = '#EF4444';
+                            profitDisp.style.color = '#DC2626';
+                            profitDisp.textContent = `-S/ ${Math.abs(netProfit).toFixed(2)}`;
+                            roiDisp.textContent = `Pérdida ROI: ${roiMargin.toFixed(1)}%`;
+                        }
+
+                        document.getElementById('tanda-pm-investment').textContent = `S/ ${record.investment.toFixed(2)}`;
+                        document.getElementById('tanda-pm-revenue').textContent = `S/ ${record.revenue.toFixed(2)}`;
+
+                        const pmItemsList = document.getElementById('tanda-pm-items-list');
+                        pmItemsList.innerHTML = '';
+                        items.forEach(it => {
+                            const row = document.createElement('div');
+                            row.style.cssText = 'background: var(--color-bg-secondary); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;';
+                            row.innerHTML = `
+                                <div>
+                                    <div style="font-weight: 800; color: var(--color-text-main);">${it.name}</div>
+                                    <div style="color: var(--color-text-muted); font-size: 0.75rem;">${it.sold} vendidas de ${it.baked} horneadas</div>
+                                </div>
+                                <div>
+                                    ${it.leftover === 0 ? '<span style="background: #D1FAE5; color: #065F46; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 12px;">⭐ 100% Vendido</span>' : `<span style="background: #FEF3C7; color: #92400E; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 12px;">${it.leftover} sobrantes</span>`}
+                                </div>
+                            `;
+                            pmItemsList.appendChild(row);
+                        });
+
+                        tandaState.step = 4;
+                        updateTandaWizardUI();
+                    } else {
+                        alert('Error al guardar tanda: ' + (data.error || 'Servidor'));
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Error de conexión al guardar la tanda.');
+                }
+            });
+
+            // Reset New Tanda Button
+            document.getElementById('btn-tanda-reset-new').addEventListener('click', () => {
+                tandaState.step = 1;
+                tandaState.name = `Tanda ${new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}`;
+                document.getElementById('tanda-name-input').value = tandaState.name;
+                tandaState.investment = 75.00;
+                document.getElementById('tanda-investment-input').value = '75.00';
+                tandaState.revenue = 195.00;
+                document.getElementById('tanda-revenue-input').value = '195.00';
+                updateTandaWizardUI();
+            });
+
+            // Sub-tabs switcher (Tanda Activa vs Histórico)
+            document.getElementById('btn-tanda-tab-new').addEventListener('click', () => {
+                document.getElementById('btn-tanda-tab-new').style.background = 'white';
+                document.getElementById('btn-tanda-tab-new').style.color = 'var(--color-text-main)';
+                document.getElementById('btn-tanda-tab-history').style.background = 'transparent';
+                document.getElementById('btn-tanda-tab-history').style.color = 'var(--color-text-muted)';
+                document.getElementById('tanda-view-wizard').style.display = 'block';
+                document.getElementById('tanda-view-history').style.display = 'none';
+            });
+
+            document.getElementById('btn-tanda-tab-history').addEventListener('click', () => {
+                document.getElementById('btn-tanda-tab-history').style.background = 'white';
+                document.getElementById('btn-tanda-tab-history').style.color = 'var(--color-text-main)';
+                document.getElementById('btn-tanda-tab-new').style.background = 'transparent';
+                document.getElementById('btn-tanda-tab-new').style.color = 'var(--color-text-muted)';
+                document.getElementById('tanda-view-wizard').style.display = 'none';
+                document.getElementById('tanda-view-history').style.display = 'block';
+                renderTandaHistoryFeed();
+            });
+
+            const renderTandaHistoryFeed = () => {
+                const tandas = tandaState.tandas || [];
+                document.getElementById('tanda-hist-count').textContent = `${tandas.length} tandas`;
+                const feed = document.getElementById('tanda-history-feed');
+                feed.innerHTML = '';
+
+                if (tandas.length === 0) {
+                    feed.innerHTML = `<div style="text-align: center; padding: 30px; color: var(--color-text-muted); background: white; border-radius: 16px; border: 1.5px dashed var(--color-border);">Aún no hay tandas anteriores registradas.</div>`;
+                } else {
+                    tandas.forEach(t => {
+                        const item = document.createElement('div');
+                        item.style.cssText = 'background: white; padding: 18px; border-radius: 18px; border: 1.5px solid var(--color-border); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; gap: 12px;';
+                        
+                        const profitBadge = t.profit >= 0
+                            ? `<span style="background: #D1FAE5; color: #065F46; font-size: 0.8rem; font-weight: 900; padding: 4px 10px; border-radius: 12px;">+S/ ${t.profit.toFixed(2)}</span>`
+                            : `<span style="background: #FEE2E2; color: #991B1B; font-size: 0.8rem; font-weight: 900; padding: 4px 10px; border-radius: 12px;">-S/ ${Math.abs(t.profit).toFixed(2)}</span>`;
+
+                        let itemsHtml = '';
+                        if (t.items && t.items.length > 0) {
+                            itemsHtml = t.items.map(it => `
+                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--color-text-muted);">
+                                    <span>• ${it.name}</span>
+                                    <span style="font-weight: 700; color: var(--color-text-main);">${it.sold}/${it.baked} vendidos</span>
+                                </div>
+                            `).join('');
+                        }
+
+                        item.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--color-text-muted);">📅 ${t.date}</span>
+                                    <h4 style="font-size: 1.05rem; font-weight: 900; color: var(--color-text-main); margin-top: 2px;">${t.name}</h4>
+                                </div>
+                                ${profitBadge}
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: var(--color-bg-secondary); padding: 10px; border-radius: 12px; font-size: 0.75rem;">
+                                <div><span style="color: var(--color-text-muted); font-weight: 600;">Inversión:</span> <strong style="color: var(--color-text-main);">S/ ${(t.investment || 0).toFixed(2)}</strong></div>
+                                <div><span style="color: var(--color-text-muted); font-weight: 600;">Recaudado:</span> <strong style="color: var(--color-text-main);">S/ ${(t.revenue || 0).toFixed(2)}</strong></div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                ${itemsHtml}
+                            </div>
+                        `;
+                        feed.appendChild(item);
+                    });
+                }
+            };
+
             document.getElementById('form-catalog').addEventListener('submit', (e) => {
                 e.preventDefault();
                 saveConfig('Catálogo de tortas actualizado.');
@@ -3001,11 +3611,15 @@
             // Initial load
             fetchConfig().then(() => {
                 hydrateCierreDiarioTab();
+                hydrateTandasTab();
 
-                // Auto-open Cierre Diario if URL contains /cierre-diario or #cierre-diario
+                // Auto-open Cierre Diario or Control de Tandas based on URL or hash
                 if (window.location.pathname.includes('cierre-diario') || window.location.hash === '#cierre-diario') {
                     const cdBtn = document.querySelector('[data-target="cierre-diario"]');
                     if (cdBtn) cdBtn.click();
+                } else if (window.location.pathname.includes('tandas') || window.location.hash === '#tandas') {
+                    const tandaBtn = document.querySelector('[data-target="tandas"]');
+                    if (tandaBtn) tandaBtn.click();
                 }
             });
         });
