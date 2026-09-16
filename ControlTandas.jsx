@@ -25,13 +25,11 @@ import {
 } from 'lucide-react';
 
 // Catalogo predeterminado de productos sugeridos
-const PRODUCT_CATALOG = [
-  { id: 'brownies', name: 'Brownies de Chocolate Belga' },
-  { id: 'galletas_oreo', name: 'Galletas Artesanales Oreo' },
-  { id: 'muffins_arandano', name: 'Muffins de Arándano Silvestre' },
-  { id: 'croissant', name: 'Croissant Crujiente' },
-  { id: 'torta_cereza', name: 'Torta Cereza Retro (Porciones)' },
-  { id: 'cheesecake', name: 'Cheesecake Cítrico y Frutal' }
+const INITIAL_PRODUCT_CATALOG = [
+  'Galleta de orea and creme',
+  'Galleta de chin chin',
+  'Brownies de chocolate',
+  'Muffins de arandano'
 ];
 
 // Datos históricos de ejemplo iniciales
@@ -45,20 +43,8 @@ const INITIAL_TANDAS_HISTORY = [
     profit: 125.00,
     margin: 147.0,
     items: [
-      { name: 'Brownies de Chocolate Belga', baked: 20, leftover: 2, sold: 18, wasteType: 'merma' },
-      { name: 'Galletas Artesanales Oreo', baked: 15, leftover: 0, sold: 15, wasteType: 'none' }
-    ]
-  },
-  {
-    id: 'tanda-100',
-    name: 'Tanda Repostera Miercoles',
-    date: '2026-09-09',
-    investment: 60.00,
-    revenue: 145.00,
-    profit: 85.00,
-    margin: 141.6,
-    items: [
-      { name: 'Muffins de Arándano Silvestre', baked: 18, leftover: 1, sold: 17, wasteType: 'personal' }
+      { name: 'Brownies de chocolate', baked: 20, leftover: 2, sold: 18, wasteType: 'merma' },
+      { name: 'Galleta de orea and creme', baked: 15, leftover: 0, sold: 15, wasteType: 'none' }
     ]
   }
 ];
@@ -67,27 +53,27 @@ export default function ControlTandas() {
   const [activeView, setActiveView] = useState('wizard'); // 'wizard' | 'historial'
   const [step, setStep] = useState(1); // 1: Compras, 2: Horneado, 3: Venta/Cierre, 4: Post-Mortem
 
+  // Dynamic Catalog State
+  const [catalog, setCatalog] = useState(INITIAL_PRODUCT_CATALOG);
+
   // Step 1: Compras & Inversión State
   const [tandaName, setTandaName] = useState(`Tanda ${new Date().toLocaleDateString('es-PE', { weekday: 'short', day: '2-digit', month: 'short' })}`);
-  const [selectedProducts, setSelectedProducts] = useState(['Brownies de Chocolate Belga', 'Galletas Artesanales Oreo']);
+  const [selectedProducts, setSelectedProducts] = useState(['Brownies de chocolate']);
   const [customProductInput, setCustomProductInput] = useState('');
   const [totalInvestment, setTotalInvestment] = useState(75.00);
 
   // Step 2: Rendimiento / Horneado State (unidades que salieron del horno por producto)
   const [bakedQuantities, setBakedQuantities] = useState({
-    'Brownies de Chocolate Belga': 18,
-    'Galletas Artesanales Oreo': 15
+    'Brownies de chocolate': 18
   });
 
   // Step 3: Sobrantes & Venta Total State
   const [leftoverQuantities, setLeftoverQuantities] = useState({
-    'Brownies de Chocolate Belga': 2,
-    'Galletas Artesanales Oreo': 0
+    'Brownies de chocolate': 2
   });
 
   const [wasteTypes, setWasteTypes] = useState({
-    'Brownies de Chocolate Belga': 'merma',
-    'Galletas Artesanales Oreo': 'none'
+    'Brownies de chocolate': 'merma'
   });
 
   const [totalRevenue, setTotalRevenue] = useState(195.00);
@@ -95,6 +81,38 @@ export default function ControlTandas() {
   // Histórico de Tandas
   const [tandasHistory, setTandasHistory] = useState(INITIAL_TANDAS_HISTORY);
   const [completedPostMortem, setCompletedPostMortem] = useState(null);
+
+  // Fetch catalog from backend API on mount
+  React.useEffect(() => {
+    fetch('/api/tanda-products')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setCatalog(data);
+        }
+      })
+      .catch(err => console.warn('Could not load tanda products:', err));
+  }, []);
+
+  // Delete product from catalog
+  const handleDeleteProduct = (prodName) => {
+    if (catalog.length <= 1) {
+      return alert('Debes mantener al menos un producto en la lista.');
+    }
+    if (window.confirm(`¿Deseas eliminar "${prodName}" de la lista de productos?`)) {
+      const updated = catalog.filter(p => p !== prodName);
+      setCatalog(updated);
+      setSelectedProducts(prev => {
+        const filtered = prev.filter(p => p !== prodName);
+        return filtered.length > 0 ? filtered : [updated[0]];
+      });
+      fetch('/api/tanda-products/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: prodName })
+      }).catch(err => console.error('Error deleting product:', err));
+    }
+  };
 
   // Toggle producto en selección múltiple
   const toggleProductSelection = (prodName) => {
@@ -115,12 +133,21 @@ export default function ControlTandas() {
   const handleAddCustomProduct = () => {
     const trimmed = customProductInput.trim();
     if (!trimmed) return;
+
+    if (!catalog.includes(trimmed)) {
+      setCatalog(prev => [...prev, trimmed]);
+    }
     if (!selectedProducts.includes(trimmed)) {
-      setSelectedProducts([...selectedProducts, trimmed]);
+      setSelectedProducts(prev => [...prev, trimmed]);
       setBakedQuantities(prev => ({ ...prev, [trimmed]: 10 }));
       setLeftoverQuantities(prev => ({ ...prev, [trimmed]: 0 }));
     }
     setCustomProductInput('');
+
+    fetch('/api/tanda-products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: trimmed })
   };
 
   // Modificar cantidad horneada
@@ -337,26 +364,35 @@ export default function ControlTandas() {
                     Seleccionar Productos a Preparar
                   </label>
                   <div className="grid grid-cols-1 gap-2">
-                    {PRODUCT_CATALOG.map((p) => {
-                      const isSelected = selectedProducts.includes(p.name);
+                    {catalog.map((prodName) => {
+                      const isSelected = selectedProducts.includes(prodName);
                       return (
-                        <button
-                          key={p.id}
-                          type="button"
-                          onClick={() => toggleProductSelection(p.name)}
-                          className={`w-full p-3.5 rounded-2xl text-left text-xs font-bold border transition-all flex items-center justify-between ${
-                            isSelected
-                              ? 'bg-amber-50 border-amber-500 text-amber-950 shadow-sm ring-1 ring-amber-400'
-                              : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                          }`}
-                        >
-                          <span>{p.name}</span>
-                          <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
-                            isSelected ? 'bg-amber-500 text-white font-black' : 'border border-slate-300'
-                          }`}>
-                            {isSelected ? '✓' : ''}
-                          </span>
-                        </button>
+                        <div key={prodName} className="flex items-center space-x-2">
+                          <button
+                            type="button"
+                            onClick={() => toggleProductSelection(prodName)}
+                            className={`flex-1 p-3.5 rounded-2xl text-left text-xs font-bold border transition-all flex items-center justify-between ${
+                              isSelected
+                                ? 'bg-amber-50 border-amber-500 text-amber-950 shadow-sm ring-1 ring-amber-400'
+                                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                            }`}
+                          >
+                            <span>{prodName}</span>
+                            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
+                              isSelected ? 'bg-amber-500 text-white font-black' : 'border border-slate-300'
+                            }`}>
+                              {isSelected ? '✓' : ''}
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteProduct(prodName)}
+                            title={`Eliminar ${prodName}`}
+                            className="w-11 h-11 rounded-2xl border border-rose-200 bg-rose-50 text-rose-600 flex items-center justify-center hover:bg-rose-100 transition-colors flex-shrink-0"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       );
                     })}
                   </div>

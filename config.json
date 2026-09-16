@@ -395,5 +395,11 @@
     ]
   },
   "dailyClosures": [],
-  "tandas": []
+  "tandas": [],
+  "tandaProducts": [
+    "Galleta de orea and creme",
+    "Galleta de chin chin",
+    "Brownies de chocolate",
+    "Muffins de arandano"
+  ]
 }

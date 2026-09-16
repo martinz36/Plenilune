@@ -188,6 +188,84 @@ app.post('/api/tandas', (req, res) => {
     });
 });
 
+// API: Get Tanda Products Catalog
+app.get('/api/tanda-products', (req, res) => {
+    fs.readFile(CONFIG_FILE, 'utf8', (err, data) => {
+        if (err) return res.status(500).json({ error: 'Failed to read data' });
+        try {
+            const config = JSON.parse(data);
+            const defaultProds = [
+                'Galleta de orea and creme',
+                'Galleta de chin chin',
+                'Brownies de chocolate',
+                'Muffins de arandano'
+            ];
+            res.json(config.tandaProducts || defaultProds);
+        } catch (e) {
+            res.status(500).json({ error: 'Invalid data format' });
+        }
+    });
+});
+
+// API: Add Tanda Product
+app.post('/api/tanda-products', (req, res) => {
+    const { name } = req.body;
+    if (!name || typeof name !== 'string' || !name.trim()) {
+        return res.status(400).json({ error: 'Invalid product name' });
+    }
+
+    fs.readFile(CONFIG_FILE, 'utf8', (err, data) => {
+        if (err) return res.status(500).json({ error: 'Failed to read data' });
+        try {
+            const config = JSON.parse(data);
+            if (!config.tandaProducts) {
+                config.tandaProducts = [
+                    'Galleta de orea and creme',
+                    'Galleta de chin chin',
+                    'Brownies de chocolate',
+                    'Muffins de arandano'
+                ];
+            }
+            const trimmedName = name.trim();
+            if (!config.tandaProducts.includes(trimmedName)) {
+                config.tandaProducts.push(trimmedName);
+            }
+
+            fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8', (writeErr) => {
+                if (writeErr) return res.status(500).json({ error: 'Failed to save product' });
+                res.json({ success: true, products: config.tandaProducts });
+            });
+        } catch (e) {
+            res.status(500).json({ error: 'Invalid data format' });
+        }
+    });
+});
+
+// API: Delete Tanda Product
+app.post('/api/tanda-products/delete', (req, res) => {
+    const { name } = req.body;
+    if (!name) {
+        return res.status(400).json({ error: 'Invalid product name' });
+    }
+
+    fs.readFile(CONFIG_FILE, 'utf8', (err, data) => {
+        if (err) return res.status(500).json({ error: 'Failed to read data' });
+        try {
+            const config = JSON.parse(data);
+            if (config.tandaProducts) {
+                config.tandaProducts = config.tandaProducts.filter(p => p.trim() !== name.trim());
+            }
+
+            fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8', (writeErr) => {
+                if (writeErr) return res.status(500).json({ error: 'Failed to delete product' });
+                res.json({ success: true, products: config.tandaProducts || [] });
+            });
+        } catch (e) {
+            res.status(500).json({ error: 'Invalid data format' });
+        }
+    });
+});
+
 // Serve static assets and main files
 app.use(express.static(__dirname));
 

@@ -3198,11 +3198,17 @@
             let tandaState = {
                 step: 1,
                 name: `Tanda ${new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}`,
-                selectedProducts: ['Brownies de Chocolate Belga', 'Galletas Artesanales Oreo'],
+                availableProducts: [
+                    'Galleta de orea and creme',
+                    'Galleta de chin chin',
+                    'Brownies de chocolate',
+                    'Muffins de arandano'
+                ],
+                selectedProducts: ['Brownies de chocolate'],
                 investment: 75.00,
-                bakedQty: { 'Brownies de Chocolate Belga': 18, 'Galletas Artesanales Oreo': 15 },
-                leftoverQty: { 'Brownies de Chocolate Belga': 2, 'Galletas Artesanales Oreo': 0 },
-                wasteTypes: { 'Brownies de Chocolate Belga': 'merma', 'Galletas Artesanales Oreo': 'none' },
+                bakedQty: { 'Brownies de chocolate': 18 },
+                leftoverQty: { 'Brownies de chocolate': 2 },
+                wasteTypes: { 'Brownies de chocolate': 'merma' },
                 revenue: 195.00,
                 tandas: [],
                 lastPostMortem: null
@@ -3212,6 +3218,24 @@
                 document.getElementById('tanda-name-input').value = tandaState.name;
                 document.getElementById('tanda-investment-input').value = tandaState.investment.toFixed(2);
                 document.getElementById('tanda-revenue-input').value = tandaState.revenue.toFixed(2);
+
+                // Fetch available products catalog
+                try {
+                    const resProds = await fetch('/api/tanda-products');
+                    if (resProds.ok) {
+                        const prods = await resProds.json();
+                        if (Array.isArray(prods) && prods.length > 0) {
+                            tandaState.availableProducts = prods;
+                        }
+                    }
+                } catch (err) {
+                    console.warn('Using default available products:', err);
+                }
+
+                // If no products selected or invalid, select first available product
+                if (!tandaState.selectedProducts || tandaState.selectedProducts.length === 0) {
+                    tandaState.selectedProducts = [tandaState.availableProducts[0]];
+                }
 
                 // Fetch history
                 try {
@@ -3227,28 +3251,18 @@
 
             const renderTandaProductChips = () => {
                 const chipsContainer = document.getElementById('tanda-product-chips');
-                const defaultCatalog = [
-                    'Brownies de Chocolate Belga',
-                    'Galletas Artesanales Oreo',
-                    'Muffins de Arándano Silvestre',
-                    'Croissant Crujiente',
-                    'Torta Cereza Retro (Porciones)',
-                    'Cheesecake Cítrico y Frutal'
-                ];
-
-                let allProds = defaultCatalog;
-                if (state.catalog && state.catalog.length > 0) {
-                    const catalogProds = state.catalog.map(c => c.title);
-                    allProds = [...catalogProds, ...defaultCatalog.filter(dp => !catalogProds.includes(dp))];
-                }
-
                 chipsContainer.innerHTML = '';
-                allProds.forEach(prodName => {
+
+                tandaState.availableProducts.forEach(prodName => {
                     const isSelected = tandaState.selectedProducts.includes(prodName);
+                    
+                    const row = document.createElement('div');
+                    row.style.cssText = 'display: flex; gap: 8px; align-items: center; width: 100%;';
+
                     const chip = document.createElement('button');
                     chip.type = 'button';
                     chip.className = 'btn btn-secondary';
-                    chip.style.cssText = `padding: 12px 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; text-align: left; border: 1.5px solid ${isSelected ? 'var(--color-accent-gold)' : 'var(--color-border)'}; background: ${isSelected ? '#FFFBEB' : 'white'}; color: ${isSelected ? '#78350F' : 'var(--color-text-main)'}; display: flex; justify-content: space-between; align-items: center; transition: var(--transition-smooth);`;
+                    chip.style.cssText = `flex: 1; padding: 12px 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; text-align: left; border: 1.5px solid ${isSelected ? 'var(--color-accent-gold)' : 'var(--color-border)'}; background: ${isSelected ? '#FFFBEB' : 'white'}; color: ${isSelected ? '#78350F' : 'var(--color-text-main)'}; display: flex; justify-content: space-between; align-items: center; transition: var(--transition-smooth); cursor: pointer;`;
                     chip.innerHTML = `<span>${prodName}</span><span style="width: 22px; height: 22px; border-radius: 50%; font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; ${isSelected ? 'background: var(--color-accent-gold); color: white;' : 'border: 1.5px solid var(--color-border);'}">${isSelected ? '✓' : ''}</span>`;
 
                     chip.addEventListener('click', () => {
@@ -3263,22 +3277,73 @@
                         renderTandaProductChips();
                     });
 
-                    chipsContainer.appendChild(chip);
+                    // Delete button
+                    const delBtn = document.createElement('button');
+                    delBtn.type = 'button';
+                    delBtn.title = `Eliminar ${prodName} del catálogo`;
+                    delBtn.style.cssText = `width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid #FEE2E2; background: #FEF2F2; color: #EF4444; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: var(--transition-smooth);`;
+                    delBtn.innerHTML = '🗑️';
+
+                    delBtn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        if (tandaState.availableProducts.length <= 1) {
+                            return alert('Debes mantener al menos un producto en el catálogo.');
+                        }
+                        if (confirm(`¿Deseas eliminar "${prodName}" de la lista de productos?`)) {
+                            tandaState.availableProducts = tandaState.availableProducts.filter(p => p !== prodName);
+                            tandaState.selectedProducts = tandaState.selectedProducts.filter(p => p !== prodName);
+                            if (tandaState.selectedProducts.length === 0 && tandaState.availableProducts.length > 0) {
+                                tandaState.selectedProducts = [tandaState.availableProducts[0]];
+                            }
+                            renderTandaProductChips();
+
+                            // Sync delete with backend
+                            try {
+                                await fetch('/api/tanda-products/delete', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name: prodName })
+                                });
+                            } catch (err) {
+                                console.error('Error deleting product:', err);
+                            }
+                        }
+                    });
+
+                    row.appendChild(chip);
+                    row.appendChild(delBtn);
+                    chipsContainer.appendChild(row);
                 });
             };
 
             // Custom Product Add Button
-            document.getElementById('btn-tanda-add-custom-prod').addEventListener('click', () => {
+            document.getElementById('btn-tanda-add-custom-prod').addEventListener('click', async () => {
                 const input = document.getElementById('tanda-custom-prod-input');
                 const val = input.value.trim();
                 if (!val) return;
+
+                if (!tandaState.availableProducts.includes(val)) {
+                    tandaState.availableProducts.push(val);
+                }
                 if (!tandaState.selectedProducts.includes(val)) {
                     tandaState.selectedProducts.push(val);
                     tandaState.bakedQty[val] = 10;
                     tandaState.leftoverQty[val] = 0;
-                    renderTandaProductChips();
                 }
+
                 input.value = '';
+                renderTandaProductChips();
+
+                // Persist new product to backend
+                try {
+                    await fetch('/api/tanda-products', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: val })
+                    });
+                } catch (err) {
+                    console.error('Error adding product:', err);
+                }
             });
 
             // Wizard Step Transition UI Handler
