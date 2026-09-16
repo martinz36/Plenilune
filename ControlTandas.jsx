@@ -21,8 +21,21 @@ import {
   Store, 
   Layers,
   History,
-  RotateCcw
+  RotateCcw,
+  Star
 } from 'lucide-react';
+import { 
+  ResponsiveContainer, 
+  PieChart, 
+  Pie, 
+  Cell, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  Legend 
+} from 'recharts';
 
 // Catalogo predeterminado de productos sugeridos
 const INITIAL_PRODUCT_CATALOG = [
@@ -110,6 +123,143 @@ export default function ControlTandas() {
       })
       .catch(err => console.warn('Could not load tanda products:', err));
   }, []);
+
+  // KPI calculations for Dashboard
+  const kpiData = useMemo(() => {
+    let totalProfit = 0;
+    let totalInvestment = 0;
+    let totalRevenue = 0;
+    let totalBaked = 0;
+    let totalSold = 0;
+    let unsoldUnits = 0;
+    let unsoldValue = 0;
+
+    const productStats = {};
+
+    tandasHistory.forEach(t => {
+      const inv = parseFloat(t.investment !== undefined ? t.investment : t.investmentCost) || 0;
+      const rev = parseFloat(t.revenue !== undefined ? t.revenue : t.totalEarned) || 0;
+      const profit = parseFloat(t.profit !== undefined ? t.profit : t.netProfit) || (rev - inv);
+
+      totalInvestment += inv;
+      totalRevenue += rev;
+      totalProfit += profit;
+
+      const items = t.items || [];
+      items.forEach(it => {
+        const pName = it.name;
+        const baked = parseInt(it.baked) || 0;
+        const leftover = parseInt(it.leftover) || 0;
+        const sold = Math.max(0, baked - leftover);
+        const price = unitPrices[pName] || 5.00;
+
+        totalBaked += baked;
+        totalSold += sold;
+        unsoldUnits += leftover;
+        unsoldValue += leftover * price;
+
+        if (!productStats[pName]) {
+          productStats[pName] = { baked: 0, sold: 0, leftover: 0, revenue: 0, wasteType: { merma: 0, personal: 0, regalo: 0 } };
+        }
+        productStats[pName].baked += baked;
+        productStats[pName].sold += sold;
+        productStats[pName].leftover += leftover;
+        productStats[pName].revenue += sold * price;
+
+        const wType = it.wasteType || 'merma';
+        if (productStats[pName].wasteType[wType] !== undefined) {
+          productStats[pName].wasteType[wType] += leftover;
+        } else {
+          productStats[pName].wasteType.merma += leftover;
+        }
+      });
+    });
+
+    let starProduct = 'N/A';
+    let maxSales = 0;
+    Object.keys(productStats).forEach(p => {
+      if (productStats[p].sold > maxSales) {
+        maxSales = productStats[p].sold;
+        starProduct = p;
+      }
+    });
+
+    const salesEfficiency = totalBaked > 0 ? (totalSold / totalBaked) * 100 : 0;
+
+    return {
+      totalProfit,
+      totalInvestment,
+      totalRevenue,
+      totalBaked,
+      totalSold,
+      unsoldUnits,
+      unsoldValue,
+      starProduct,
+      starProductSales: maxSales,
+      salesEfficiency,
+      productStats
+    };
+  }, [tandasHistory, unitPrices]);
+
+  const DESTINO_COLORS = ['#10B981', '#F59E0B', '#F43F5E'];
+
+  const destinoData = useMemo(() => {
+    let soldCount = 0;
+    let giftCount = 0;
+    let wasteCount = 0;
+
+    tandasHistory.forEach(t => {
+      (t.items || []).forEach(it => {
+        const baked = parseInt(it.baked) || 0;
+        const leftover = parseInt(it.leftover) || 0;
+        const sold = Math.max(0, baked - leftover);
+        soldCount += sold;
+
+        const wType = it.wasteType || 'merma';
+        if (wType === 'personal' || wType === 'regalo') {
+          giftCount += leftover;
+        } else {
+          wasteCount += leftover;
+        }
+      });
+    });
+
+    return [
+      { name: 'Vendido', value: soldCount },
+      { name: 'Consumo / Regalo', value: giftCount },
+      { name: 'Merma', value: wasteCount }
+    ];
+  }, [tandasHistory]);
+
+  const historialBarData = useMemo(() => {
+    return tandasHistory.slice(0, 6).reverse().map(t => ({
+      name: t.name ? (t.name.length > 10 ? t.name.substring(0, 10) + '...' : t.name) : t.date,
+      Inversión: parseFloat(t.investment || 0),
+      Recaudación: parseFloat(t.revenue || 0)
+    }));
+  }, [tandasHistory]);
+
+  const topRentablesData = useMemo(() => {
+    const stats = kpiData.productStats;
+    return Object.keys(stats)
+      .map(p => ({
+        name: p.length > 12 ? p.substring(0, 12) + '...' : p,
+        ganancia: stats[p].revenue
+      }))
+      .sort((a, b) => b.ganancia - a.ganancia)
+      .slice(0, 5);
+  }, [kpiData]);
+
+  const sobrantesData = useMemo(() => {
+    const stats = kpiData.productStats;
+    return Object.keys(stats)
+      .map(p => ({
+        name: p.length > 12 ? p.substring(0, 12) + '...' : p,
+        sobrantes: stats[p].leftover
+      }))
+      .sort((a, b) => b.sobrantes - a.sobrantes)
+      .slice(0, 5);
+  }, [kpiData]);
 
   // Delete product from catalog
   const handleDeleteProduct = (prodName) => {
@@ -324,75 +474,205 @@ export default function ControlTandas() {
 
         {activeView === 'dashboard' && (
           <div className="space-y-5 animate-in fade-in duration-200">
-            {/* KPI Cards Grid */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                <span className="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
-                  Ganancia Neta Total
-                </span>
-                <span className="text-xl font-black text-emerald-600 block">
-                  S/ {tandasHistory.reduce((acc, t) => acc + (t.profit !== undefined ? t.profit : (t.revenue - t.investment)), 0).toFixed(2)}
-                </span>
-                <span className="text-[10px] text-slate-400">Recaudado - Inversión</span>
+            
+            {tandasHistory.length === 0 ? (
+              /* EMPTY STATE */
+              <div className="bg-white p-8 rounded-3xl border border-slate-200 text-center space-y-4 shadow-sm">
+                <div className="w-20 h-20 mx-auto rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-4xl shadow-inner">
+                  🧁
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-lg font-black text-slate-900">¡Aún no hay Tandas registradas!</h3>
+                  <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                    Registra tu primera tanda de producción para ver el análisis de rentabilidad, productos estrella y control de mermas.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveView('wizard')}
+                  className="px-6 py-3 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-extrabold text-xs rounded-2xl shadow-md transition-all inline-flex items-center space-x-2"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Crear mi Primera Tanda</span>
+                </button>
               </div>
-
-              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                <span className="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
-                  ROI Promedio
-                </span>
-                <span className="text-xl font-black text-indigo-600 block">
-                  {(tandasHistory.length > 0 ? tandasHistory.reduce((acc, t) => acc + parseFloat(t.margin || t.roi || 0), 0) / tandasHistory.length : 0).toFixed(1)}%
-                </span>
-                <span className="text-[10px] text-slate-400">Rentabilidad por tanda</span>
-              </div>
-
-              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                <span className="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
-                  Inversión Total
-                </span>
-                <span className="text-base font-extrabold text-slate-800 block">
-                  S/ {tandasHistory.reduce((acc, t) => acc + parseFloat(t.investment || t.investmentCost || 0), 0).toFixed(2)}
-                </span>
-                <span className="text-[10px] text-slate-400">Gastado en insumos</span>
-              </div>
-
-              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                <span className="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
-                  Recaudación Total
-                </span>
-                <span className="text-base font-extrabold text-slate-800 block">
-                  S/ {tandasHistory.reduce((acc, t) => acc + parseFloat(t.revenue || t.totalEarned || 0), 0).toFixed(2)}
-                </span>
-                <span className="text-[10px] text-slate-400">Total cobrado</span>
-              </div>
-            </div>
-
-            {/* Profit History Breakdown Visual */}
-            <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
-                Evolución de Rentabilidad por Tanda
-              </h3>
-              <div className="space-y-2">
-                {tandasHistory.map((t, idx) => {
-                  const prof = t.profit !== undefined ? t.profit : (t.revenue - t.investment);
-                  const isProf = prof >= 0;
-                  return (
-                    <div key={t.id || idx} className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 text-xs">
-                      <div>
-                        <span className="font-bold text-slate-800 block">{t.name}</span>
-                        <span className="text-[10px] text-slate-400">{t.date}</span>
-                      </div>
-                      <div className="text-right">
-                        <span className={`font-black text-sm block ${isProf ? 'text-emerald-600' : 'text-rose-600'}`}>
-                          {isProf ? '+' : ''}S/ {prof.toFixed(2)}
-                        </span>
-                        <span className="text-[10px] text-slate-400 font-bold">ROI {t.margin || t.roi}%</span>
+            ) : (
+              <>
+                {/* 4 KPI CARDS ROW */}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* KPI 1: Ganancia Neta Total */}
+                  <div className="bg-emerald-50/90 p-4 rounded-3xl border border-emerald-200 shadow-sm relative overflow-hidden">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-extrabold uppercase text-emerald-800 tracking-wider">
+                        Ganancia Neta Total
+                      </span>
+                      <div className="w-7 h-7 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-xs">
+                        <DollarSign className="w-4 h-4" />
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
+                    <p className="text-xl font-black text-emerald-700">
+                      S/ {kpiData.totalProfit.toFixed(2)}
+                    </p>
+                    <span className="text-[10px] text-emerald-600 font-bold block mt-0.5">
+                      Recaudado - Inversión
+                    </span>
+                  </div>
+
+                  {/* KPI 2: Producto Estrella */}
+                  <div className="bg-amber-50/90 p-4 rounded-3xl border border-amber-200 shadow-sm relative overflow-hidden">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-extrabold uppercase text-amber-900 tracking-wider">
+                        Producto Estrella
+                      </span>
+                      <div className="w-7 h-7 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-xs">
+                        <Star className="w-4 h-4 fill-amber-200" />
+                      </div>
+                    </div>
+                    <p className="text-xs font-black text-amber-950 truncate" title={kpiData.starProduct}>
+                      {kpiData.starProduct}
+                    </p>
+                    <span className="text-[10px] text-amber-700 font-bold block mt-0.5">
+                      {kpiData.starProductSales} vendidas
+                    </span>
+                  </div>
+
+                  {/* KPI 3: Dinero en Merma/Regalos */}
+                  <div className="bg-rose-50/90 p-4 rounded-3xl border border-rose-200 shadow-sm relative overflow-hidden">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-extrabold uppercase text-rose-800 tracking-wider">
+                        Merma / Regalos
+                      </span>
+                      <div className="w-7 h-7 rounded-xl bg-rose-500 text-white flex items-center justify-center shadow-xs">
+                        <AlertCircle className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <p className="text-xl font-black text-rose-700">
+                      S/ {kpiData.unsoldValue.toFixed(2)}
+                    </p>
+                    <span className="text-[10px] text-rose-600 font-bold block mt-0.5">
+                      {kpiData.unsoldUnits} unidades no vendidas
+                    </span>
+                  </div>
+
+                  {/* KPI 4: Eficiencia de Venta */}
+                  <div className="bg-purple-50/90 p-4 rounded-3xl border border-purple-200 shadow-sm relative overflow-hidden">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-extrabold uppercase text-purple-900 tracking-wider">
+                        Eficiencia Venta
+                      </span>
+                      <div className="w-7 h-7 rounded-xl bg-purple-500 text-white flex items-center justify-center shadow-xs">
+                        <TrendingUp className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <p className="text-xl font-black text-purple-700">
+                      {kpiData.salesEfficiency.toFixed(1)}%
+                    </p>
+                    <span className="text-[10px] text-purple-600 font-bold block mt-0.5">
+                      {kpiData.totalSold}/{kpiData.totalBaked} horneadas
+                    </span>
+                  </div>
+                </div>
+
+                {/* GRID 2x2 DE GRÁFICOS RECHARTS PASTEL */}
+                <div className="grid grid-cols-1 gap-4">
+                  
+                  {/* Gráfico 1: Destino de Producción (PieChart Dona) */}
+                  <div className="bg-white p-4 rounded-3xl border border-slate-200/90 shadow-sm space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                      <h4 className="text-xs font-black uppercase text-slate-800 tracking-wider">
+                        1. Destino de Producción (Dona)
+                      </h4>
+                    </div>
+                    <div className="h-48 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={destinoData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={40}
+                            outerRadius={65}
+                            paddingAngle={5}
+                            dataKey="value"
+                          >
+                            {destinoData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={DESTINO_COLORS[index % DESTINO_COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Tooltip formatter={(value) => [`${value} unidades`, 'Cantidad']} />
+                          <Legend verticalAlign="bottom" height={32} iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Gráfico 2: Historial de Tandas (BarChart Inversión vs Recaudación) */}
+                  <div className="bg-white p-4 rounded-3xl border border-slate-200/90 shadow-sm space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                      <h4 className="text-xs font-black uppercase text-slate-800 tracking-wider">
+                        2. Historial de Tandas (Inversión vs Recaudación)
+                      </h4>
+                    </div>
+                    <div className="h-52 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={historialBarData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                          <XAxis dataKey="name" tick={{ fontSize: 9 }} />
+                          <YAxis tick={{ fontSize: 9 }} />
+                          <Tooltip formatter={(value) => [`S/ ${value}`, 'Monto']} />
+                          <Legend verticalAlign="bottom" height={32} wrapperStyle={{ fontSize: '11px' }} />
+                          <Bar dataKey="Inversión" fill="#F87171" radius={[6, 6, 0, 0]} />
+                          <Bar dataKey="Recaudación" fill="#34D399" radius={[6, 6, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Gráfico 3: Top Productos Más Rentables (BarChart Horizontal) */}
+                  <div className="bg-white p-4 rounded-3xl border border-slate-200/90 shadow-sm space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                      <h4 className="text-xs font-black uppercase text-slate-800 tracking-wider">
+                        3. Top Productos Más Rentables
+                      </h4>
+                    </div>
+                    <div className="h-52 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={topRentablesData} layout="vertical" margin={{ top: 5, right: 15, left: 10, bottom: 5 }}>
+                          <XAxis type="number" tick={{ fontSize: 9 }} />
+                          <YAxis type="category" dataKey="name" tick={{ fontSize: 9 }} width={85} />
+                          <Tooltip formatter={(value) => [`S/ ${value}`, 'Ganancia Estimada']} />
+                          <Bar dataKey="ganancia" fill="#A78BFA" radius={[0, 6, 6, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Gráfico 4: Alerta de Sobrantes (BarChart) */}
+                  <div className="bg-white p-4 rounded-3xl border border-slate-200/90 shadow-sm space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 rounded-full bg-rose-500"></div>
+                      <h4 className="text-xs font-black uppercase text-slate-800 tracking-wider">
+                        4. Alerta de Sobrantes (Unidades sin Vender)
+                      </h4>
+                    </div>
+                    <div className="h-52 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={sobrantesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                          <XAxis dataKey="name" tick={{ fontSize: 9 }} />
+                          <YAxis tick={{ fontSize: 9 }} />
+                          <Tooltip formatter={(value) => [`${value} unidades`, 'Sobrantes']} />
+                          <Bar dataKey="sobrantes" fill="#FB7185" radius={[6, 6, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                </div>
+              </>
+            )}
+
           </div>
         )}
 
